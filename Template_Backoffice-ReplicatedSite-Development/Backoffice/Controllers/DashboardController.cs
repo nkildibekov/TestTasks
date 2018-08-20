@@ -25,6 +25,12 @@ namespace Backoffice.Controllers
             return View(model);
         }
 
+        [Route( "test" )]
+        public ActionResult Test()
+        {
+            return View();
+        }
+
         #region Ajax Calls
         public JsonNetResult GetCurrentCommissions()
         {

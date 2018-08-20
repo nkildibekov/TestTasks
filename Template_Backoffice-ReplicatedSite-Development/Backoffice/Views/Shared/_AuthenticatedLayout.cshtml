@@ -211,6 +211,7 @@
                         var cartCount = Exigo.PropertyBags.Get<ShoppingCartItemsPropertyBag>(ShoppingCartName + "Cart").Items.Sum(c => c.Quantity);
                     }
                     <li><a href = "@Url.Action("cart", "Shopping")" ><span id="cartCountContainer" style="@(cartCount > 0 ? "" : "display:none")">(<span id="cartCount" data-text="orderquantity">@cartCount.ToString("N0")</span>)</span> <i class="fa-shopping-cart"></i> @Resources.Common.MyCart</a></li>
+                    <li><a href = "@Url.Action("test", "Dashboard")">Go to Test Page</a></li>
                 </ul>
             </div>
         </div>
