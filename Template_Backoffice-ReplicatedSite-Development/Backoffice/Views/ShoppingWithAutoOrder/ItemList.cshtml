@@ -1,0 +1,213 @@
+﻿@model ItemListViewModel
+@{
+    ViewBag.Title = Resources.Common.Shopping;
+}
+
+<h2>@ViewBag.Title</h2>
+
+
+<div id="view-item-list">
+    <div class="row margin-10">
+        <div class="col-md-3 hidden-sm hidden-xs">
+            <div id="categories-container">
+                <!-- Desktop Nav -->
+                @* Normal Menu *@
+                <div class="hidden-xs hidden-sm" id="shopping-nav">
+                    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                        @foreach (var category in Model.Categories)
+                        {
+                            var hasSubcategories = (category.Subcategories != null && category.Subcategories.Count() > 0);
+                            <div class="panel panel-default">
+                                <div class="panel-heading" role="tab" id="heading@(category.WebCategoryID)" data-category="@category.WebCategoryID">
+                                    <div class="panel-title">
+                                        <a class="pull-left" data-categoryid="@category.WebCategoryID">
+                                            @category.WebCategoryDescription
+                                        </a>
+                                        @if (hasSubcategories)
+                                        {
+                                            <a class="pull-right category-toggle" href="#collapse@(category.WebCategoryID)" data-toggle="collapse" data-categoryid="@category.WebCategoryID" data-parent="#accordion" aria-expanded="true" aria-controls="collapse@(category.WebCategoryID)">
+                                                <i class="fa-plus"></i>
+                                            </a>
+                                        }
+                                        <div class="clearfix"></div>
+                                    </div>
+                                </div>
+                                <div id="collapse@(category.WebCategoryID)" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+                                    @if (hasSubcategories)
+                                    {
+                                        <div class="panel-body">
+                                            <ul class="subcategory-list list-unstyled">
+                                                @foreach (var subcategory in category.Subcategories)
+                                                {
+                                                    <li class="navbar-link" data-nav-id="@subcategory.WebCategoryID" data-parent-categoryid="@category.WebCategoryID">
+                                                        <a data-categoryid="@subcategory.WebCategoryID">@subcategory.WebCategoryDescription</a>
+                                                    </li>
+                                                }
+                                            </ul>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-9 col-sm-12">
+            <!-- Mobile Category Menu -->
+            <div class="visible-sm visible-xs" style="margin-bottom: 20px;">
+
+                <select id="mobile-shopping-nav" class="form-control col-xs-12">
+                    <option value="0" data-categoryid="0" selected="selected">@Resources.Common.AllProducts</option>
+                    @foreach (var category in Model.Categories)
+                    {
+                        <option value="@category.WebCategoryID" data-categoryid="@category.WebCategoryID">@category.WebCategoryDescription</option>
+                        if (category.Subcategories != null && category.Subcategories.Count() > 0)
+                        {
+                            foreach (var subcategory in category.Subcategories)
+                            {
+                                <option class="nested-subcategory" data-categoryid="@subcategory.WebCategoryID">@category.WebCategoryDescription - @subcategory.WebCategoryDescription</option>
+                            }
+                        }
+                    }
+                </select>
+                <div class="space-50"></div>
+            </div>
+
+            <div class="row margin-15" id="itemList">
+                <p class="text-center">
+                    <!-- Dynamically Injected -->
+                    <img class="img-responsive" src="@Url.Content("~/Content/images/loading/circle-48.gif")" />
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts
+{
+    <script>
+        require(["jquery", "pubsub", "ajax", "shopping", "toastr", "extensions"],
+            function($, pubsub, ajax, shopping, toastr) {
+                var itemListUrl = "@Url.Action("GetItemList")",
+                    model = @Model.CategoryID,
+                    context = "#view-item-list",
+                    $context = $(context),
+                    addItemUrl = '@Url.Action("additemtocart")';
+
+                function registerEventHandlers() {
+                    $("#shopping-nav [data-categoryid]:not(.category-toggle)").on('click', function(){
+                        var categoryID = $(this).data('categoryid'),
+                            $mobileListItem = $("#mobile-shopping-nav").find("[data-categoryid='" + categoryID + "']").parents("li").first();
+
+                        $("#shopping-nav li").removeClass("active");
+                        $("#mobile-shopping-nav li").removeClass("active");
+                        $(this).addClass("active");
+                        $mobileListItem.addClass("active");
+                        helpers.showLoadingImage();
+                        actions.loadItemList(categoryID);
+                    });
+
+                    $("#mobile-shopping-nav").on('change', function() {
+                        var $this = $(this).children("option:selected"),
+                            categoryID = $this.data('categoryid'),
+                            $parentListItem = $this.parents("li").first(),
+                            $nonMobileListItem = $("#shopping-nav").find("[data-categoryid='" + categoryID + "']");
+
+                        $("#shopping-nav li").removeClass("active");
+                        $nonMobileListItem.addClass("active");
+                        helpers.showLoadingImage();
+                        actions.loadItemList(categoryID);
+                    });
+
+                    $(".category-toggle").on("click", function () {
+                        var $this = $(this),
+                            $currentIcon = $this.find("i"),
+                            category = $this.parents('[data-category]').data("category");
+
+                        // Handle the current selected category
+                        $currentIcon.toggleClass("fa-minus").toggleClass("fa-plus");
+
+                        // Then toggle the other category icons as they close
+                        $(".category-toggle").each(function () {
+                            if ($(this).parents("[data-category]").data("category") != category) {
+                                $(this).find("i").removeClass("fa-minus").addClass("fa-plus");
+                            }
+                        });
+                    });
+
+                    $context.on("click", ".cart-btn", function() { actions.addItemToCart(this); });
+                }
+
+                var actions = {
+                    loadItemList: function (categoryid) {
+                        var categoryID = (categoryid == undefined) ? model.CategoryID :  categoryid;
+                        ajax.json({
+                            url: itemListUrl,
+                            data: { categoryID: categoryID },
+                            success: function (response) {
+                                if (response.success) {
+                                    var $html = $("#itemList");
+                                    $html.html(response.html);
+                                }
+                            },
+                            error: function (xhr, error, data) {
+                                console.log("error loading itemlist", xhr);
+                            }
+                        });
+                    },
+                    addItemToCart: function(_item) {
+                        var $item = $(_item);
+                        var itemcode = $item.attr("data-itemcode");
+                        var itemType = $item.attr("data-type");
+
+                        ajax.json({
+                            url: addItemUrl,
+                            data: {
+                                item: {
+                                    ItemCode: itemcode,
+                                    Quantity: 1,
+                                    Type: itemType
+                                }
+                            },
+                            success: function(response) {
+                                if (response.success) {
+                                    var orderTypeMessage = itemType == 'Order' ? '@Resources.Common.HasBeenAddedToOrder' : '@Resources.Common.HasBeenAddedToAutoOrder';
+
+                                    toastr.success(("<strong>{0}</strong> " + orderTypeMessage)
+                                            .format($('.item-row[data-itemcode="' + itemcode + '"]').find('.itemdescription').text()));
+
+                                    if (itemType == 'Order') {
+                                        $("#cartCount").html(parseInt($("#cartCount").html()) + 1);
+                                        $('#cartCountContainer').not(':contains("(0)")').fadeIn();
+                                    }
+                                }
+                            }
+                        });
+                    }
+                }
+
+                var helpers = {
+                    showLoadingImage: function() {
+                        $('#itemList').html('<p class="text-center"><img class="img-responsive" src="@Url.Content("~/Content/images/loading/circle-48.gif")" /></p>')
+                    },
+                    formatItem: function (item) {
+                        // Quantity checking
+                        item.Quantity = item.Quantity || 0;
+                        if (isNaN(item.Quantity)) item.Quantity = 0;
+                        else item.Quantity = parseFloat(item.Quantity);
+
+                        return item;
+                    }
+                }
+
+                function _init() {
+                    registerEventHandlers();
+                    actions.loadItemList();
+                }
+                _init();
+            });
+
+    </script>
+}

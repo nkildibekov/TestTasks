@@ -1,0 +1,541 @@
+﻿<script>
+    require(["toastr", "jquery", "jquery-ui", "jquery-sumoselect", "ajax", "cookies", "kendo", "bootstrap", "tinymce"], function (toastr, $, jqueryui, sumo, ajax, cookies, kendo) {
+
+    // Settings
+    var getContentItemContentURL = '@Url.Action("getcontentitemcontent", "content")',
+        previewContentURL = '@Url.Action("previewcontent","content")',
+        setContentURL = '@Url.Action("setcontent","content")',
+        setAlertURL = '@Url.Action("setalert","content")',
+        deleteAlertURL = '@Url.Action("deletealert","content")',
+        getAlertToEditURL = '@Url.Action("getalerttoedit", "content")',
+        getLanguagesURL = '@Url.Action("getlanguages","content")',
+        getCountryAndLanguageSetsURL = '@Url.Action("getcountryandlanguagesets","content")',
+        getAlertListURL = '@Url.Action("getalertlist","content")',
+        isCustomerTypeMasterURL = '@Url.Action("iscustomertypemaster","content")',
+        languageExpiration = '@DateTime.Now.AddYears(1).ToShortDateString()'
+
+    // Event Handlers
+    function registerEventHandlers() {
+        // Content Manager Editor modal listener.
+        $("[data-role='editContent']").on('click', function () {
+            if (helpers.validateContent()) {
+                var contentID = $(this).parents('#editContent').data('contentID');
+                var contentObject = helpers.createContentObject();
+                contentObject.ContentItemID = contentID;
+                actions.editContent(contentObject);
+            }
+        });
+
+        // Preview Content
+        $("[data-role='preview']").on('click', function () {
+            actions.previewContent();
+        });
+
+        // Populate Content field of Editor with specific item's content.
+        $(".cmcontentedit").on('click', function () {
+            actions.retrieveContent(
+                $(this).attr('id'),
+                $('#contentCountries option:selected').val(),
+                parseInt($('#contentLanguages option:selected').val())
+            );
+        });
+
+        $("#contentCountries").on("change", function () {
+            var options = {};
+            options.expires = new Date(languageExpiration);
+            options.path = "/";
+            options.domain = false;
+            options.secure = false;
+            cookies.set('@GlobalSettings.Globalization.CountryCookieName', $('#contentCountries option:selected').val(), options);
+            cookies.set('@GlobalSettings.Globalization.CountryCookieChosenName', "true", options);
+            toastr.success("@Resources.Common.Loading <span class='glyphicon glyphicon-refresh glyphicon-refresh-animate' style='margin-left: 8px'></span>");
+            window.location = window.location;
+        });
+
+        $("#contentLanguages").on("change", function () {
+
+            cookies.set('@GlobalSettings.Globalization.LanguageCookieName', $('#contentLanguages option:selected').attr("language"), {
+                expires: new Date('@DateTime.Now.AddYears(1).ToShortDateString()'),
+                path: '/'
+            });
+            toastr.success("@Resources.Common.Loading <span class='glyphicon glyphicon-refresh glyphicon-refresh-animate' style='margin-left: 8px'></span>");
+            window.location = window.location;
+        });
+
+        // Log-In Alert Editor Date Time Picker
+        $('.PostDate').kendoDateTimePicker({
+            timeFormat: "HH:mm",
+            format: "MM/dd/yyyy HH:mm",
+            parseFormats: ["MM/dd/yyyy hh:mmtt", "MM/dd/yyyy HH:mm", "MM/dd/yyyy", "HH:mm"],
+            min: new Date($.now())
+        });
+
+        // Set Publish date as minimum value for expiration date.
+        $("#publishDate").on("change", function () {
+            $("#expirationDate").kendoDateTimePicker({
+                min: new Date($("#publishDate").data("kendoDateTimePicker").value())
+            });
+        });
+
+        // Set Expiration date as maximum value for publish date.
+        $("#expirationDate").on("change", function () {
+            $("#publishDate").kendoDateTimePicker({
+                max: new Date($("#expirationDate").data("kendoDateTimePicker").value())
+            });
+        });
+
+        // Open Log-In Alert list menu
+        $("#logInAlertMenuButton").on('click', function () {
+            actions.getAlertList();
+            actions.getAvailableMarketLanguageSets();
+        });
+
+        // Open Create Log-In Alert
+        $("[data-role='createLogInAlert']").on('click', function () {
+            if (helpers.validateAlert()) {
+                helpers.createLogInAlertObject();
+                if ($("[data-role='createLogInAlert']").data("key") == "") {
+                    actions.createLogInAlert(logInAlertObject);
+                }
+                else {
+                    var editAlert = helpers.editAlertObject();
+                    actions.editAlert(editAlert);
+                }
+            }
+        });
+
+        // Add log in alert.
+        $("#logInAlertMenu [data-role='addLogInAlert']").on('click', function () {
+            helpers.clearAlertFields();
+            $('#logInAlertMenuAdd').modal('show');
+            $("[data-role='createLogInAlert']").data("key", "");
+            var datepicker = $("#publishDate").data("kendoDateTimePicker");
+            datepicker.value(new Date());
+        });
+
+        // Hide modal after adding log-in alert.
+        $("#logInAlertMenuAdd [data-role='viewLogInAlerts']").on('click', function () {
+            $('#logInAlertMenuAdd').modal('hide');
+        });
+
+        //delete alert
+        $(document).on("click", ".deleteAlert", function () {
+            var itemID = $(this).data("id");
+            helpers.deleteAlertConfirmation(itemID);
+        });
+
+        // Set contentID as DeleteAlertConfirmation's modal data.
+        $("#deleteAlertConfirmation").on("click", function () {
+            actions.deleteAlert($('#deleteAlertConfirmation').data("id"));
+        });
+
+        //edit alert
+        $(document).on("click", ".editAlert", function () {
+            $('#logInAlertMenuAdd').modal('show');
+            actions.editAlertDisplay($(this).data("id"));
+        });
+
+        //content editor country/language drop-downs
+        $("#contentEditorNavigation").on("change", "#contentCountries", function () {
+            actions.getAvailableLanguages();
+        });
+    }
+
+    // Actions
+    var actions = {
+        // Retrieves content of a content item and displays it as raw html in the targeted div.
+        retrieveContent: function(contentid, countryid, languageid) {
+            ajax.json({
+                url: getContentItemContentURL,
+                data: { contentID: contentid, countryID: countryid, languageID: languageid },
+                success: function(response) {
+                    if (!response.success) {
+                        console.log(response.error);
+                        return;
+                    }
+                    $("#Content").val(response.content);
+                    $("#editContent").data("contentID", contentid);
+                    tinymce.init({
+                        selector: 'textarea#Content',
+                        plugins: 'advlist autolink link image lists charmap print preview code',
+                        setup: function(editor) {
+                            editor.on('change',
+                                function() {
+                                    editor.save();
+                                });
+                        },
+                        init_instance_callback: function(editor) {
+                            editor.on('GetContent',
+                                function(e) {
+                                    console.log(e);
+                                    actions.cleanContent(e.content);
+                                });
+                        },
+                        cleanup_on_startup: false,
+                        trim_span_elements: false,
+                        verify_html: false,
+                        cleanup: false,
+                        convert_urls: false
+                    });
+                },
+                error: function(response) {
+                    console.log(response.message, "Error");
+                }
+            });
+        },
+
+        // Returns content to be previewed by the Preview button and sisplays as raw html in targeted div.
+        cleanContent: function (dirtyContent) {
+            ajax.json({
+                url: previewContentURL,
+                data: { previewContent: dirtyContent },
+                success: function (response) {
+                    if (!response.success) {
+                        console.log(response.message);
+                    }
+                    $("#Content").val(response.previewContent);
+                },
+                error: function (response) {
+                    console.log(response.message, "Error");
+                }
+            });
+        },
+
+        // Returns content to be previewed by the Preview button and sisplays as raw html in targeted div.
+        previewContent: function () {
+            ajax.json({
+                url: previewContentURL,
+                data: { previewContent: $("#Content").val() },
+                success: function (response) {
+                    if (!response.success) {
+                        console.log(response.error);
+                        return;
+                    }
+                    $("#previewContentRender").html(response.previewContent);
+                },
+                error: function (response) {
+                    console.log("Error: ", xhr, error, status);
+                }
+            });
+        },
+
+        // Edits content by passing it a new content and the ID of content to be edited.
+        editContent: function (contentObject) {
+            ajax.json({
+                url: setContentURL,
+                data: { contentItem: contentObject},
+                success: function (response) {
+                    if (!response.success) {
+                        console.log(response.error);
+                        return;
+                    }
+                    location.reload();
+                },
+                error: function (xhr, error, status) {
+                    console.log("Error: ", xhr, error, status);
+                }
+            });
+        },
+
+        // Edits alert by passing it an alert object and the alert's ID.
+        editAlert: function(alertObject){
+            ajax.json({
+                url: setAlertURL,
+                data: { content: alertObject },
+                success: function (response) {
+                    if (!response.success) {
+                        console.log(response.error);
+                        return;
+                    }
+                    $('#logInAlertMenuAdd').modal('hide');
+                    actions.getAlertList();
+                },
+                error: function (xhr, error, status) {
+                    console.log("Error: ", xhr, error, status);
+                }
+            });
+        },
+
+        // Create Log-In Alert by passing Log-In Alert object to the action 'createcontent','content'
+        createLogInAlert: function (logInAlertObject) {
+            ajax.json({
+                url: setAlertURL,
+                data: { content: logInAlertObject },
+                success: function (response) {
+                    if (!response.success) {
+                        console.log(response.error);
+                        return;
+                    }
+                    // Refresh the Alert List to remove deleted content.
+                    actions.getAlertList();
+
+                    $('#logInAlertMenuAdd').modal('hide');
+                },
+                error: function (xhr, error, status) {
+                    console.log("Error: ", xhr, error, status);
+                }
+            });
+        },
+
+        // Delete alert.
+        deleteAlert: function(deleteAlertID) {
+            ajax.json({
+                url: deleteAlertURL,
+                data: { contentItemID: deleteAlertID },
+                success: function (response) {
+                    if (!response.success) {
+                        console.log(response.error);
+                        return;
+                    }
+                    // Refresh the Alert List to remove deleted content.
+                    actions.getAlertList();
+                    // Close the modal.
+                    $('#deleteAlert').modal('hide');
+                },
+                error: function (xhr, error, status) {
+                    console.log("Error: ", xhr, error, status);
+                }
+            });
+        },
+
+        // Display alert in the 'Edit Alert' modal.
+        editAlertDisplay: function(editAlertID) {
+            ajax.json({
+                url: getAlertToEditURL,
+                data: { contentID: editAlertID },
+                success: function (response) {
+                    if (!response.success) {
+                        console.log(response.error);
+                        return;
+                    }
+                    $("#logInAlertContent").val(response.content);
+                    $("#logInAlertContentDescription").val(response.item.ContentDescription);
+                    $("[data-role='createLogInAlert']").data("key", response.item.ContentItemID);
+                    $("#publishDate").val(response.item.ValidFrom);
+                    $("#expirationDate").val(response.item.ExpirationDate);
+                    $("#logInAlertLanguage")[0].sumo.unSelectAll()
+                    $.each(response.countryLanguagePairsValues, function (i, e) {
+                        $('#logInAlertLanguage')[0].sumo.selectItem(e);
+                    });
+                },
+                error: function (xhr, error, status) {
+                    console.log("Error: ", xhr, error, status);
+                }
+            });
+        },
+
+        // Check if customer type is master and initialize Sumo and loadAvailableLanguages
+        isCustomerTypeMaster: function() {
+            ajax.json({
+                url: isCustomerTypeMasterURL,
+                success: function (response) {
+                    if (!response.success) {
+                        console.log(response.error);
+                        return;
+                    }
+                    if (response.authenticated) {
+                        var MySelect = $('.SlectBox').SumoSelect();
+                        actions.loadAvailableLanguages();
+                    }
+                },
+                error: function (xhr, error, status) {
+                    console.log("Error: ", xhr, error, status);
+                }
+            });
+        },
+
+        // Load languages and select from cookies
+        loadAvailableLanguages: function() {
+            ajax.json({
+                url: getLanguagesURL,
+                data: { market: cookies.get('@GlobalSettings.Globalization.CountryCookieName') != null ? cookies.get('@GlobalSettings.Globalization.CountryCookieName') : $('#contentCountries option:selected').val() },
+                success: function (response) {
+                    if (!response.success) {
+                        console.log(response.error);
+                        return;
+                    }
+                    var countryCookieName = cookies.get('@GlobalSettings.Globalization.CountryCookieName');
+                    $("#contentCountries option[value='" + countryCookieName + "']").prop('selected', true);
+                    var $cl = $("#contentLanguages");
+                    $cl.empty(); // remove old options
+                    $.each(response.availableLanguages, function (value, key) {
+                        $cl.append($("<option></option>")
+                            .attr("value", key.LanguageID).text(key.LanguageDescription).attr("language", key.CultureCode));
+                    });
+                    var languageCookieName = cookies.get('@GlobalSettings.Globalization.LanguageCookieName');
+                    $("#contentLanguages option[language='" + languageCookieName + "']").prop('selected', true);
+                },
+                error: function (xhr, error, status) {
+                    console.log("Error: ", xhr, error, status);
+                }
+            });
+        },
+
+        // Get available languages.
+        getAvailableLanguages: function() {
+            ajax.json({
+                url: getLanguagesURL,
+                data: { market: $('#contentCountries option:selected').val() },
+                success: function (response){
+                    if (!response.success) {
+                        console.log(response.error);
+                        return;
+                    }
+                    var $cl = $("#contentLanguages");
+                    $cl.empty(); // remove old options
+                    $.each(response.availableLanguages, function (value, key) {
+                        $cl.append($("<option></option>")
+                            .attr("value", key.LanguageID).text(key.LanguageDescription).attr("language", key.CultureCode));
+                    });
+                },
+                error: function (xhr, error, status) {
+                    console.log("Error: ", xhr, error, status);
+                }
+            });
+        },
+
+        // Get available market language sets.
+        getAvailableMarketLanguageSets: function() {
+            ajax.json({
+                url: getCountryAndLanguageSetsURL,
+                success: function (response) {
+                    if (!response.success) {
+                        console.log(response.error);
+                        return;
+                    }
+                    var $el = $("#logInAlertLanguage");
+                    $el.empty(); // remove old options
+                    $.each(response.availableCountryAndLanguageSets, function (value, key) {
+                        $el.append($("<option></option>")
+                            .attr("value", response.availableCountries[value] + "/" + response.availableLanguages[value])
+                            .text(key));
+                    });
+                    $('#logInAlertLanguage').SumoSelect({ okCancelInMulti: true, selectAll: true });
+                },
+                error: function (xhr, error, status) {
+                    console.log("Error: ", xhr, error, status);
+                }
+            });
+        },
+
+        // Get alert list.
+        getAlertList: function() {
+            ajax.json({
+                url: getAlertListURL,
+                data: {},
+                success: function (response) {
+                    if (!response.success) {
+                        console.log(response.error);
+                        return;
+                    }
+                    var $html = $("#alertlist-target");
+                    $html.html(response.html);
+                },
+                error: function (xhr, error, status) {
+                    console.log("Error: ", xhr, error, status);
+                }
+            });
+        }
+    }
+
+    // Helpers
+    var helpers = {
+        // Validate that the fields in the Log-In Alert weren't left blank.
+        validateAlert: function () {
+            if ($("#logInAlertContent").val() == "") {
+                $("#logInAlertContent").css("border-color", "red").focus();
+                return false;
+            } else {
+                $("#logInAlertContent").css("border-color", "#ccc").focus();
+            }
+
+            if ($("#logInAlertContentDescription").val() == "") {
+                $("#logInAlertContentDescription").css("border-color", "red").focus();
+                return false;
+            } else {
+                $("#logInAlertContentDescription").css("border-color", "#ccc").focus();
+            }
+
+            if ($("#publishDate").val() == "") {
+                $("#publishDate").css("border-color", "red").focus();
+                return false;
+            } else {
+                $("#publishDate").css("border-color", "#ccc").focus();
+            }
+
+            if ($("#logInAlertLanguage").val() == null) {
+                $("#logInAlertLanguage ~ .SelectBox").css("border-color", "red").focus();
+                return false;
+            } else {
+                $("#logInAlertLanguage ~ .SelectBox").css("border-color", "#ccc").focus();
+            }
+            return true;
+        },
+
+        // Clears alert fields.
+        clearAlertFields: function () {
+            $("#logInAlertContent").val(""),
+            $("#logInAlertContentDescription").val(""),
+            $("#publishDate").val(""),
+            $("#expirationDate").val(""),
+            $("#logInAlertLanguage")[0].sumo.unSelectAll()
+        },
+
+        // Creates a content block.
+        createContentObject: function () {
+            contentObject = {
+                Content: $("#Content").val(),
+                CountryID: $('#contentCountries option:selected').val(),
+                LanguageID: parseInt($('#contentLanguages option:selected').val())
+            }
+            return contentObject;
+        },
+
+        // Edits an alert and sets item id to the data-key of that alert.
+        editAlertObject: function () {
+            var editAlert = helpers.createLogInAlertObject();
+            editAlert.ContentItemID = $("[data-role='createLogInAlert']").data("key");
+            return editAlert;
+        },
+
+        // Validate Content Create fields before attempting to create a content block.
+        validateContent: function () {
+            if ($("#Content").val() == "") {
+                $("#Content").css("border-color", "red").focus();
+                return false;
+            }
+            return true;
+        },
+
+        // Create Log-In Alert object.
+        createLogInAlertObject: function () {
+            logInAlertObject = {
+                ContentDescription: $("#logInAlertContentDescription").val(),
+                Content: $("#logInAlertContent").val(),
+                ValidFrom: $("#publishDate").val(),
+                ExpirationDate: $("#expirationDate").val(),
+                ViewID: "Alert",
+                SiteDescription: "Backoffice",
+                CountryID: $("#contentCountries").val(),
+                LanguageID: $("#contentLanguages").val(),
+                CountryLanguageList: $("#logInAlertLanguage").val()
+            }
+            return logInAlertObject;
+        },
+
+        // Delete alert confirmation.
+        deleteAlertConfirmation: function (itemID) {
+            $('#deleteAlert').modal("show");
+            $('#deleteAlertConfirmation').data("id", itemID);
+        },
+    }
+
+    // Initialization
+    function init() {
+        registerEventHandlers();
+        actions.isCustomerTypeMaster();
+    }
+
+    init();
+});
+</script>

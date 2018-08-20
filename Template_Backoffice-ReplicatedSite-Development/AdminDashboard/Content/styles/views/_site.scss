@@ -1,0 +1,21 @@
+@media(max-width: 767px) {
+    #site-logo { position: fixed; margin-top: -61px; z-index: 1040;
+        img { height: 60px; }
+    }
+}
+
+
+// Loading animations
+#site-content-wrapper { position: relative; }
+body {
+    #_loadingmask { display: none; background: url(../images/loading.gif) no-repeat top center #fff; }
+
+    &.loading {
+        #site-content { /*@include blur();*/ min-height: 100px; }
+        #_loadingmask { display: block; position: absolute; z-index: 1000; top: 0; right: 0; bottom: 0; left: 0; }
+    }
+
+    #site-logo {
+        img { height: 60px; }
+    }
+}

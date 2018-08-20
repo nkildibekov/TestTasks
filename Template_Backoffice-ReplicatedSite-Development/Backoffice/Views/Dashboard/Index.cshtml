@@ -1,0 +1,308 @@
+﻿@model DashboardViewModel
+@{
+    ViewBag.Title = Resources.Common.Dashboard;
+    var paidRankID = (Model.Volumes != null) ? Model.Volumes.PayableAsRank.RankID : 0;
+}
+
+<div id="view-dashboard">
+    <div class="row margin-20">
+        <!-- Spin Up Instruction: Theme Switcher - Remove col-a, col-b, ect... from card columns -->
+        <!--COMMISSIONS-->
+        <div class="col-sm-6 col-md-4 col-a">
+            <div class="card card-default card-metrics" data-scroll-reveal="enter bottom">
+                <div class="card-heading">
+                    <h3 class="card-title">
+                        @Resources.Common.YourCurrentEarnings
+                    </h3>
+                </div>
+                <div class="card-body text-center-mobile" id="card-current-commissions">
+                    <div class="text-center">
+                        <div class="space-20"></div>
+                        <img src="@Url.Content("~/content/images/loading/circle-48.gif")" />
+                    </div>
+                </div>
+                <a href="@Url.Action("commissiondetail", "commissions")" class="card-footer block text-right">
+                    @Resources.Common.ViewCurrentEarnings <i class="fa-chevron-right"></i>
+                </a>
+            </div>
+        </div>
+        <!--PROMOTION STATUS-->
+        <div class="col-sm-6 col-md-4 col-b">
+            <div class="card card-default card-ajax" id="view-rankadvancementcard" data-scroll-reveal="enter bottom">
+                <div class="card-heading">
+                    <h3 class="card-title">
+                        @Resources.Common.YourPromotionStatus
+                    </h3>
+                </div>
+                <div class="card-body" id="RankAdvancementBody">
+                    <div class="space-70 hidden-xs"></div>
+                    <div class="text-center">
+                        <img src="~/Content/images/loading/circle-64.GIF" />
+                        <div class="space-10"></div>
+                        @Resources.Common.Calculating<br />
+                        <small class="text-muted ajax-status"></small>
+                    </div>
+                </div>
+                <a href="@Url.Action("rank", "commissions")" class="card-footer block text-right">
+                    @Resources.Common.ViewPromotionDetails <i class="fa-chevron-right"></i>
+                </a>
+            </div>
+        </div>
+        <!--METRICS -->
+        <div class="col-sm-6 col-md-4 col-c">
+            <div class="card card-default card-metrics" data-scroll-reveal="enter bottom">
+                <div class="card-heading">
+                    <h3 class="card-title">
+                        @Resources.Common.YourMetrics
+                    </h3>
+                </div>
+                <div class="card-body" id="card-volumes">
+                    <div class="text-center">
+                        <div class="space-20"></div>
+                        <img src="@Url.Content("~/content/images/loading/circle-48.gif")" />
+                    </div>
+                </div>
+                <a href="@Url.Action("volumelist", "commissions")" class="card-footer block text-right">
+                    @Resources.Common.ViewAllVolumes <i class="fa-chevron-right"></i>
+                </a>
+            </div>
+        </div>
+        <!--ORDERS-->
+        <div class="col-sm-6 col-md-4 col-d">
+            <div class="card card-default card-recentorders" data-scroll-reveal="enter bottom">
+                <div class="card-heading">
+                    <h3 class="card-title">
+                        @Resources.Common.YourRecentOrders
+                    </h3>
+                </div>
+                <div class="card-body no-padding" id="card-recent-orders">
+                    <div class="text-center">
+                        <div class="space-20"></div>
+                        <img src="@Url.Content("~/content/images/loading/circle-48.gif")" />
+                    </div>
+                </div>
+                <a href="@Url.Action("orderlist", "orders")" class="card-footer block text-right">
+                    @Resources.Common.ViewAllOrders <i class="fa-chevron-right"></i>
+                </a>
+            </div>
+        </div>
+        <!--COMPANY NEWS -->
+        <div class="col-sm-6 col-md-4 col-e">
+            <div class="card card-default card-ajax card-companynews" id="view-companynews" data-scroll-reveal="enter bottom">
+                <div class="card-heading">
+                    <h3 class="card-title color-blue">
+                        @Resources.Common.CompanyNews
+                    </h3>
+                </div>
+                <div class="card-body" id="card-company-news">
+                    <div class="text-center">
+                        <div class="space-20"></div>
+                        <img src="@Url.Content("~/content/images/loading/circle-48.gif")" />
+                    </div>
+                </div>
+                <a href="@Url.Action("companynewslist", "companynews")" class="card-footer block text-right">
+                    @Resources.Common.ViewAllNews <i class="fa-chevron-right"></i>
+                </a>
+            </div>
+        </div>
+        <!--NEW DISTRIBUTORS -->
+        <div class="col-sm-6 col-md-4 col-e">
+            <div class="card card-default card-media-grid" data-scroll-reveal="enter bottom">
+                <div class="card-heading">
+                    <h3 class="card-title">
+                        @Resources.Common.YourNewestDistributors
+                        @if (GlobalSettings.Backoffices.Reports.Dashboard.NewestDistributors.Days > 0)
+                        {
+                            <span class="pull-right">
+                                @Resources.Common.InThePast_Days.FormatWith(GlobalSettings.Backoffices.Reports.Dashboard.NewestDistributors.Days)
+                            </span>
+                        }
+                    </h3>
+                </div>
+                <div class="card-body" id="card-new-distributors">
+                    <div class="text-center">
+                        <div class="space-20"></div>
+                        <img src="@Url.Content("~/content/images/loading/circle-48.gif")" />
+                    </div>
+                </div>
+                <a href="@Url.Action("newdistributorslist", "organization")" class="card-footer block text-right">
+                    @Resources.Common.ViewNewestDistributors <i class="fa-chevron-right"></i>
+                </a>
+            </div>
+        </div>
+        <!--RECENT ACTIVITY-->
+        <div class="col-sm-6 col-md-4 col-f">
+            <div class="card card-default card-media-grid" data-scroll-reveal="enter bottom">
+                <div class="card-heading">
+                    <h3 class="card-title">
+                        @Resources.Common.YourTeamsRecentActivity
+                    </h3>
+                </div>
+                <div class="card-body" id="card-recent-activity">
+                    <div class="text-center">
+                        <div class="space-20"></div>
+                        <img src="@Url.Content("~/content/images/loading/circle-48.gif")" />
+                    </div>
+                </div>
+                <a href="@Url.Action("recentactivity", "organization")" class="card-footer block text-right">
+                    @Resources.Common.ViewAllRecentActivity <i class="fa-chevron-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script>
+        require(["jquery", "ajax", "scrollreveal", "cookies", "kendo"], function ($, ajax, scrollReveal, cookies, kendo) {
+
+            // Settings
+            var context = "#view-dashboard",
+                $context = $(context),
+                currentRankID = @paidRankID,
+                logInAlertCookieName = '@GlobalSettings.Globalization.LogInAlertCookieName',
+                logInAlertExpiration = '@DateTime.Now.AddYears(1).ToShortDateString()';
+
+            var urls = {
+                recentOrders: '@Url.Action("GetRecentOrders", "Dashboard")',
+                volumes: '@Url.Action("GetVolumes", "Dashboard")',
+                companyNews: '@Url.Action("GetCompanyNews", "Dashboard")',
+                newestDistributors: '@Url.Action("GetNewestDistributors", "Dashboard")',
+                commissions: '@Url.Action("GetCurrentCommissions", "Dashboard")',
+                recentactivity: '@Url.Action("GetRecentActivity", "Dashboard")'
+            };
+
+            // Actions
+            var actions = {
+                fireOnLoadFunctions: function() {
+                    actions.getCurrentEarningsCard();
+                    actions.getVolumesCard();
+                    actions.getRecentOrdersCard();
+                    actions.getCompanyNewsCard();
+                    actions.getNewestDistributorsCard();
+                    actions.getRecentActivityCard();
+                },
+                getRecentOrdersCard: function() {
+                    ajax.json({
+                        url: urls.recentOrders,
+                        success: function(response) {
+                            if (response.success) {
+                                $('#card-recent-orders').html(response.html);
+                            } else {
+                                console.log('GetRecentOrders failed', response);
+                            }
+                        }
+                    });
+                },
+                getVolumesCard: function() {
+                    ajax.json({
+                        url: urls.volumes,
+                        success: function(response) {
+                            if (response.success) {
+                                $('#card-volumes').html(response.html);
+
+                                // Set the Current Rank ID for the Rank Advancement widget
+                                currentRankID = response.currentRankID;
+                                actions.getRankAdvancementCard();
+                            } else {
+                                console.log('GetVolumes failed', response);
+                            }
+                        }
+                    });
+                },
+                getCompanyNewsCard: function() {
+                    ajax.json({
+                        url: urls.companyNews,
+                        success: function(response) {
+                            if (response.success) {
+                                $('#card-company-news').html(response.html);
+                            } else {
+                                console.log('GetCompanyNews failed', response);
+                            }
+                        }
+                    });
+                },
+                getNewestDistributorsCard: function() {
+                    ajax.json({
+                        url: urls.newestDistributors,
+                        success: function(response) {
+                            if (response.success) {
+                                $('#card-new-distributors').html(response.html);
+                            } else {
+                                console.log('GetNewestDistributors failed', response);
+                            }
+                        }
+                    });
+                },
+                getCurrentEarningsCard: function() {
+                    ajax.json({
+                        url: urls.commissions,
+                        success: function(response) {
+                            if (response.success) {
+                                $('#card-current-commissions').html(response.html);
+                            } else {
+                                console.log('GetCurrentEarnings failed', response);
+                            }
+                        }
+                    });
+                },
+                getRecentActivityCard: function() {
+                    ajax.json({
+                        url: urls.recentactivity,
+                        success: function(response) {
+                            if (response.success) {
+                                $('#card-recent-activity').html(response.html);
+                            } else {
+                                console.log('GetRecentActivity failed', response);
+                            }
+                        }
+                    });
+                },
+                getRankAdvancementCard: function () {
+                    ajax.html({
+                        url: Router.action("Dashboard", "GetRankAdvancementCard", { rankid: currentRankID }),
+                        interval: 3000,
+                        maxAttempts: 5,
+                        success: function (response) {
+                            $('#view-rankadvancementcard', $context).replaceWith(response);
+                        },
+                        repeat: function (attempts) {
+                            if (attempts == 3) {
+                                $('#view-rankadvancementcard .ajax-status', $context).html(Resources.Common.CalculationTakingLonger);
+                            }
+                        },
+                        fail: function () {
+                            $('#view-rankadvancementcard .card-body', $context).html(Resources.Common.RankAdvancementFailed);
+                        }
+                    });
+                }
+            };
+
+            // Event Handlers
+            function registerEventHandlers() {
+                // ScrollReveal
+                if ($(window).width() > 767) {
+                    window.scrollReveal = new scrollReveal();
+                }
+                else {
+                    $(window).resize(function() {
+                        if ($(window).width() > 767) {
+                            window.scrollReveal = new scrollReveal();
+                        }
+                    });
+                }
+            }
+
+            // Initialization
+            function init() {
+
+                // Fire our functions that must occur on initial load
+                actions.fireOnLoadFunctions();
+
+                registerEventHandlers();
+            }
+            init();
+        });
+    </script>
+}

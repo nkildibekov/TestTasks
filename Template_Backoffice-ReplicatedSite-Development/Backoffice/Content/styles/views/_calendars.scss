@@ -1,0 +1,247 @@
+@import "../mixins/_mixins.scss";
+
+#view-manageevent {
+    .k-header {
+        background-color: transparent;
+    }
+
+    .k-widget.input-sm {
+        padding: 0;
+    }
+
+    .k-datepicker {
+        width: 9em;
+
+        .k-select {
+            display: none;
+        }
+    }
+
+    .k-timepicker {
+        width: 7.5em;
+
+        .k-select {
+            display: none;
+        }
+    }
+
+    .k-picker-wrap {
+        padding-right: 0;
+    }
+}
+
+@media all and (max-width: 767px) {
+}
+
+@media all and (min-width: 768px) and (max-width: 991px) {
+}
+
+@media all and (min-width: 992px) and (max-width: 1199px) {
+}
+
+@media all and (min-width: 1200px) {
+    #view-calendar {
+        ul > li.k-current-view { display: none; }  
+        .k-scheduler-views li:nth-child(2) { border-top-left-radius: 4px; border-bottom-left-radius: 4px;  border-style: solid; border-width: 1px 1px 1px 1px; }
+
+        font-size: 1.35rem;
+        padding-bottom: 2rem;
+
+        .k-event {
+            background-color: none;
+            border: none;
+        }
+
+        [class^=eventType-] {
+            height: 100%;
+            color: #424242;
+        }
+
+        aside {
+
+            section.search {
+                position: relative;
+
+                button {
+                    background-color: transparent;
+                    border: none;
+                    position: absolute;
+                    top: 5px;
+                    right: 10px;
+                    width: auto;
+                }
+            }
+
+            span.k-widget.k-dropdown {
+                width: 100%;
+                margin-bottom: 5px;
+            }
+
+            button {
+                display: block;
+                width: 100%;
+            }
+        }
+
+        & > section:last-of-type {
+            padding: 0;
+
+            [data-widget="scheduler"] {
+                .k-header {
+                    font-size: 0.95em;
+                }
+            }
+        }
+
+        header {
+            h2 {
+                font-size: 3em;
+            }
+
+            h4 {
+                font-size: 2em;
+            }
+        }
+
+        ul.legend {
+            padding: 0;
+            list-style-type: none;
+
+            li:not([disabled]) {
+                opacity: 1;
+            }
+
+            li:not([disabled]):hover {
+                opacity: 0.4;
+                cursor: pointer;
+                text-decoration: line-through;
+            }
+
+            li[disabled] {
+                opacity: 0.4;
+                text-decoration: line-through;
+            }
+
+            li[disabled]:hover {
+                opacity: 1;
+                cursor: pointer;
+                text-decoration: none;
+            }
+        }
+    }
+
+    .k-edit-form-container {
+        .k-datetimepicker, .k-dropdown {
+            border-radius: 0 4px 4px 0;
+
+            .k-picker-wrap, .k-dropdown-wrap {
+                border-radius: 0 4px 4px 0;
+            }
+        }
+
+        [data-container-for] {
+            position: relative;
+            display: table;
+            border-collapse: separate;
+
+
+            [data-role='timezoneeditor'] {
+                width: 100%;
+
+                .k-dropdown {
+                    width: 100%;
+                }
+            }
+        }
+
+        span[data-toggle] {
+            padding-left: 15px;
+            padding-bottom: 0;
+            display: block;
+
+            i.fa {
+                color: #424242;
+            }
+        }
+
+        span[data-toggle]:hover {
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        & > section, & > div {
+            padding: 0 15px;
+        }
+
+        section, & > div {
+            margin-bottom: 5px;
+
+            span.input-group-addon {
+                font-size: 12px;
+            }
+
+            span.input-group-addon[for='recurrenceRule'] {
+                display: inline-block;
+                width: auto;
+                padding: 10px;
+            }
+
+            section#recurrenceRule {
+                display: inline-block;
+
+                .k-recur-view {
+
+                    .k-edit-label:first-of-type, .k-edit-field:first-of-type {
+                        margin-top: 15px;
+                    }
+
+                    .k-edit-label {
+                        width: auto;
+                        padding: 7.5px 0 0 0;
+                        margin: 0;
+                    }
+
+                    .k-edit-field {
+                        float: left;
+                        clear: none;
+                        width: auto;
+                        margin: 0 0 0 5px;
+                        padding: 0;
+
+                        ul {
+                            li {
+                                margin: 0;
+                            }
+                        }
+                    }
+                }
+            }
+
+            input[type='text']:not(.k-input) {
+                border: 1px solid #CCC;
+                padding: 6px 12px;
+                width: 100%;
+            }
+
+            label + input {
+                margin-left: 0;
+            }
+
+            input[type='radio'] {
+                margin-left: 5px;
+            }
+
+            input, select {
+                -moz-box-sizing: border-box;
+                -webkit-box-sizing: border-box;
+                box-sizing: border-box;
+            }
+        }
+
+        section.event-address {
+            input {
+                margin-bottom: 5px;
+            }
+        }
+    }
+}

@@ -1,0 +1,111 @@
+﻿@model GetCustomerOrdersResponse
+
+
+@foreach (var order in Model.Orders.OrderByDescending(c => c.OrderDate).Take(10))
+{
+    var currencyCode = order.CurrencyCode;
+    var currencyCultureCode = new System.Globalization.CultureInfo(GlobalUtilities.GetCultureCodeFormatBasedOnCurrency(currencyCode, Identity.Current.Country));
+
+    <div class="ordersummary">
+        <div class="panel panel-default">
+            <div class="panel-body no-padding">
+                <div class="row margin-0">
+                    <div class="col-sm-3 details-container">
+                        <div class="padded-container">
+                            <div class="text-lg">@order.OrderDate.ToString("MMMM d, yyyy")</div>
+
+                            <p>
+                                @Resources.Common.Order <a href="@Url.Action("orderinvoice", "orders", new { token = Common.Services.Security.Encrypt(order.OrderID, Identity.Current.CustomerID) })">#@order.OrderID</a>
+                            </p>
+
+
+                            <dl class="dl">
+                                <dt>@Resources.Common.Total</dt>
+                                <dd><span class="text-danger">@order.Total.ToString("C", currencyCultureCode)</span></dd>
+
+                                @if (!order.IsVirtualOrder)
+                                {
+                                    <div class="space-10"></div>
+                                    <dt>@Resources.Common.ShippingAddress</dt>
+                                        <dd>
+                                            @Html.DisplayFor(c => order.Recipient, "ShippingAddress")
+                                        </dd>
+                                }
+
+                                @if (order.HasTrackingNumbers)
+                                {
+                                    <div class="space-10"></div>
+                                    <dt>@Resources.Common.TrackYourOrder</dt>
+                                        <dd>
+                                            @foreach (var trackingNumber in order.TrackingNumbers)
+                                            {
+                                                <a href="javascript:;">@trackingNumber</a><br />
+                                            }
+                                        </dd>
+                                }
+
+                            </dl>
+
+
+                            <ul class="list-unstyled">
+                                <li><a href="@Url.Action("orderinvoice", "orders", new { token = Common.Services.Security.Encrypt(order.OrderID, Identity.Current.CustomerID) })">@Resources.Common.ViewInvoice</a></li>
+
+                            </ul>
+
+                        </div>
+                    </div>
+                    <div class="col-sm-9 items-container">
+                        <div class="padded-container">
+                            <div class="row">
+                                <div class="col-sm-8">
+                                    <div class="text-lg">
+                                        <span class="text-info">@order.OrderStatusDescription</span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    @if (order.HasTrackingNumbers)
+                                    {
+                                        <a href="javascript:;" class="btn btn-primary btn-block" title="@order.TrackingNumbers.First()">@Resources.Common.TrackYourOrder</a>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        <hr />
+                        <div class="padded-container">
+                            @foreach (var detail in order.Details)
+                            {
+                                <div class="item">
+                                    <div class="row">
+                                        <div class="col-sm-2 col-xs-3">
+                                            <div class="productimage">
+                                                <a href="@Url.Action("itemdetail", "shopping", new { itemcode = detail.ItemCode })">
+                                                    <img src="@GlobalUtilities.GetProductImagePath(detail.ImageUrl)" class="img-responsive" />
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-10 col-xs-9">
+                                            <a href="@Url.Action("itemdetail", "shopping", new { itemcode = detail.ItemCode })" class="block">@detail.ItemDescription</a>
+                                            <small class="text-sm text-muted">@Resources.Common.SKU: <a href="@Url.Action("itemdetail", "shopping", new { itemcode = detail.ItemCode })">#@detail.ItemCode</a></small>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            @if (order.Details.Count() == 0)
+                            {
+                                <div class="text-muted">
+                                    * @Resources.Common.NoItemsPurchasedInOrder *
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+@if (Model.Orders.Count() == 0)
+{
+    <hr />
+    <p class="text-center text-muted">* @Resources.Common.NoOrdersFound *</p>
+}

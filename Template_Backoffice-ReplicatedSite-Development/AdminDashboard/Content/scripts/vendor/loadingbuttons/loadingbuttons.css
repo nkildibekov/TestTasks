@@ -1,0 +1,376 @@
+/*
+ * Ladda
+ * http://lab.hakim.se/ladda
+ * MIT licensed
+ *
+ * Copyright (C) 2013 Hakim El Hattab, http://hakim.se
+ */
+
+ .btn { 
+	position: relative; 
+ }
+
+.btn .ladda-spinner {
+    position: absolute;
+    z-index: 2;
+    display: inline-block;
+    width: 32px;
+    height: 32px;
+    top: 50%;
+    margin-top: -16px;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.btn .ladda-label {
+    position: relative;
+    z-index: 3;
+}
+
+.btn .ladda-progress {
+    position: absolute;
+    width: 0;
+    height: 100%;
+    left: 0;
+    top: 0;
+    background: rgba(0,0,0,0.2);
+    visibility: hidden;
+    opacity: 0;
+    -webkit-transition: 0.1s linear all !important;
+    -moz-transition: 0.1s linear all !important;
+    -ms-transition: 0.1s linear all !important;
+    -o-transition: 0.1s linear all !important;
+    transition: 0.1s linear all !important;
+}
+
+.btn[data-loading] .ladda-progress {
+    opacity: 1;
+    visibility: visible;
+}
+
+.btn,.btn .ladda-spinner,.btn .ladda-label {
+    -webkit-transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) all !important;
+    -moz-transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) all !important;
+    -ms-transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) all !important;
+    -o-transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) all !important;
+    transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) all !important;
+}
+
+.btn[data-style=zoom-in],.btn[data-style=zoom-in] .ladda-spinner,.btn[data-style=zoom-in] .ladda-label,.btn[data-style=zoom-out],.btn[data-style=zoom-out] .ladda-spinner,.btn[data-style=zoom-out] .ladda-label {
+    -webkit-transition: 0.3s ease all !important;
+    -moz-transition: 0.3s ease all !important;
+    -ms-transition: 0.3s ease all !important;
+    -o-transition: 0.3s ease all !important;
+    transition: 0.3s ease all !important;
+}
+
+.btn[data-style=expand-right] .ladda-spinner {
+    right: 14px;
+}
+
+.btn[data-style=expand-right][data-size="s"] .ladda-spinner,.btn[data-style=expand-right][data-size="xs"] .ladda-spinner {
+    right: 4px;
+}
+
+.btn[data-style=expand-right][data-loading] {
+    padding-right: 56px;
+}
+
+.btn[data-style=expand-right][data-loading] .ladda-spinner {
+    opacity: 1;
+}
+
+.btn[data-style=expand-right][data-loading][data-size="s"],.btn[data-style=expand-right][data-loading][data-size="xs"] {
+    padding-right: 40px;
+}
+
+.btn[data-style=expand-left] .ladda-spinner {
+    left: 14px;
+}
+
+.btn[data-style=expand-left][data-size="s"] .ladda-spinner,.btn[data-style=expand-left][data-size="xs"] .ladda-spinner {
+    left: 4px;
+}
+
+.btn[data-style=expand-left][data-loading] {
+    padding-left: 56px;
+}
+
+.btn[data-style=expand-left][data-loading] .ladda-spinner {
+    opacity: 1;
+}
+
+.btn[data-style=expand-left][data-loading][data-size="s"],.btn[data-style=expand-left][data-loading][data-size="xs"] {
+    padding-left: 40px;
+}
+
+.btn[data-style=expand-up] {
+    overflow: hidden;
+}
+
+.btn[data-style=expand-up] .ladda-spinner {
+    top: -32px;
+    left: 50%;
+    margin-left: -16px;
+}
+
+.btn[data-style=expand-up][data-loading] {
+    padding-top: 54px;
+}
+
+.btn[data-style=expand-up][data-loading] .ladda-spinner {
+    opacity: 1;
+    top: 14px;
+    margin-top: 0;
+}
+
+.btn[data-style=expand-up][data-loading][data-size="s"],.btn[data-style=expand-up][data-loading][data-size="xs"] {
+    padding-top: 32px;
+}
+
+.btn[data-style=expand-up][data-loading][data-size="s"] .ladda-spinner,.btn[data-style=expand-up][data-loading][data-size="xs"] .ladda-spinner {
+    top: 4px;
+}
+
+.btn[data-style=expand-down] {
+    overflow: hidden;
+}
+
+.btn[data-style=expand-down] .ladda-spinner {
+    top: 62px;
+    left: 50%;
+    margin-left: -16px;
+}
+
+.btn[data-style=expand-down][data-size="s"] .ladda-spinner,.btn[data-style=expand-down][data-size="xs"] .ladda-spinner {
+    top: 40px;
+}
+
+.btn[data-style=expand-down][data-loading] {
+    padding-bottom: 54px;
+}
+
+.btn[data-style=expand-down][data-loading] .ladda-spinner {
+    opacity: 1;
+}
+
+.btn[data-style=expand-down][data-loading][data-size="s"],.btn[data-style=expand-down][data-loading][data-size="xs"] {
+    padding-bottom: 32px;
+}
+
+.btn[data-style=slide-left] {
+    overflow: hidden;
+}
+
+.btn[data-style=slide-left] .ladda-label {
+    position: relative;
+}
+
+.btn[data-style=slide-left] .ladda-spinner {
+    left: 100%;
+    margin-left: -16px;
+}
+
+.btn[data-style=slide-left][data-loading] .ladda-label {
+    opacity: 0;
+    left: -100%;
+}
+
+.btn[data-style=slide-left][data-loading] .ladda-spinner {
+    opacity: 1;
+    left: 50%;
+}
+
+.btn[data-style=slide-right] {
+    overflow: hidden;
+}
+
+.btn[data-style=slide-right] .ladda-label {
+    position: relative;
+}
+
+.btn[data-style=slide-right] .ladda-spinner {
+    right: 100%;
+    margin-left: -16px;
+}
+
+.btn[data-style=slide-right][data-loading] .ladda-label {
+    opacity: 0;
+    left: 100%;
+}
+
+.btn[data-style=slide-right][data-loading] .ladda-spinner {
+    opacity: 1;
+    left: 50%;
+}
+
+.btn[data-style=slide-up] {
+    overflow: hidden;
+}
+
+.btn[data-style=slide-up] .ladda-label {
+    position: relative;
+}
+
+.btn[data-style=slide-up] .ladda-spinner {
+    left: 50%;
+    margin-left: -16px;
+    margin-top: 1em;
+}
+
+.btn[data-style=slide-up][data-loading] .ladda-label {
+    opacity: 0;
+    top: -1em;
+}
+
+.btn[data-style=slide-up][data-loading] .ladda-spinner {
+    opacity: 1;
+    margin-top: -16px;
+}
+
+.btn[data-style=slide-down] {
+    overflow: hidden;
+}
+
+.btn[data-style=slide-down] .ladda-label {
+    position: relative;
+}
+
+.btn[data-style=slide-down] .ladda-spinner {
+    left: 50%;
+    margin-left: -16px;
+    margin-top: -2em;
+}
+
+.btn[data-style=slide-down][data-loading] .ladda-label {
+    opacity: 0;
+    top: 1em;
+}
+
+.btn[data-style=slide-down][data-loading] .ladda-spinner {
+    opacity: 1;
+    margin-top: -16px;
+}
+
+.btn[data-style=zoom-out] {
+    overflow: hidden;
+}
+
+.btn[data-style=zoom-out] .ladda-spinner {
+    left: 50%;
+    margin-left: -16px;
+    -webkit-transform: scale(2.5);
+    -moz-transform: scale(2.5);
+    -ms-transform: scale(2.5);
+    -o-transform: scale(2.5);
+    transform: scale(2.5);
+}
+
+.btn[data-style=zoom-out] .ladda-label {
+    position: relative;
+    display: inline-block;
+}
+
+.btn[data-style=zoom-out][data-loading] .ladda-label {
+    opacity: 0;
+    -webkit-transform: scale(0.5);
+    -moz-transform: scale(0.5);
+    -ms-transform: scale(0.5);
+    -o-transform: scale(0.5);
+    transform: scale(0.5);
+}
+
+.btn[data-style=zoom-out][data-loading] .ladda-spinner {
+    opacity: 1;
+    -webkit-transform: none;
+    -moz-transform: none;
+    -ms-transform: none;
+    -o-transform: none;
+    transform: none;
+}
+
+.btn[data-style=zoom-in] {
+    overflow: hidden;
+}
+
+.btn[data-style=zoom-in] .ladda-spinner {
+    left: 50%;
+    margin-left: -16px;
+    -webkit-transform: scale(0.2);
+    -moz-transform: scale(0.2);
+    -ms-transform: scale(0.2);
+    -o-transform: scale(0.2);
+    transform: scale(0.2);
+}
+
+.btn[data-style=zoom-in] .ladda-label {
+    position: relative;
+    display: inline-block;
+}
+
+.btn[data-style=zoom-in][data-loading] .ladda-label {
+    opacity: 0;
+    -webkit-transform: scale(2.2);
+    -moz-transform: scale(2.2);
+    -ms-transform: scale(2.2);
+    -o-transform: scale(2.2);
+    transform: scale(2.2);
+}
+
+.btn[data-style=zoom-in][data-loading] .ladda-spinner {
+    opacity: 1;
+    -webkit-transform: none;
+    -moz-transform: none;
+    -ms-transform: none;
+    -o-transform: none;
+    transform: none;
+}
+
+.btn[data-style=contract] {
+    overflow: hidden;
+    width: 100px;
+}
+
+.btn[data-style=contract] .ladda-spinner {
+    left: 50%;
+    margin-left: -16px;
+}
+
+.btn[data-style=contract][data-loading] {
+    border-radius: 50%;
+    width: 52px;
+}
+
+.btn[data-style=contract][data-loading] .ladda-label {
+    opacity: 0;
+}
+
+.btn[data-style=contract][data-loading] .ladda-spinner {
+    opacity: 1;
+}
+
+.btn[data-style=contract-overlay] {
+    overflow: hidden;
+    width: 100px;
+    box-shadow: 0px 0px 0px 3000px rgba(0,0,0,0);
+}
+
+.btn[data-style=contract-overlay] .ladda-spinner {
+    left: 50%;
+    margin-left: -16px;
+}
+
+.btn[data-style=contract-overlay][data-loading] {
+    border-radius: 50%;
+    width: 52px;
+    box-shadow: 0px 0px 0px 3000px rgba(0,0,0,0.8);
+}
+
+.btn[data-style=contract-overlay][data-loading] .ladda-label {
+    opacity: 0;
+}
+
+.btn[data-style=contract-overlay][data-loading] .ladda-spinner {
+    opacity: 1;
+}
+

@@ -1,0 +1,231 @@
+﻿@model SubscriptionsViewModel
+@{
+        Layout = "~/Views/Shared/_NoNavigationPageLayout.cshtml";
+        ViewBag.Title = Resources.Common.Subscriptions;
+        var loadingGif = Url.Content("~/content/images/loading/circle-64.gif");
+}
+<section id="view-subscriptions" class="row">
+    <aside class="col-xs-12 col-sm-4 col-md-3 col-lg-3">
+        <section>
+            <button type="button" data-toggle="modal" data-target="#add-subscription" class="btn btn-primary">@Resources.Common.AddNewSubscription</button>
+        </section>
+
+        <hr />
+
+        <section>
+
+            <a href="@Url.Action("Calendar","Events")" class="btn btn-primary">@Resources.Common.BackToCalendar</a>
+        </section>
+    </aside>
+    <section class="col-xs-12 col-sm-8 col-md-9 col-lg-9">
+        @if (!Model.CustomerCalendarSubscriptions.Any())
+        {
+            <h4 class="text-center text-muted">@Resources.Common.YouHaveNoSubscriptions</h4>
+        }
+        @foreach (var subscription in Model.CustomerCalendarSubscriptions)
+        {
+            if (subscription.CustomerID == GlobalSettings.Company.CorporateCalendarAccountID)
+            {
+                <section class="row">
+                    <header class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        <h4>@Resources.Common.CorporateCalendar</h4>
+                    </header>
+                    @foreach (var calendar in subscription.Calendars)
+                    {
+                        <section class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                            <label class="col-xs-6 col-sm-8 col-md-9 col-lg-9">
+                                <p>@Resources.Common.YouMayNotUnsubscribe</p>
+                            </label>
+                            <aside class="col-xs-6 col-sm-4 col-md-3 col-lg-3">
+                                
+                                <button disabled type="button" class="btn btn-default" data-action="unsubscribe" data-calendar-id="@calendar.CalendarID">@Resources.Common.Unsubscribe</button>
+                            </aside>
+                        </section>
+                    }
+                </section>
+            }
+            else
+            {
+                <section class="row">
+                    <header class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        <h4>@subscription.FullName @Resources.Common.ID: #@subscription.CustomerID</h4>
+                    </header>
+                    @foreach (var calendar in subscription.Calendars)
+                    {
+                        <section class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                            <div class="col-xs-6 col-sm-8 col-md-9 col-lg-9"></div>
+                            <aside class="col-xs-6 col-sm-4 col-md-3 col-lg-3">
+                                <button type="button" class="btn btn-default" data-action="unsubscribe" data-calendar-id="@calendar.CalendarID">@Resources.Common.Unsubscribe</button>
+                            </aside>
+                        </section>
+                    }
+                </section>
+            }
+        }
+    </section>
+
+   
+    <article class="modal fade" id="add-subscription">
+        <section class="modal-dialog">
+            <section class="modal-content">
+                <header class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">@Resources.Common.Close</span></button>
+                    <h4 class="modal-title">@Resources.Common.AddNewSubscription</h4>
+                </header>
+                <section class="modal-body">
+                    <section id="view-subscription-search" class="row">
+                        <header class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                            <h5>@Resources.Common.SearchForYourDistributor</h5>
+                        </header>
+                        @using (Ajax.BeginForm("SearchSubscriptions", "Events", null, new AjaxOptions()
+                        {
+                            OnBegin = "subscriptionOverview.onBegin('#search-susbcriptions')",
+                            OnFailure = "subscriptionOverview.onFailure",
+                            OnSuccess = "subscriptionOverview.onSuccess",
+                            OnComplete = "subscriptionOverview.onComplete"
+                        }, new { novalidate = "novalidate", @class = "col-xs-12 col-sm-12 col-md-12 col-lg-12", @id = "search-susbcriptions" }))
+                        {
+                            <section class="input-group">
+                                @Html.TextBoxFor(model => model.Query, new
+                                {
+                                    @placeholder = Resources.Common.Search,
+                                    @class = "form-control"
+                                })
+                                <span class="input-group-btn">
+                                    <button class="btn btn-default" data-action="search" type="submit"><i class="fa fa-search"></i></button>
+                                </span>
+                            </section>
+                            @Html.ValidationMessageFor(model => model.Query)
+                        }
+                        <section data-holds="results" class="col-xs-12 col-sm-12 col-md-12 col-lg-12"></section>
+                    </section>
+                </section>
+            </section>
+        </section>
+    </article>
+</section>
+@section scripts
+{
+    <script>
+        var subscriptionOverview;
+        require(["jquery", "ajax", "toastr", "bootstrap" ], function ($, ajax, toastr) {
+            subscriptionOverview = (function () {
+                @* Settings *@
+                var context = "#view-subscriptions",
+                    subscribeUrl = "@Url.Action("SubscribeToDistributorCalendar", "Events")",
+                    unSubscribeUrl = "@Url.Action("UnsubscribeFromDistributorCalendar", "Events")",
+                    loadingGif = "@loadingGif";
+
+                @* Helpers *@
+                var helpers = {
+                    buttonStatusLoading: function () {
+                        $(context).find("[data-loading-text]").each(function () {
+                            $(this).button("loading");
+                        });
+                    },
+                    buttonStatusReset: function () {
+                        $(context).find("[data-loading-text]").each(function () {
+                            $(this).button("reset");
+                        });
+                    },
+                    displayLoadingGIF: function () {
+                        $("[data-holds='results']").html("<div data-holds='loading-gif'><img src='" + loadingGif + "' alt='" + "@Resources.Common.Loading" + "' /></div>");
+                    }
+                };
+
+                @* Actions *@
+                var actions = {
+                    subscribe: function (id) {
+                        ajax.json({
+                            url: subscribeUrl,
+                            data: {
+                                id: id
+                            },
+                            error: function (xhr, error, status) {
+                                toastr.error("@Resources.Common.UnexpectedError");
+                                console.log(xhr, error, status);
+                            },
+                            success: function (response) {
+                                if (response.success) {
+                                    window.location = window.location;
+                                } else {
+                                    toastr.error(response.message);
+                                }
+                            }
+                        });
+                    },
+                    unSubscribe: function (id) {
+                        ajax.json({
+                            url: unSubscribeUrl,
+                            data: {
+                                id: id
+                            },
+                            error: function (xhr, error, status) {
+                                toastr.error("@Resources.Common.UnexpectedError");
+                                console.log(xhr, error, status);
+                            },
+                            success: function (response) {
+                                if (response.success) {
+                                    $("[data-calendar-id='" + id + "']").parents("section.row").eq(0).remove();
+                                } else {
+                                    toastr.error(response.message);
+                                }
+                            }
+                        });
+                    },
+                    onBegin: function (id) {
+                        if (!$(id).valid()) {
+                            return false;
+                        } else {
+                            helpers.buttonStatusLoading();
+                            helpers.displayLoadingGIF();
+                        }
+                        return true;
+                    },
+                    onFailure: function (xhr, status, error) {
+                        helpers.buttonStatusReset();
+                        toastr.error("@Resources.Common.UnknownError");
+                        debug.console.log(xhr, status, error);
+                    },
+                    onSuccess: function (response) {
+                        if (response.success) {
+                            $("[data-holds='results']").html(response.html);
+                        } else {
+                            helpers.buttonStatusReset();
+                            toastr.error(response.message);
+                            debug.console.log(response.debug);
+                        }
+                    },
+                    onComplete: function () {
+                    }
+                };
+
+                @* Event Handlers *@
+                function registerEventHandlers() {
+                    $(context).on("click", '[data-action="subscribe"]', function () {
+                        actions.subscribe($(this).data('calendar-id'));
+                    });
+                    $(context).on("click", '[data-action="unsubscribe"]', function () {
+                        actions.unSubscribe($(this).data('calendar-id'));
+                    });
+                }
+
+                @* Initialization *@
+                function init() {
+                    registerEventHandlers();
+                }
+
+                init();
+
+                @* Exports *@
+                return {
+                    onBegin: actions.onBegin,
+                    onFailure: actions.onFailure,
+                    onSuccess: actions.onSuccess,
+                    onComplete: actions.onComplete
+                };
+            })();
+        });
+    </script>
+}
+

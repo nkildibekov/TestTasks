@@ -1,0 +1,87 @@
+﻿@model IEnumerable<IItem>
+@{
+    var contextID = Guid.NewGuid();
+    var type = (ShoppingCartItemType)ViewData["Type"];
+    var typeID = (int)type;
+    // Used when we are on the review step and we do not want to allow a user to edit quantities and remove items. Instead, there will be a link to the cart page.
+    var hideControls = (ViewData["HideControls"] != null && ViewData["HideControls"].CanBeParsedAs<bool>()) ? (bool)ViewData["HideControls"] : false;
+}
+
+<div data-widget="paneledcart" id="view-paneledcart-@contextID" class="view-paneledcart">
+    @{
+        var items = Model.Where(c => c.Type == type);
+    }
+
+    @if (items.Count() > 0)
+    {
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    @Html.Raw(ViewData["PanelTitle"])
+                    @if (hideControls)
+                    {
+                        <a href="@Url.Action("cart")" class="pull-right">@Resources.Common.EditItems</a>
+                        <div class="clearfix"></div>
+                    }
+                </h3>
+
+            </div>
+
+            <div class="panel-body">
+                @Html.Partial("Partials/Cart/Cart", items)
+            </div>
+
+            <div class="panel-footer">
+                <div class="text-right">@Resources.Common.Subtotal (<span data-text="quantity">@items.Sum(c => c.Quantity).ToString("N0")</span> @Resources.Common.Items.ToLower()): <strong><span data-text="subtotal">@items.Sum(c => c.Quantity * c.Price).ToString("C")</span></strong></div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <p>@Resources.Common.NoItemsInCart</p>
+    }
+</div>
+
+
+@using (Html.BeginPartialScript())
+{
+    <script>
+        require(["jquery", "shopping", "pubsub", "extensions"], function ($) {
+
+            // Settings
+            var context = "#view-paneledcart-@contextID",
+                $context = $(context),
+                typeID = @typeID;
+
+            window.on('cart.cartupdated', function (data) {
+                var updatedItem = data.item;
+                var items = data.items;
+
+                var quantity = 0;
+                for (var i = 0, max = items.length; i < max; i++) {
+                    var item = items[i];
+
+                    console.log("item", item);
+
+                    if (item.Type == typeID) {
+                        quantity += item.Quantity;
+                    }
+                }
+
+                console.log(quantity);
+
+                if(quantity == 0) {
+                    $context.remove();
+                }
+                else
+                {
+                    $('[data-text="quantity"]', $context).html(quantity.format("N0"));
+
+                    if (updatedItem.Type == typeID) {
+                        $('[data-text="subtotal"]', $context).html(data.subtotal.format("C"));
+                    }
+                }
+            });
+        });
+    </script>
+}

@@ -1,0 +1,107 @@
+﻿@model ContactViewModel
+@{
+    ViewBag.Title = Resources.Common.About;
+}
+
+<div id="view-about">
+    <div class="bannerabout">
+        <div class="card-section">
+            <div class="banner-text">
+                <h2>@Resources.Common.About @Identity.Owner.FirstName</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-3 text-center">
+            <div class="card-section">
+                <img src="@Url.Avatar(Identity.Owner.CustomerID)" class="img-responsive prof-img" />
+                <h2 class="dist-name" style="font-size:18px;">@Identity.Owner.FirstName @Identity.Owner.LastName</h2>
+                <div class="text-strong">@CommonResources.CustomerTypes(Identity.Owner.CustomerTypeID)</div>
+            </div>
+        </div>
+        <div class="col-sm-9">
+            <div class="card-section">
+                @Html.Raw(Greeking.Paragraphs(3))
+            </div>
+
+            <div class="card-section">
+                <h2>@Resources.Common.ContactUs</h2>
+
+                <p>
+                    <i class="fa-phone"></i> @GlobalSettings.Company.Phone
+                </p>
+                <p>
+                    <i class="fa-envelope"></i> @GlobalSettings.Company.Email
+                </p>
+                <div class="space-20"></div>
+
+                @using (Html.BeginForm())
+                {
+                    <div class="form-group">
+                        @Html.TextBoxFor(c => c.Name, new { @class = "form-control", placeholder = "Name" })
+                    </div>
+                    <div class="form-group">
+                        @Html.TextBoxFor(c => c.Phone, new { @class = "form-control", placeholder = "Phone" })
+                    </div>
+                    <div class="form-group">
+                        @Html.TextBoxFor(c => c.Email, new { @class = "form-control", placeholder = "Email" })
+                        <span class="text-danger">
+                            @Html.ValidationMessageFor(c => c.Email)
+                        </span>
+                    </div>
+                    <div class="form-group">
+                        @Html.TextAreaFor(c => c.Notes, new { @class = "form-control", placeholder = "Notes" })
+                    </div>
+
+                    <a id="btn-submitform" class="btn btn-default">@Resources.Common.Submit</a>
+                }
+
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts
+{
+    <script>
+        require(["jquery", "ajax", "toastr"],
+            function ($, ajax, toastr) {
+
+
+                function registerEventHandlers() {
+                    $('#btn-submitform').on('click', function () {
+                        actions.sendContactEmail();
+                    });
+                }
+
+                var actions = {
+                    sendContactEmail: function () {
+                        if ($('#btn-submitform').parents('form').valid()) {
+                            var model = $('#btn-submitform').parents('form').first().serializeObject();
+                            ajax.json({
+                                url: window.location,
+                                data: { model: model },
+                                success: function (response) {
+                                    console.log(response);
+                                    if (response.success) {
+                                        toastr.success("Email Sent");
+                                    }
+                                },
+                                error: function (xhr, error, data) {
+                                    console.log("@Resources.Common.ErrorLoadingItemList", xhr);
+                                }
+                            });
+                        }
+                    }
+
+                }
+
+                function _init() {
+                    registerEventHandlers();
+                }
+                _init();
+            });
+    </script>
+}
+
+

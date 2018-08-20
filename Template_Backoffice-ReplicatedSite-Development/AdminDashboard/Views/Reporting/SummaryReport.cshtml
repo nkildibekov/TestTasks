@@ -1,0 +1,223 @@
+﻿@model SummaryReportFiltersViewModel
+@{
+    ViewBag.Title = "Summary Report";
+}
+
+@* Templates *@
+@{
+    Func<dynamic, object> Report = @<div class="panel panel-primary hidden panel-report" data-report="@item.Action">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" data-parent="#accordion" href="#collapse-@item.Action.ToLower()">
+                    @Html.Raw(item.Title)
+                </a>
+            </h4>
+        </div>
+        <div id="collapse-@item.Action.ToLower()" class="panel-collapse collapse @((!Request.Browser.IsMobileDevice) ? "in" : "")">
+            <div class="panel-body no-padding">
+                <div class="text-center"><img src="~/Content/images/loading.gif" /></div>
+            </div>
+        </div>
+    </div>;
+}
+
+<div class="document-body">
+    <div id="view-summaryreport">
+        <div class="page-header">
+            <h3>@ViewBag.Title</h3>
+        </div>
+
+        <div class="well hidden-print" data-role="filters">
+            <div class="row">
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        @Html.LabelFor(c => c.StartDate)
+                        @Html.EditorFor(c => c.StartDate)
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(c => c.EndDate)
+                        @Html.EditorFor(c => c.EndDate)
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>Report Type</label>
+                        @Html.DropDownListFor(c => c.OrderStatusesType, Enum.GetValues(typeof(SummaryReportOrderStatusesType)).OfType<SummaryReportOrderStatusesType>().ToList().Select(c => new SelectListItem()
+                        {
+                            Text = c.GetDescription(),
+                            Value = ((int)c).ToString()
+                        }), new { @class = "form-control" })
+                        <div class="space-5"></div>
+
+                        @Html.DropDownListFor(c => c.ReportType, Enum.GetValues(typeof(SummaryReportType)).OfType<SummaryReportType>().ToList().Select(c => new SelectListItem()
+                        {
+                            Text = c.GetDescription(),
+                            Value = ((int)c).ToString()
+                        }), new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <strong>Payment Types</strong>
+
+                        @foreach (SummaryReportPaymentType value in Enum.GetValues(typeof(SummaryReportPaymentType)))
+                        {
+                            <div class="checkbox">
+                                <label for="PaymentTypes_@((int)value)">
+                                    <input type="checkbox" id="PaymentTypes_@((int)value)" name="PaymentTypes" value="@((int)value)" @((Model.PaymentTypes.Contains(value)) ? "checked" : "") />
+                                    @value.GetDescription()
+                                </label>
+                            </div>
+                        }
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <strong>$MXP</strong>
+
+                        @foreach (SummaryReportRevenueType value in Enum.GetValues(typeof(SummaryReportRevenueType)))
+                        {
+                            <div class="radio">
+                                <label for="RevenueType_@((int)value)">
+                                    <input type="radio" id="RevenueType_@((int)value)" name="RevenueType" value="@((int)value)" @((Model.RevenueType == value) ? "checked" : "") />
+                                    @value.GetDescription()
+                                </label>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <button type="button" class="btn btn-primary" data-role="submit">Generate Report</button>
+        </div>
+        <div class="space-50 hidden-print"></div>
+
+        <div class="panel-group" id="accordion">
+            @Report(new { Title = "<i class='fa-users'></i> IBO Enrollments", Action = "IBOEnrollment" })
+            @Report(new { Title = "<i class='fa-repeat'></i> AOP Enrollment Activity", Action = "AOPEnrollmentActivity" })
+            @Report(new { Title = "<i class='fa-calendar'></i> AOP Forecast", Action = "AOPForecast" })
+            @Report(new { Title = "<i class='fa-cube'></i> Product Orders", Action = "ProductOrders" })
+            @Report(new { Title = "<i class='fa-money'></i> Payment Methods", Action = "PaymentMethods" })
+            @Report(new { Title = "<i class='fa-send'></i> Shipping", Action = "Shipping" })
+            @Report(new { Title = "<i class='fa-cube'></i> Individual SKUs", Action = "Items" })
+        </div>
+    </div>
+
+
+
+    @* Page Scripts *@
+    <style>
+        .panel-report { margin: 30px 0; }
+            .panel-report .panel-default > .panel-heading { border-bottom: 0; background-color: transparent; }
+            .panel-report .table thead th { background-color: transparent; }
+            .panel-report .table,
+            .panel-report .table thead th,
+            .panel-report .table-responsive { border-top: 0; }
+                .panel-report .table th { border-left: 0; border-right: 0; }
+        .table th { text-transform: uppercase; color: #999; font-size: 0.75em; font-weight: normal; }
+        .table thead th { background-color: #f5f5f5; }
+        .weekend { background-color: #f5f5f5 !important; color: #777; }
+        tr:hover .weekend { background-color: #e8e8e8 !important; }
+        .panel-report .table td.description { min-width: 300px; }
+        .subrow td { font-size: 0.85em; }
+            .subrow td:first-child { padding-left: 20px !important; }
+
+        @@media print {
+            #view-summaryreport { font-size: 8pt; }
+            .panel-report .table td.description { min-width: 200px; }
+        }
+    </style>
+
+    <script>
+        require(["ajax", "urls"], function (ajax, url) {
+
+            // Settings
+            var context = "#view-summaryreport",
+                $context = $(context),
+                reports = $("[data-report]", $context).map(function () {
+                    return $(this).data('report');
+                });
+
+
+            // Event Handlers
+            function registerEventHandlers() {
+                $('[data-role="submit"]', $context).on('click', function () {
+                    actions.getReports();
+                });
+            }
+
+
+            // Actions
+            var actions = {
+                getReports: function () {
+                    var filters = helpers.getFilters();
+
+                    for (var i = 0; i < reports.length; i++) {
+                        (function (index) {
+                            var report = reports[index];
+                            var $report = $('[data-report="{0}"]'.format(report));
+
+                            if ($report.data('original-text')) {
+                                $report.find('.panel-body').html($report.data('original-text'));
+                            }
+                            $report.removeClass('hidden');
+
+                            service.getReport(report, filters)
+                                .then(function (html) {
+                                    if (!$report.data('original-text')) {
+                                        $report.data('original-text', $report.find('.panel-body').html());
+                                    }
+
+                                    actions.renderReport(report, html);
+                                })
+                                .fail(function (xhr, status, error) {
+                                    toastr.error(xhr.responseText);
+                                })
+                                .always(function () {
+
+                                });
+                        })(i);
+                    }
+                },
+                renderReport: function (report, response) {
+                    $('[data-report="{0}"] .panel-body'.format(report), $context).html(response);
+                }
+            };
+
+
+            // Services
+            var service = {
+                getReport: function (report, filters) {
+                    return $.ajax({
+                        url: Router.action("Reporting", report),
+                        type: 'POST',
+                        data: {
+                            action: report,
+                            filters: filters
+                        },
+                        headers: { "__RequestVerificationToken": $('[name=__RequestVerificationToken]').val() }
+                    });
+                }
+            };
+
+
+            // Helpers
+            var helpers = {
+                getFilters: function () {
+                    return $('[data-role="filters"]').serializeObject();
+                }
+            };
+
+
+            // Initialization
+            function init() {
+                $('[title]').tooltip();
+
+                registerEventHandlers();
+            }
+            init();
+
+        });
+    </script>
+
+</div>

@@ -1,0 +1,12 @@
+﻿@{
+    ViewBag.Title = "Admin Dashboard";
+}
+
+@using (Html.BeginPartialScript())
+{
+    <script>
+        require(["vendor/jquery.ajaxify"], function (ajaxify) {
+            ajaxify.loadUrl('@Url.Action("index", "overview")');
+        });
+    </script>
+}

@@ -1,0 +1,17 @@
+﻿@model System.Web.Mvc.HandleErrorInfo
+@{
+    ViewBag.Title = "Unexpected Error";
+    Layout = "~/Views/Shared/_ErrorLayout.cshtml";
+}
+
+<div class="jumbotron">
+    <div class="container">
+        <div class="text-center">
+            <h1>Oops!</h1>
+            <p class="lead">
+                Something unexpected happened. We've let our tech team know. Please try again later.
+            </p>
+            <p><a class="btn btn-primary btn-lg" role="button" onclick="history.go(-1);">Go Back</a></p>
+        </div>
+    </div>
+</div>

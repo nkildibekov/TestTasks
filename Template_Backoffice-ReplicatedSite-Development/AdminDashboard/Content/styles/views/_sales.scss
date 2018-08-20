@@ -1,0 +1,9 @@
+#view-salesbyitem,
+#view-salesbycountryitem {
+    .border-left { border-left: 1px solid #ccc; }
+    .border-right { border-right: 1px solid #ccc; }
+
+    tbody {
+        td { font-size: 0.85em; min-width: 100px; @include disable-highlighting(); }
+    }
+}

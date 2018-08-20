@@ -1,0 +1,15 @@
+﻿@{
+    Layout = "~/Views/Shared/_MasterLayout.cshtml";
+}
+
+@section header { @RenderSection("header", required: false) }
+
+
+
+<main class="container container-expandable" id="site-content">
+    @RenderBody()
+</main>
+
+
+
+@section scripts { @RenderSection("scripts", required: false) }

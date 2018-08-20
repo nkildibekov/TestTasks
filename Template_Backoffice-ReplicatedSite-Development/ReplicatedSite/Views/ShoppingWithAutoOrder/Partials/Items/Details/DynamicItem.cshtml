@@ -1,0 +1,48 @@
+﻿@model Product
+@{
+    var contextID = Guid.NewGuid();
+}
+
+<div data-widget="product" id="view-product-@contextID">
+    <h4>Item C</h4>
+    $14.95
+    <input type="number" name="Quantity" value="1" />
+
+    <button type="button" data-role="customize">Customize</button>
+
+
+
+    <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">Heading</h4>
+                </div>
+                <div class="modal-body">
+                    Coming soon!
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" data-role="addtocart" class="btn btn-primary">Add to Cart</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <input type="hidden" name="ItemCode" value="@Model.ItemCode" />
+    <input type="hidden" name="GroupMasterItemCode" value="@Model.GroupMasterItemCode" />
+    <input type="hidden" name="Type" value="@Model.Type" />
+</div>
+
+
+
+@using (Html.BeginPartialScript())
+{
+    <script>
+        require(["products"], function (product) {
+            product.bind('#view-product-@contextID');
+        });
+    </script>
+}

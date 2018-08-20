@@ -1,0 +1,26 @@
+﻿@*Any modifications made here should also be made in _PageLayout*@
+
+@{
+    Layout = "~/Views/Shared/_AuthenticatedLayout.cshtml";
+}
+@section styles { @RenderSection("styles", required: false) }
+@section header { @RenderSection("header", required: false) }
+
+@{
+    if (!string.IsNullOrEmpty(ViewBag.Title))
+    {
+        <div class="page-header">
+            <div class="container">
+                <h1>@ViewBag.Title</h1>
+            </div>
+        </div>
+    }
+}
+
+
+<div class="container container-expandable">
+    @RenderBody()
+</div>
+
+
+@section scripts{ @RenderSection("scripts", required: false) }

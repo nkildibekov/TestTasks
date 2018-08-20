@@ -1,0 +1,54 @@
+﻿@model ProductSalesViewModel
+
+<div class="document-body">
+    <div id="view-productsales">
+
+        @foreach (var warehouseDescription in Model.ProductSales.OrderBy(c => c.WarehouseDescription).Select(c => c.WarehouseDescription).Distinct())
+        {
+            var productsInWarehouse = Model.ProductSales.Where(c => c.WarehouseDescription == warehouseDescription).OrderByDescending(c => c.Total).ToList();
+            var totalInWarehouse = productsInWarehouse.Sum(c => c.Total);
+
+            <h3 class="pull-left">@warehouseDescription Warehouse - (@DateTime.Now.ToString("MMMM yyyy"))</h3>
+
+
+            foreach (var currencyCode in productsInWarehouse.OrderBy(c => c.CurrencyCode).Select(c => c.CurrencyCode).Distinct())
+            {
+                var productsInCurrency = productsInWarehouse.Where(c => c.CurrencyCode == currencyCode).ToList();
+                var totalInCurrency = productsInCurrency.Sum(c => c.Total);
+
+
+                <h3 class="pull-right">@GlobalUtilities.FormatCurrency(totalInCurrency, currencyCode) @currencyCode.ToUpper()</h3>
+                <div class="clearfix"></div>
+
+                <div class="panel panel-default">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-condensed table-hover">
+                            <thead>
+                                <tr>
+                                    <th style="width: 120px;">Item Code</th>
+                                    <th class="hidden-xs">Description</th>
+                                    <th class="text-right" style="width: 120px;">Total</th>
+                                    <th class="text-right" style="width: 120px;">% Currency</th>
+                                    <th class="text-right" style="width: 120px;">% Warehouse</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var product in productsInCurrency)
+                                {
+                                    <tr>
+                                        <td>@product.ItemCode</td>
+                                        <td class="hidden-xs">@product.ItemDescription</td>
+                                        <td class="text-right">@GlobalUtilities.FormatCurrency(product.Total, currencyCode)</td>
+                                        <td class="text-right">@(((product.Total > 0M) ? product.Total / totalInCurrency : 0M).ToString("P"))</td>
+                                        <td class="text-right">@(((product.Total > 0M) ? product.Total / totalInWarehouse : 0M).ToString("P"))</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            }
+        }
+
+    </div>
+</div>

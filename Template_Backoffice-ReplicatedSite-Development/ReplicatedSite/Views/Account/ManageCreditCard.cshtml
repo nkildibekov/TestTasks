@@ -1,0 +1,109 @@
+﻿@model CreditCard
+@{
+    ViewBag.Title = Resources.Common.YourAccount;
+    Layout = "~/Views/Account/_Layout.cshtml";
+}
+
+
+
+<div id="view-ccoverview" class="row">
+    <div class="col-sm-9">
+        @using (Html.BeginForm("savecreditcard", "account"))
+        {
+
+            @Html.HiddenFor(c => c.Type)
+
+            if (Model.IsUsedInAutoOrders)
+            {
+                <div class="alert alert-info">
+                    <h4>@Resources.Common.EditingAutoOrderCreditCards</h4>
+                    @Resources.Common.ChangesToAutoOrderCreditCards.FormatWith(Model.AutoOrderIDs.Length)
+                </div>
+            }
+
+            <div class="well">
+                @Html.EditorForModel()
+            </div>
+
+            <a id="btnSaveCard" class="btn btn-primary" data-loading-text="@Resources.Common.Loading">@Resources.Common.SaveChanges</a>
+            <a href="@Url.Action("PaymentMethodList")" class="btn btn-link">@Resources.Common.Cancel</a>
+
+            if (Model.Type != CreditCardType.New && !Model.IsUsedInAutoOrders)
+            {
+                <span class="pull-right">
+                    <a href="@Url.Action("DeleteCreditCard", new { type = Model.Type })" class="btn btn-default">@Resources.Common.Delete</a>
+                </span>
+            }
+
+            @Html.AntiForgeryToken()
+        }
+    </div>
+    <div class="col-sm-3">
+
+    </div>
+</div>
+
+@section scripts
+{
+
+    <script src="@Url.Content("~/Scripts/exigopayments-1.0.0.js")"></script>
+    <script>
+        require(["jquery", "forms", "toastr", "bootstrap"], function ($, forms, toastr) {
+
+            // Settings
+            var context = "#view-ccoverview",
+                $context = $(context);
+
+
+            // Event Handlers
+            function registerEventHandlers() {
+                $('#btnSaveCard').on('click', function () {
+                    var $this = $(this);
+                    var $form = $this.parents("form").first();
+
+                    if ($form.valid()) {
+                        $this.button("loading");
+
+                        var cardNumber = $("#@Html.IdFor(c => c.CardNumber)").val();
+
+                        // Get Credit Card Token here
+                        ExigoPayments.tokenize({
+                            credential: "@PaymentConfiguration.PaymentCredentials.Create()",
+                            card: cardNumber,
+                            month: $("#@Html.IdFor(c => c.ExpirationMonth)").val(),
+                            year: $("#@Html.IdFor(c => c.ExpirationYear)").val(),
+                            success: function (token) {
+                                $(".creditcard-token").val(token);
+                                var cardDisplay = cardNumber.substr(cardNumber.length - 4);
+                                $(".creditcard-display").val(cardDisplay);
+
+                                // Clear the name so the CC Number is not submitted
+                                $("#@Html.IdFor(c => c.CardNumber)").attr('name', '');
+
+                                $form.submit();
+                            },
+                            failure: function (errorMessage) {
+                                toastr.error(errorMessage);
+                                $this.button("reset");
+                                return;
+                            }
+                        });
+
+
+                        if (!$form.valid()) {
+                            $this.button("reset");
+                        }
+                    }
+                });
+            }
+
+
+            // Initialization
+            function init() {
+                registerEventHandlers();
+            }
+            init();
+
+        });
+    </script>
+}

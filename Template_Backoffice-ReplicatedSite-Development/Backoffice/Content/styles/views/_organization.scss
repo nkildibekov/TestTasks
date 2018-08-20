@@ -1,0 +1,90 @@
+
+.jOrgChart {
+    .node { font-size: 11px; cursor: pointer;
+        .node-body { height: 70px; width: 45px; border-radius: 3px; border: 1px solid #000;
+            &.rank-0 { background: #35363B; }
+            &.rank-1 { background: green; }
+            &.rank-2 { background: aqua; }
+            &.rank-3 { background: pink; }
+            &.rank-4 { background: violet; }
+            &.rank-5 { background: limegreen; }
+            &.rank-6 { background: blue; }
+            &.rank-7 { background: yellow; }
+            &.rank-8 { background: purple; }
+            &.rank-9 { background: teal; }
+            &.rank-10 { background: magenta; }
+            &.rank-11 { background: darkorange; }
+            &.rank-12 { background: darkred; }
+            &.rank-13 { background: salmon; }
+            &.rank-14 { background: brown; }
+
+            .fa-heart { color: red; float: left; }
+            .fa-repeat { color: orange; float: right; }
+        }
+        .node-options { width: 45px; }
+        &.null-node { visibility: hidden; }
+        &.open-node {
+            .node-body { background: #CCC;
+                [class*=fa-] { background: transparent; color: #000; font-size: 44px; position: relative; top: 7px; left: -2px; }
+            }
+        }
+    }
+
+    .line.null-node,
+    .top.null-node,
+    .left.null-node,
+    .right.null-node { border: 0 !important; background-color: transparent !important; }
+}
+
+
+#view-tree-viewer {
+    .key-item { display: block; width: 20px; height: 20px; border: 1px solid #000;
+        &.icon { border: none; }
+        &.rank-0 { background: #35363B; }
+        &.rank-1 { background: green; }
+        &.rank-2 { background: aqua; }
+        &.rank-3 { background: pink; }
+        &.rank-4 { background: violet; }
+        &.rank-5 { background: limegreen; }
+        &.rank-6 { background: blue; }
+        &.rank-7 { background: yellow; }
+        &.rank-8 { background: purple; }
+        &.rank-9 { background: teal; }
+        &.rank-10 { background: magenta; }
+        &.rank-11 { background: darkorange; }
+        &.rank-12 { background: darkred; }
+        &.rank-13 { background: salmon; }
+        &.rank-14 { background: brown; }
+        &.fa-plus-circle { color: black; }
+        &.fa-heart { color: red; }
+        &.fa-repeat { color: orange; }
+        &[class*=fa-] { font-size: 22px; position: relative; top: -1px; }
+    }
+    .table-hover {
+        thead { background: #DDD; }
+        tbody tr { cursor: pointer; }
+    }
+    #search-results-container { max-height: 300px; overflow-y: auto; display: none; }
+    #upline-container { max-height: 300px; overflow-y: auto; }
+
+    .nav-buttons {
+        text-align: center;
+    }
+
+    [data-role="bottomleft"]:before{
+         -ms-transform: rotate(45deg); /* IE 9 */
+         -webkit-transform: rotate(45deg); /* Chrome, Safari, Opera */
+         transform: rotate(45deg);
+         display: block;
+         font-size: 2em;
+     }
+     [data-role="bottomright"]:before{
+         -ms-transform: rotate(-45deg); /* IE 9 */
+         -webkit-transform: rotate(-45deg); /* Chrome, Safari, Opera */
+         transform: rotate(-45deg);
+         display: block;
+         font-size: 2em;
+     }
+}
+
+.view-treenode-popover { min-height: 60px; }

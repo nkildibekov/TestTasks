@@ -1,0 +1,41 @@
+﻿@model IItem
+@{
+    var contextID = Guid.NewGuid();
+}
+
+<div data-widget="item" id="view-item-@contextID" class="view-item view-item-card work-item-img img-rounded panel panel-default">
+        <div class="no-decorate" href="@Url.Action("itemdetail", new { itemcode = Model.ItemCode })">
+            <div class="panel-body">
+                @Html.HiddenFor(c => c.ItemCode)
+                @Html.HiddenFor(c => c.Type)
+                @Html.HiddenFor(c => c.ParentItemCode)
+                @Html.Hidden("Quantity", 1)
+
+                <div class="image">
+                    <img src="@Model.SmallImageUrl" />
+                </div>
+                <div class="details">
+                    <div class="itemdescription" data-clamp="2">@Model.ItemDescription</div>
+                    <div class="price">@Model.Price.ToString("C")</div>
+                </div>               
+            </div>
+            <div class="work-overlay panel-body  img-rounded text-white">
+                <div class="shortDetailContainer">
+                    <div class="shortDetail">
+                      @Html.Raw(Model.ShortDetail1)
+                    </div>
+                </div>
+                <div class="btnContainer">
+                    <div class="row">
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 text-left">
+                            <button type="button" onclick="location.href='@Url.Action("itemdetail", new { itemcode = Model.ItemCode })'" class="details-btn">@Resources.Common.Details</button>
+                        </div>
+                        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 text-right">
+                            <button type="button" class="cart-btn btn-primary" data-loading-text="@Resources.Common.Loading" data-itemcode="@Model.ItemCode" data-type="@Model.Type" data-parentitemcode="@Model.ParentItemCode"><i class="fa-shopping-cart"></i> @Resources.Common.AddToCart</button>
+                        </div>
+                    </div>
+                </div>
+            </div>    
+        <div class="custom-hover img-rounded"></div>
+    </div>   
+</div>

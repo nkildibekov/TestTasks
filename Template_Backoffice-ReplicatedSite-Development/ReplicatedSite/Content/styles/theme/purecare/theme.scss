@@ -1,0 +1,481 @@
+﻿@import "../../mixins/_mixins";
+
+//Colors
+$blue: #0081ef;
+$ltblue: #00adef;
+$dkblue: #0047a7;
+$white: #fff;
+$ltgray: #EDF1E9;
+$dkgray: #768185;
+$textgray: #2e3b4c;
+
+
+//Main Styles
+body {
+
+    #site-content {
+    }
+
+    color: $textgray;
+
+
+    h1, h2, h3, h4, h5, h6 {
+        color: $dkgray;
+    }
+
+    p {
+        color: $textgray;
+    }
+}
+
+#site-header { border-top-color: $blue; }
+
+// logo
+.logomain {
+    background-image: url('/Content/styles/theme/purecare/images/logo.png');
+    background-repeat: no-repeat;
+    min-height: 100px;
+    width: 100%;
+    background-size: contain;
+
+    @media (max-width: 600px) { 
+        min-height: 30px !important;
+    }
+}
+
+.nav .open > a, .nav .open > a:hover, .nav .open > a:focus {
+    background-color: $blue;
+}
+
+
+ .subcategory-list {
+
+        li {
+            padding: 0 10px;
+            border-radius: 4px;
+            border: 1px solid $ltgray;
+            background-color: $white;
+            margin-bottom: 5px;
+        }
+    
+}
+
+.navbar-default {
+    background-color: $white;    
+    color: $blue;
+    border-bottom: 1px solid $ltgray;
+
+    #cart-list {
+        padding: 10px;
+    }
+
+    .amount {
+        color: $textgray;
+    }
+
+    .product-link {
+        color: $white;
+
+        &:hover, &:active {
+            color: $ltgray;
+        }
+    }
+
+    a {
+        color: $blue;
+
+        &:hover, &:active {
+            color: $dkblue;
+        }
+    }
+
+    .order-preview {
+        color: $textgray;
+    }
+
+    .btn-default {
+        color: $textgray;
+
+        &:hover, &:active {
+            color: $textgray;
+        }
+    }
+}
+
+.navbar-default .navbar-nav > li > a {
+    color: $dkgray;
+
+    &:hover, &:active {
+        color: $blue;
+        background-color: $white;
+    }
+}
+
+.navbar-default .navbar-toggle .icon-bar {
+    background-color: $blue;
+}
+
+.navbar-default .navbar-toggle:hover, .navbar-default .navbar-toggle:focus {
+    background-color: transparent;
+}
+
+.navbar-default .navbar-toggle {
+    border-color: transparent;
+}
+
+.navbar {
+    margin-bottom: 0;
+    border-radius: 0;
+}
+
+@media (max-width: 768px) {
+    .navbar {
+        margin-bottom: 20px;
+    }
+
+    .navbar-collapse {
+        .pull-right {
+            float: none !important;
+        }
+    }
+}
+//Buttons and Links
+a {
+    color: $blue;
+
+    &:hover, &:active {
+        color: $dkblue;
+    }
+}
+
+footer {
+    background-color: $white;
+    border: none;
+    border-top: 1px solid $ltgray;
+}
+
+.btn {
+    border-radius: 4px;
+    padding: 10px 20px;
+}
+
+.btn-info {
+    background-color: $blue;
+    color: $white;
+
+    &:hover, &:active {
+        background-color: $dkblue;
+        color: $white;
+    }
+}
+
+.btn-primary {
+    background-color: $blue;
+    color: $white;
+
+    &:hover, &:active {
+        background-color: $dkblue;
+        color: $white;
+    }
+}
+
+//Panels
+.panel-default > .panel-heading {
+    background-color: $white;
+    border: 1px solid $ltgray;
+    border-radius: 0;
+}
+
+#categorylist-accordion .panel, #categorylist-accordion .panel-heading, #categorylist-accordion .panel-title, #categorylist-accordion .panel-body {
+
+    .panel-heading {
+        .panel-title {
+            border-radius: 4px;
+            border: 1px solid $ltgray;
+            background-color: $white;
+        }
+    }
+}
+
+.nav-pills > li.active > a, .nav-pills > li.active > a:hover, .nav-pills > li.active > a:focus {
+    background-color: $blue;
+}
+
+
+//Text
+
+.white-text {
+    color: $white;
+}
+
+.product-link {
+    color: $blue;
+
+    &:hover, &:active {
+        color: $dkblue;
+    }
+}
+
+//Sections
+
+.blue-section {
+    background-image: url("/Content/styles/theme/purecare/images/bluebg.jpg");
+    background-size: cover;
+    background-position: left top;
+}
+
+.featured-product {
+    background-color: transparent;
+}
+
+.form {
+    text-align: left;
+}
+
+.well {
+    background-color: $white;
+    margin-bottom: 20px;
+}
+
+.card-section {
+    background-color: $white;
+    padding: 30px;
+    border: 1px solid $ltgray;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+
+// Banners
+#home-carousel {
+    .carousel-caption {
+        h3, p { color: white; }
+    }
+}
+.banner01 {
+    .card-section {
+        background-image: url('/Content/styles/theme/purecare/images/banner01.jpg');
+        min-height: 300px;
+        width: 100%;
+        background-position: center;
+        padding: 0;
+        background-size: cover;
+    }
+}
+
+.banner02 {
+    .card-section {
+        background-image: url('/Content/styles/theme/purecare/images/banner01.jpg');
+        background-size: cover;
+
+        .banner-text {
+        }
+
+        h1, h2, h3 {
+            margin: 0;
+            color: $white;
+        }
+
+        h1 {
+            font-size: 60px;
+            font-weight: bold;
+        }
+
+        h2 {
+            font-size: 40px;
+        }
+
+        h3 {
+            font-size: 30px;
+        }
+    }
+}
+
+.bannerjoin {
+    .card-section {
+        background-image: url('/Content/styles/theme/purecare/images/bannerjoin.jpg');
+        background-size: cover;
+        background-position: center;
+
+        .banner-text {
+        }
+
+        h1, h2, h3 {
+            margin: 0;
+            color: $white;
+            text-shadow: 2px 2px rgba(0,0,0,0.23);
+        }
+
+        h1 {
+            font-size: 60px;
+            font-weight: bold;
+        }
+
+        h2 {
+            font-size: 40px;
+        }
+
+        h3 {
+            font-size: 30px;
+        }
+    }
+}
+
+.bannerabout {
+    .card-section {
+        background-image: url('/Content/styles/theme/purecare/images/bannerabout.jpg');
+        background-size: cover;
+        background-position: center;
+
+        .banner-text {
+        }
+
+        h1, h2, h3 {
+            margin: 0;
+            color: $white;
+            text-shadow: 2px 2px rgba(0,0,0,0.23);
+        }
+
+        h1 {
+            font-size: 60px;
+            font-weight: bold;
+        }
+
+        h2 {
+            font-size: 40px;
+        }
+
+        h3 {
+            font-size: 30px;
+        }
+    }
+}
+
+.bannerlogin {
+    .card-section {
+        background-image: url('/Content/styles/theme/purecare/images/bannerlogin.jpg');
+        background-size: cover;
+        background-position: center;
+
+        .banner-text {
+        }
+
+        h1, h2, h3 {
+            margin: 0;
+            color: $white;
+            text-shadow: 2px 2px rgba(0,0,0,0.23);
+        }
+
+        h1 {
+            font-size: 60px;
+            font-weight: bold;
+        }
+
+        h2 {
+            font-size: 40px;
+        }
+
+        h3 {
+            font-size: 30px;
+        }
+    }
+}
+
+.home-products {
+    .row {
+        text-align: center;
+
+        .btn {
+            text-transform: uppercase;
+        }
+    }
+}
+
+//Shopping
+#shopping-cart-preview .dropdown-toggle {
+    margin-left: 13px;
+}
+
+
+//images
+
+.logonav {
+    background-image: url('/Content/styles/theme/purecare/images/logonav.png');
+    background-repeat: no-repeat;
+    min-height: 38px;
+    min-width: 90px;
+    background-size: contain;
+}
+
+.product01 {
+    background-image: url('/Content/styles/theme/purecare/images/product01.png');
+    background-repeat: no-repeat;
+    min-height: 260px;
+    background-size: contain;
+    background-position: center;
+}
+
+.product02 {
+    background-image: url('/Content/styles/theme/purecare/images/product02.png');
+    background-repeat: no-repeat;
+    min-height: 260px;
+    background-size: contain;
+    background-position: center;
+}
+
+.product03 {
+    background-image: url('/Content/styles/theme/purecare/images/product03.png');
+    background-repeat: no-repeat;
+    min-height: 260px;
+    background-size: contain;
+    background-position: center;
+}
+
+.product04 {
+    background-image: url('/Content/styles/theme/purecare/images/product04.png');
+    background-repeat: no-repeat;
+    min-height: 260px;
+    background-size: contain;
+    background-position: center;
+}
+
+.product05 {
+    background-image: url('/Content/styles/theme/purecare/images/product05.png');
+    background-repeat: no-repeat;
+    min-height: 260px;
+    background-size: contain;
+    background-position: center;
+}
+
+.homebanner {
+    background-image: url('/Content/styles/theme/purecare/images/banner01_long.jpg');
+    min-height: 405px;
+    width: 100%;    
+    background-position: center;
+}
+
+.join01 {
+    background-image: url('/Content/styles/theme/purecare/images/img_join01.jpg');
+    min-height: 285px;
+    width: 100%;
+    margin-bottom: 20px;
+    background-position: center;
+    background-size: cover;
+}
+
+.join02 {
+    background-image: url('/Content/styles/theme/purecare/images/img_join02.jpg');
+    min-height: 285px;
+    width: 100%;
+    margin-bottom: 20px;
+    background-position: center;
+    background-size: cover;
+}
+
+.join03 {
+    background-image: url('/Content/styles/theme/purecare/images/img_join03.jpg');
+    min-height: 285px;
+    width: 100%;
+    margin-bottom: 20px;
+    background-position: center;
+    background-size: cover;
+}

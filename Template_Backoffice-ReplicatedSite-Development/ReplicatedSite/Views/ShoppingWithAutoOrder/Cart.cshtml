@@ -1,0 +1,135 @@
+﻿@model CartViewModel
+@{
+    ViewBag.Title = Resources.Common.Cart;
+}
+
+<h2>@ViewBag.Title</h2>
+
+<div id="view-cart">
+    @if (Model.Items.Count() == 0)
+    {
+        <p>@Resources.Common.NoItemsInCart</p>
+    }
+    else
+    {
+        <div class="row">
+            <div class="col-sm-9">
+                @{
+                    var orderItems = Model.Items.Where(c => c.Type == ShoppingCartItemType.Order);
+                    if (orderItems.Count() > 0)
+                    {
+                        @Html.Partial("Partials/Cart/PaneledCart", orderItems, new ViewDataDictionary {
+                                        { "PanelTitle", GlobalUtilities.Capitalize(Resources.Common.ItemsToBuyNow) },
+                                        { "Type", ShoppingCartItemType.Order }
+                                    })
+                    }
+
+
+                    var autoOrderItems = Model.Items.Where(c => c.Type == ShoppingCartItemType.AutoOrder);
+                    if (autoOrderItems.Count() > 0)
+                    {
+                        @Html.Partial("Partials/Cart/PaneledCart", autoOrderItems, new ViewDataDictionary {
+                                        { "PanelTitle", Resources.Common.AutoOrder + " " + Resources.Common.Items },
+                                        { "Type", ShoppingCartItemType.AutoOrder }
+                                    })
+                    }
+                }
+            </div>
+            <div class="col-sm-3">
+
+                <div class="panel panel-default">
+                    <div class="panel-body well">
+                        @if (Model.Items.Where(c => c.Type == ShoppingCartItemType.Order).Count() > 0)
+                        {
+                            <div class="text-center">
+                                <div class="lead">@Resources.Common.Subtotal (<span data-text="orderquantity">@orderItems.Sum(c => c.Quantity).ToString("N0")</span> @Resources.Common.Items.ToLower()):<br /><strong><span data-text="ordersubtotal">@orderItems.Sum(c => c.Quantity * c.Price).ToString("C")</span></strong></div>
+                            </div>
+                        }
+                        else if (Model.Items.Where(c => c.Type == ShoppingCartItemType.AutoOrder).Count() > 0)
+                        {
+                            <div class="text-center">
+                                <div class="lead">@Resources.Common.Subtotal (<span data-text="orderquantity">@autoOrderItems.Sum(c => c.Quantity).ToString("N0")</span> @Resources.Common.Items.ToLower()):<br /><strong><span data-text="ordersubtotal">@autoOrderItems.Sum(c => c.Quantity * c.Price).ToString("C")</span></strong></div>
+                            </div>
+                        }
+
+                        <div class="text-center">
+                            <a href="@Url.Action("Checkout")" class="btn btn-primary btn-block">@Resources.Common.Checkout</a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    }
+    <a class="btn btn-primary" href="@Url.Action("ItemList")">@Resources.Common.BackToProducts</a>
+    <div class="space-20"></div>
+</div>
+
+
+@section scripts
+{
+    <script>
+
+        require(["jquery", "pubsub", "ajax", "extensions"], function ($, pubsub, ajax) {
+
+            $('#cartCountContainer').not(':contains("(0)")').fadeIn();
+            $('#cartCountContainer:contains("(0)")').fadeOut();
+
+            window.on('cart.updateitemquantity', function (data) {
+                ajax.json({
+                    url: '@Url.Action("updateitemquantity")',
+                    data: data,
+                    success: function (response) {
+                        if (response.success) {
+                            window.trigger('cart.cartupdated', response);
+                        }
+                    }
+                });
+            });
+            window.on('cart.removeitemfromcart', function (id) {
+                ajax.json({
+                    url: '@Url.Action("removeitemfromcart")',
+                    data: {
+                        id: id
+                    },
+                    success: function (response) {
+                        if (response.success) {
+                            window.trigger('cart.itemremoved', id);
+                            window.trigger('cart.cartupdated', response);
+                        }
+                    }
+                });
+            });
+
+
+
+            window.on('cart.cartupdated', function (data) {
+                var updatedItem = data.item;
+                var items = data.items;
+
+                if (updatedItem.Quantity == 0) {
+                    window.trigger('cart.itemremoved', updatedItem.ID);
+                }
+
+                if (updatedItem.Type == 0) {
+
+                    var quantity = 0;
+                    for (var i = 0, max = items.length; i < max; i++) {
+                        var item = items[i];
+
+                        if (item.Type == 0) {
+                            quantity += item.Quantity;
+                        }
+                    }
+
+                    $('[data-text="orderquantity"]').html(quantity.format("N0"));
+                    $('[data-text="ordersubtotal"]').html(data.subtotal.format("C"));
+                    $('#cartCountContainer').not(':contains("(0)")').fadeIn();
+                    $('#cartCountContainer:contains("(0)")').fadeOut();
+                }
+            });
+
+        });
+
+    </script>
+}

@@ -1,0 +1,47 @@
+#view-overview {
+    #ordersummary { margin: 0 0 20px 0; padding: 0; border-collapse: separate; -webkit-border-radius: 5px; -moz-border-radius: 5px; border-radius: 5px; -webkit-box-shadow: 0px 2px 2px -1px #777777; -moz-box-shadow: 0px 2px 2px -1px #777777; box-shadow: 0px 2px 2px -1px #777777;
+        & > div { position: relative; padding-top: 20px; height: 252px; border-left: 1px solid #FFF; border-right: 1px solid #FFF; text-align: center; vertical-align: top; text-transform: uppercase; font-weight: bolder; 
+            .amounts { height: 175px; }
+            .icon { margin: 0 0 5px 0; }
+            .title { font-size: 11px; line-height: 11px; white-space: nowrap; margin: 0; }
+            .value { margin-bottom: 10px; font-size: 24px; line-height: 24px; white-space: nowrap; }
+            .list { font-size: 11px; line-height: 14px; 
+                .item { text-align: left; white-space: nowrap; 
+                    strong { width: 25%; display: inline-block; text-align: right; padding-right: 5px; color: white; }
+                }
+            }
+        }
+
+        & > .color-green { background: url(../Images/bgOrderSummaryGreen.jpg) repeat-x top center; border-left-color: #e4f3c9; border-right-color: #59a31b; -webkit-border-top-left-radius: 5px; -moz-border-top-left-radius: 5px; border-top-left-radius: 5px; -webkit-border-bottom-left-radius: 5px; -moz-bottom-top-left-radius: 5px; border-bottom-left-radius: 5px; 
+            .icon { width: auto; height: 64px; background: url(../Images/accept.png) no-repeat bottom center; }
+            .title { color: #7fbf27; }
+            .value,
+            .list .item strong { color: #3d892d; }
+            .list .item { color: #f0ffd9; }
+        }
+
+        & > .color-blue { background: url(../Images/bgOrderSummaryBlue.jpg) repeat-x top center; border-left-color: #d1e8f5; border-right-color: #3779b9; 
+            .icon { width: auto; height: 64px; background: url(../Images/help.png) no-repeat bottom center; }
+            .title { color: #007cc3; }
+            .value,
+            .list .item strong { color: #152d65; }
+            .list .item { color: #bbdcef; }
+        }
+
+        & > .color-orange { background: url(../Images/bgOrderSummaryOrange.jpg) repeat-x top center; border-left-color: #f4eac9; border-right-color: #a36816; 
+            .icon { width: auto; height: 64px; background: url(../Images/warning.png) no-repeat bottom center; }
+            .title { color: #ed920f; }
+            .value,
+            .list .item strong { color: #a36816; }
+            .list .item { color: #f0e1b5; }
+        }
+
+        & > .color-red { background: url(../Images/bgOrderSummaryRed.jpg) repeat-x top center; border-left-color: #f1cece; border-right-color: #b74a4a; -webkit-border-top-right-radius: 5px; -moz-border-top-right-radius: 5px; border-top-right-radius: 5px;  -webkit-border-bottom-right-radius: 5px; -moz-bottom-top-right-radius: 5px; border-bottom-right-radius: 5px; 
+            .icon { width: auto; height: 64px; background: url(../Images/delete.png) no-repeat bottom center; }
+            .title { color: #cf241c; }
+            .value,
+            .list .item strong { color: #7c1e19; }
+            .list .item { color: #f0c7c7; }
+        }
+    }
+}

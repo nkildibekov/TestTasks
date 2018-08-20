@@ -1,0 +1,179 @@
+﻿@model LoginViewModel
+@{
+    Layout = "~/Views/Shared/_PublicLayout.cshtml";
+    ViewBag.Title = Resources.Common.SignIn;
+}
+
+<!-- Spin Up Instruction: Theme Switcher - Remove -->
+<div class="login-bg">
+    <div id="view-sitelogin">
+        <div class="text-center">
+            <div class="logomain img-responsive"></div>
+        </div>
+
+        @using (Html.BeginForm())
+        {
+            <div class="form-group">
+                @Html.TextBoxFor(c => c.LoginName, new { @class = "form-control", placeholder = Resources.Common.Username })
+            </div>
+
+            <div class="form-group">
+                @Html.PasswordFor(c => c.Password, new { @class = "form-control", value = Model.Password, placeholder = Resources.Common.Password })
+            </div>
+
+            <a id="loginbutton" class="btn btn-primary" data-loading-text="@Resources.Common.Loading">@Resources.Common.SignIn</a>
+            <a href="@Url.Action("forgotpassword")" class="margin-left-10">@Resources.Common.ForgotPassword</a>
+        }
+    </div>
+</div>
+<!-- End Spin Up Instruction -->
+<!-- Spin Up Instruction: Theme Switcher - Add -->
+
+@*<div id="view-sitelogin">
+    <div class="text-center">
+        <img src="https://placehold.it/300x100&text=Logo" class="img-responsive" />
+    </div>
+
+    <div class="space-30"></div>
+
+    @using (Html.BeginForm())
+    {
+        <div class="form-group">
+            @Html.TextBoxFor(c => c.LoginName, new { @class = "form-control", placeholder = Resources.Common.Username })
+        </div>
+
+        <div class="form-group">
+            @Html.PasswordFor(c => c.Password, new { @class = "form-control", value = Model.Password, placeholder = Resources.Common.Password })
+        </div>
+
+        <a id="loginbutton" class="btn btn-primary" data-loading-text="@Resources.Common.Loading">@Resources.Common.SignIn</a>
+        <a href="@Url.Action("forgotpassword")" style="display: inline-block; margin-top:10px;">@Resources.Common.ForgotPassword</a>
+
+    }
+</div>*@
+
+
+@section scripts
+{
+    
+    <style>
+        body {
+            background-image: url('../../Content/styles/theme/bellezza/images/background.jpg');
+            background-position: center center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: cover;
+            background-color: #464646;
+        }
+
+        #site-content {
+            padding-top: 0 !important;
+        }
+    </style>
+
+    <script>
+        require(["jquery", "ajax", "cookies", "urls", "app", "toastr", "forms", "bootstrap"], function ($, ajax, cookies, url, app, toastr) {
+
+            // Settings
+            var context = '#view-sitelogin',
+                $context = $(context),
+                cookiename = '@(GlobalSettings.Globalization.CookieKey)LoginName',
+                landingUrl = ('@Settings.UseGateKeeper' == "True") ? '@Url.Action("Continue")' : '@Url.Action("Index", "Dashboard")';
+
+            // Event Handlers
+            function registerEventHandlers() {
+
+                // Login Form
+                $('#loginbutton', $context).on('click', function (event) {
+                    $("#loginbutton").button("loading");
+                    actions.signin();
+                });
+                $('input', $context).on('keypress', function (event) {
+                    if (event.which == 13) {
+                        $("#loginbutton").button("loading");
+                        actions.signin();
+                    }
+                });
+            }
+
+
+            // Actions
+            var actions = {
+                clearCookies: function () {
+                    cookies.clear(cookiename);
+                },
+                loadCookies: function () {
+                    var savedLoginName = cookies.get(cookiename);
+                    if (savedLoginName) $('#LoginName').val(savedLoginName);
+
+                },
+                saveCookies: function () {
+                    // Get the expiration date of the cookie
+                    var expires = new Date();
+                    expires.setDate(expires.getDate() + 365);
+
+                    // Set the cookies
+                    cookies.set(cookiename, $('#LoginName').val(), {
+                        expires: expires
+                    });
+                },
+                signin: function () {
+
+                    // Validate the form
+                    if (!$('form', $context).valid()) {
+                        $("#loginbutton").button("reset");
+                        return false;
+                    }
+
+                    // Submit the form
+                    ajax.json({
+                        url: '@Url.Action("login")',
+                        data: $('form').serializeObject(),
+                        beforeSend: function () {
+                            toastr.clear();
+                        },
+                        success: function (response) {
+                            if (!response.Status) {
+                                actions.throwError("@Resources.Common.LoginFailed", response.ErrorMessage);
+                                $("#loginbutton").button("reset");
+                            }
+                            else {
+                                // Save the cookies
+                                actions.saveCookies();
+
+                                // Redirect
+                                window.location = (response.RedirectUrl != '') ? response.RedirectUrl : decodeURIComponent(url.current.queryKey.ReturnUrl || landingUrl);
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            actions.throwError("@Resources.Common.LoginFailed", error);
+                            $("#loginbutton").button("reset");
+                        }
+                    });
+                },
+                throwError: function (title, error) {
+                    toastr.error(error, title);
+                    $('#Password').focus();
+                    $("#loginbutton").button("reset");
+                }
+            };
+
+
+            // Initialization
+            function _init() {
+
+                // Register the event handlers
+                registerEventHandlers();
+
+                // Load the saved cookies into the form
+                actions.loadCookies();
+
+                // Focus on the right field
+                if ($('#LoginName').val() == '') $('#LoginName').focus();
+                else $('#Password').focus();
+            }
+            _init();
+
+        });
+    </script>
+}

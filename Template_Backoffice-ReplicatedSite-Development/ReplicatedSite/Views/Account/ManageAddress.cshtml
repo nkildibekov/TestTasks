@@ -1,0 +1,68 @@
+﻿@model Address
+@{
+    ViewBag.Title = Resources.Common.YourAccount;
+    Layout = "~/Views/Account/_Layout.cshtml";
+    var address = Model;
+}
+
+<div class="row">
+    <div id="view-addressoverview" class="col-sm-9">
+        @using (Html.BeginForm("saveaddress", "account"))
+        {
+            <div class="well">
+                @Html.EditorFor(model => model, "Address")
+                @Html.HiddenFor(model => model.AddressType)
+
+
+                @if (Model.AddressType != AddressType.Main)
+                {
+                    <div class="checkbox">
+                        <label>
+                            @Html.CheckBox("MakePrimary") @Resources.Common.SaveAsPrimaryAddress
+                        </label>
+                    </div>
+                }
+            </div>
+
+            <button type="submit" class="btn btn-primary" data-loading-text="@Resources.Common.Saving">@Resources.Common.SaveChanges</button>
+            <a href="@Url.Action("AddressList")" class="btn btn-link">@Resources.Common.Cancel</a>
+
+            if (Model.AddressType != AddressType.New && Model.AddressType != AddressType.Main)
+            {
+                <span class="pull-right">
+                    <a href="@Url.Action("DeleteAddress", new { type = Model.AddressType })" class="btn btn-default">@Resources.Common.Delete</a>
+                </span>
+            }
+
+            @Html.AntiForgeryToken()
+        }
+    </div>
+</div>
+<div class="space-20"></div>
+
+@section scripts
+{
+
+    <script>
+        require(["jquery", "forms", "bootstrap"], function($, forms) {
+
+            // Settings
+            var context = "#view-addressoverview",
+                $context = $(context);
+
+
+            // Event Handlers
+            function registerEventHandlers() {
+                $("[type='submit']").loadingClickEvent();
+            }
+
+
+            // Initialization
+            function init() {
+                registerEventHandlers();
+            }
+            init();
+
+        });
+    </script>
+}

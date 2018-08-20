@@ -1,0 +1,139 @@
+﻿@model GetCustomerOrdersResponse
+@{
+    ViewBag.Title = Resources.Common.Orders;
+
+    var rowCount = Model.RowCount;
+    var action = ViewContext.RouteData.Values["action"].ToString().ToLower();
+    var page = Model.Page;
+    var isSearch = ViewBag.IsSearch != null && ViewBag.IsSearch == true && action == "searchorderslist";
+
+    var hasPreviousPage = page > 1;
+    var hasNextPage = rowCount < Model.OrderCount;
+    var hasPagination = hasPreviousPage || hasNextPage;
+}
+
+<h2>@ViewBag.Title</h2>
+
+<div class="orderlist">
+    <nav class="navbar navbar-default" role="navigation">
+        <div class="navbar-form navbar-left" role="search">
+            <div class="form-group">
+                <input type="search" id="searchordersfilter" value="@ViewContext.RouteData.Values["id"]" class="form-control input-sm" placeholder="@(Resources.Common.Order)#..." />
+            </div>
+            <button type="button" id="searchorders" class="btn btn-primary btn-sm">@Resources.Common.Search @Resources.Common.Orders</button>
+            @if (isSearch)
+            {
+                <a href="@Url.Action("orderlist", "orders", new { page = 1 })" class="btn btn-default btn-sm">@Resources.Common.Clear</a>
+            }
+        </div>
+        @if (hasPagination)
+        {
+            <div class="pagination-container">
+                @Html.Partial("Partials/_OrderListPagination", Model)
+            </div>
+        }
+    </nav>
+
+    <div class="space-10"></div>
+    <ul class="nav nav-pills">
+        <li class="@((action == "openorderslist") ? "active" : "")"><a href="@Url.Action("openorderslist", new { page = 1 })">@Resources.Common.OpenOrders</a></li>
+        <li class="@((action == "shippedorderslist") ? "active" : "")"><a href="@Url.Action("shippedorderslist", new { page = 1 })">@Resources.Common.ShippedOrders</a></li>
+        <li class="@((action == "declinedorderslist") ? "active" : "")"><a href="@Url.Action("declinedorderslist", new { page = 1 })">@Resources.Common.DeclinedOrders</a></li>
+        <li class="@((action == "cancelledorderslist") ? "active" : "")"><a href="@Url.Action("cancelledorderslist", new { page = 1 })">@Resources.Common.CancelledOrders</a></li>
+        <li class="@((action == "returnedorderslist") ? "active" : "")"><a href="@Url.Action("returnedorderslist", new { page = 1 })">@Resources.Common.ReturnedOrders</a></li>
+        <li class="@((action == "orderlist") ? "active" : "")"><a href="@Url.Action("orderlist", new { page = 1 })">@Resources.Common.AllOrders</a></li>
+
+        @if (isSearch)
+        {
+            <li class="@((action == "searchorderslist") ? "active" : "")"><a href="@Url.Action("searchorderslist")">@Resources.Common.SearchResults</a></li>
+        }
+    </ul>
+    <div class="space-10"></div>
+
+
+
+    @if (isSearch)
+    {
+        <h4>@Model.Orders.Count() @Resources.Common.OrdersFound.ToLower()</h4>
+    }
+
+    <div class="order-list-container">
+        @Html.Partial("Partials/_OrderListRows", Model)
+    </div>
+
+
+@if (hasPagination)
+{
+    <div class="pagination-container">
+        @Html.Partial("Partials/_OrderListPagination", Model)
+    </div>
+}
+</div>
+
+
+
+@section scripts
+{
+    <script>
+        require(['jquery', 'ajax'], function ($, ajax) {
+
+            var context = '.orderlist',
+                $context = $(context),
+                orderCount = parseInt('@Model.OrderCount'),
+                page = parseInt('@Model.Page');
+
+            // Event Handlers
+            function registerEventHandlers() {
+                $('#searchordersfilter').on('keypress', function (event) {
+                    if (event.which == 13) {
+                        event.preventDefault();
+                        actions.searchOrder($('#searchordersfilter').val());
+                    }
+                });
+                $('#searchorders').on('click', function () {
+                    actions.searchOrder($('#searchordersfilter').val());
+                });
+
+                $context.on('click', '[data-page-action]', function () {
+                    var action = $(this).data('page-action'),
+                        page = $(this).data('page');
+
+                    $(this).button('loading');
+
+                    ajax.json({
+                        url: action,
+                        success: function (response) {
+                            if (response.success) {
+                                // Populate the pagination and Order rows sections
+                                $('.pagination-container').each(function () {
+                                    $(this).html(response.pagination);
+                                });
+                                $('.order-list-container').html(response.orderNodes);
+                            } else {
+                                console.log('get orders failed', response);
+                            }
+                        }
+                    });
+                });
+            }
+
+
+            // Actions
+            var actions = {
+                searchOrder: function (id) {
+                    if (id == '' || isNaN(id)) window.location = '@Url.Action("orderlist")';
+                    else window.location = '@Url.Action("searchorderslist", new { id = 0 })'.replace('0', '') + id;
+                }
+            };
+
+
+            // Initialization
+            function init() {
+                registerEventHandlers();
+            }
+            init();
+
+        });
+
+    </script>
+}

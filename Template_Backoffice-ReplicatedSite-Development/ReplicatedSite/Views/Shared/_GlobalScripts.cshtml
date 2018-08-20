@@ -1,0 +1,186 @@
+﻿<script>
+    require(["jquery", "cookies", "ajax", "toastr", "app", "pubsub", "bootstrap", "extensions"], function ($, cookies, ajax, toastr) {
+
+        //Spin Up Instruction: Theme Switcher - Remove
+        $(function () {
+            var cookieName = "selectedStyle";
+            selectedStyle = cookies.get(cookieName);
+
+            if (selectedStyle != "" && selectedStyle != null) {
+                $('#selectStyles option[value=' + selectedStyle + ']').prop('selected', true);
+            }
+
+            var themeName = $('#selectStyles option:selected').val();
+
+            // Get the expiration date of the cookie
+            var expires = new Date();
+            expires.setDate(expires.getDate() + 365);
+
+            // Set the cookie
+            cookies.set(cookieName, themeName, {
+                expires: expires,
+                path: "/"
+            });
+
+            var head = document.getElementsByTagName('head')[0];
+            var link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.type = 'text/css';
+            var host = window.location.protocol + '//' + window.location.host;
+            link.href = host + '/Content/styles/theme/' + themeName + '/theme.min.css';
+            link.media = 'all';
+            head.appendChild(link);
+
+            $(".fa-paint-brush").on("click", function () {
+                $(".style-switcher").toggleClass("extended");
+            });
+
+            $('#selectStyles').change(function () {
+                var newValue = $(this).val();
+
+                // Get the expiration date of the cookie
+                var expires = new Date();
+                expires.setDate(expires.getDate() + 365);
+
+                // Set the cookie
+                cookies.set(cookieName, newValue, {
+                    expires: expires,
+                    path: "/"
+                });
+
+                window.location = window.location;
+            });
+        });
+        // End Spin Up Instruction
+        // Settings
+        var languageExpiration = '@DateTime.Now.AddYears(1).ToShortDateString()',
+            languageCookieName = '@GlobalSettings.Globalization.LanguageCookieName',
+            countryCookieName = '@GlobalSettings.Globalization.CountryCookieName',
+            countryCookieChosenName = '@GlobalSettings.Globalization.CountryCookieChosenName';                  
+
+        // Event Handlers
+        function registerEventHandlers() {
+            // open country/language modal
+            $('[data-toggle="language"]').on('click', function () {
+                var $countryLangaugeModal = $("#language");
+                $countryLangaugeModal.modal('show');
+            });
+
+            // language selection
+            $('[data-language]').on("click", function () {
+
+                cookies.set('@GlobalSettings.Globalization.LanguageCookieName', $(this).data("language"), {
+                    expires: new Date('@DateTime.Now.AddYears(1).ToShortDateString()'),
+                    path: '/'
+                });
+
+                window.location = window.location;
+            });
+
+            // Whe the language modal is opened, preset the values of the dropdowns if the langauge cookie already exists
+            $("#language").on('shown.bs.modal', function () {
+                if (cookies.get(languageCookieName) !== null) {
+                    actions.setModalLanguageValues();
+                }
+            });
+
+            // If the language modal is closed, set the language cookie if not already set
+            $("#language").on('hidden.bs.modal', function () {
+                var languageCookieNotSet = (cookies.get(languageCookieName) == null),
+                    countryChosenCookieNotSet = (cookies.get(countryCookieChosenName) == null);
+
+                if (languageCookieNotSet || countryChosenCookieNotSet) {
+                    actions.setCountryLanguageCookies();
+                }
+            });
+
+            // When Submit is clicked in the language modal set/overwrite the existing language cookie value
+            $("#languageSubmit").on('click', function () {
+                $("#language").modal('hide');
+                actions.setCountryLanguageCookies();
+            });
+
+            $('[data-action="toggleMenu"]').on("click", function (e) {
+                $(".sub-menu").toggle(400);
+            });
+
+            $("body").on("keyup, change", "[name$='Quantity']", function (e) {
+                var $this = $(this),
+                    allowZero = $(this).hasClass("allow-zero"),
+                    quantity = $this.val();
+
+
+                if (quantity.indexOf(".") >= 0) {
+                    $this.val(quantity.replace(".", ""));
+                    return;
+                }
+
+                if (quantity < 1 && !allowZero) {
+                    $this.val("1");
+                    return;
+                }
+                if (quantity < 0 && allowZero) {
+                    $this.val("0");
+                    return;
+                }
+            });
+        }
+
+
+        // Actions
+        var actions = {            
+            setCountryLanguageCookies: function (language, market) {
+                var lang = (language || $('[name="Language"]').val());
+                var country = (market || $('[name="Country"]').val());
+                var options = {};
+                options.expires = new Date(languageExpiration);
+                options.path = "/";
+                options.domain = false;
+                options.secure = false;
+
+                cookies.set(countryCookieName, country, options);
+                cookies.set(countryCookieChosenName, "true", options);
+                cookies.set(languageCookieName, lang, options);                
+
+                window.location = window.location;
+            },
+            setModalLanguageValues: function () {
+                var lang = cookies.get(languageCookieName);
+                var country = cookies.get(countryCookieName);
+
+                $('[name="Language"]').val(lang);
+                if (country !== null)
+                {
+                    $('[name="Country"]').val(country);
+                }                
+            },            
+            ensureCountryLanguageChosen: function () {
+                var hasMultipleLanguages = (parseInt(@Exigo.GetLanguages().Count()) > 1),
+                    hasMultipleCountries = (parseInt(@GlobalSettings.Markets.AvailableMarkets.Count) > 1),
+                    languageCookieNotSet = (cookies.get(languageCookieName) == null),
+                    countryCookieChosenNotSet = (cookies.get(countryCookieChosenName) == null);
+                
+                // If multiple countries or languages are supported and their respective cookies are not set, show the country language modal
+                if((hasMultipleCountries && countryCookieChosenNotSet) || (hasMultipleLanguages && languageCookieNotSet))
+                {
+                    $("#language").modal('show');
+                }
+                else if(countryCookieChosenNotSet && languageCookieNotSet)
+                {
+                    // if only one country and language exist and the cookies aren't set, set them automatically
+                    actions.setCountryLanguageCookies();                    
+                }                
+            }
+        };
+
+
+        // Initialization
+        function init() {
+            registerEventHandlers();
+
+            actions.ensureCountryLanguageChosen();           
+        }
+
+        init();
+    });
+</script>

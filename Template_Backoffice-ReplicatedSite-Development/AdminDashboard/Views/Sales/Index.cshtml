@@ -1,0 +1,24 @@
+﻿@model ProductSalesViewModel
+
+<div class="document-body">
+    <div id="view-salesportal">
+
+        <h3>Sales</h3>
+
+        <ul class="nav nav-pills nav-stacked">
+            <li>
+                <a href="@Url.Action("salesbyitem")" class="ajaxify">
+                    <i class="fa-bar-chart-o media-object text-primary"></i>
+                    Sales by Item
+                </a>
+            </li>
+            <li>
+                <a href="@Url.Action("salesbycountryitem")" class="ajaxify">
+                    <i class="fa-bar-chart-o media-object text-primary"></i>
+                    Sales by Country, Item
+                </a>
+            </li>
+        </ul>
+
+    </div>
+</div>

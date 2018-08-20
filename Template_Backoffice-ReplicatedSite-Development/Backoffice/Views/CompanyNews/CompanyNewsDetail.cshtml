@@ -1,0 +1,31 @@
+﻿@model CompanyNewsViewModel
+@{
+    ViewBag.Title = "Company News";
+    var newsItem = Model.CompanyNewsItems.First();
+}
+
+<div id="view-company-news">
+    <h2>@newsItem.Description</h2>
+    <date>@newsItem.CreatedDate.ToShortDateString()</date>
+    <div class="row margin-10">
+        <div class="col-sm-12">
+            @if (Model.CompanyNewsItems.Count() > 0)
+            {
+                <div class="panel-group" id="accordion">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            @Html.Raw(newsItem.Content)
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <p>@Resources.Common.NoCurrentNewsDisplay.</p>
+            }
+            <a href="@Url.Action("companynewslist", "companynews")" class="btn btn-primary pull-right">@Resources.Common.CompanyNews</a>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+   
+</div>

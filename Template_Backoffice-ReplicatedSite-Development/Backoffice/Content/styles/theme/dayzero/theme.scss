@@ -1,0 +1,274 @@
+﻿@import "../../mixins/_mixins";
+
+
+
+//Navigation
+
+/*.nav .open > a, .nav .open > a:hover, .nav .open > a:focus {
+    background-color: #ccc;
+}
+
+.top-head {
+    height: 36px;
+    @media (min-width: 768px) {
+        .navbar-nav > li > a {
+            padding: 0;
+        }
+    }
+
+    .nav > li > a:hover, .nav > li > a:focus {
+        background-color: #ccc;
+    }
+}
+
+// logo
+.logomain {
+    background-image: url('http://placehold.it/100x100/333/fff?text=LOGO');
+    background-repeat: no-repeat;
+    min-height: 100px;
+    width: 100%;
+    background-size: contain;
+
+    @media (max-width: 600px) { 
+        min-height: 30px !important;
+    }
+}
+
+.navbar {
+    margin-bottom: 0;
+}
+
+@media (max-width: 768px) {
+    .navbar {
+        margin-bottom: 20px;
+    }
+
+    .navbar-collapse {
+        .pull-right {
+            float: none !important;
+        }
+    }
+}
+
+.subcategory-list {
+
+        li {
+            padding: 0 10px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            background-color: white;
+            margin-bottom: 5px;
+        }
+    
+}
+
+//Panel
+.panel-default > .panel-heading > .panel-title {
+    border: none;
+    border-radius: 4px;
+    color: #333;
+    background-color: #f5f5f5;
+}
+
+
+.panel-default > .panel-heading > .panel-title > a{
+    color: #333;
+    background-color: #f5f5f5;
+    border:none;
+}
+
+//Sections
+
+
+.card-section {
+    background-color: #f5f5f5;
+    padding: 30px;
+    border: 1px solid #e3e3e3;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+
+
+.home-products {
+    .card-section {
+    }
+
+    .row {
+        text-align: center;
+
+        .btn {
+            text-transform: uppercase;
+        }
+    }
+}
+
+//Shopping
+#shopping-cart-preview .dropdown-toggle {
+    margin-left: 13px;
+}
+
+
+//images
+
+
+.banner01 {
+    .card-section {
+        background-image: url('http://placehold.it/1920x400/eee/333?text=BANNER');
+        min-height: 300px;
+        width: 100%;
+        background-position: center;
+        padding: 0;
+        background-size: cover;
+    }
+}
+
+.bannerjoin {
+    .card-section {
+        background-color: #f5f5f5;
+        border: 1px solid #e3e3e3;
+        padding: 10px 20px;
+
+        h1 {
+            margin: 0;
+            color: #333;
+            text-shadow: 2px 2px rgba(0,0,0,0.23);
+            font-size: 60px;
+            font-weight: bold;
+        }
+    }
+}
+
+.bannerabout {
+    .card-section {
+        background-color: #f5f5f5;
+        border: 1px solid #e3e3e3;
+        padding: 10px 20px;
+
+        h1 {
+            margin: 0;
+            color: #333;
+            text-shadow: 2px 2px rgba(0,0,0,0.23);
+            font-size: 60px;
+            font-weight: bold;
+        }
+    }
+}
+
+.bannerlogin {
+    .card-section {
+        background-color: #f5f5f5;
+        border: 1px solid #e3e3e3;
+        padding: 10px 20px;
+
+        h1 {
+            margin: 0;
+            color: #333;
+            text-shadow: 2px 2px rgba(0,0,0,0.23);
+            font-size: 60px;
+            font-weight: bold;
+        }
+    }
+}*/
+.logomain {
+    background-image: url('http://placehold.it/100x100/333/fff?text=LOGO');
+    background-repeat: no-repeat;
+    min-height: 100px;
+    width: 100%;
+    background-size: contain;
+
+    @media (max-width: 600px) { 
+        min-height: 30px !important;
+    }
+}
+.logonav {
+    background-image: url('http://placehold.it/38x90/333/fff?text=LOGO');
+    background-repeat: no-repeat;
+    min-height: 38px;
+    min-width: 90px;
+    background-size: contain;
+}
+.banner01 {
+    .card-section {
+        background-image: url('http://placehold.it/1920x400/eee/333?text=BANNER');
+        min-height: 300px;
+        width: 100%;
+        background-position: center;
+        padding: 0;
+        background-size: cover;
+    }
+}
+.product01 {
+    background-image: url('/Content/styles/theme/bootstrap/images/product01.png');
+    background-repeat: no-repeat;
+    min-height: 260px;
+    background-size: contain;
+    background-position: center;
+}
+
+.product02 {
+    background-image: url('/Content/styles/theme/bootstrap/images/product01.png');
+    background-repeat: no-repeat;
+    min-height: 260px;
+    background-size: contain;
+    background-position: center;
+}
+
+.product03 {
+    background-image: url('/Content/styles/theme/bootstrap/images/product01.png');
+    background-repeat: no-repeat;
+    min-height: 260px;
+    background-size: contain;
+    background-position: center;
+}
+
+.product04 {
+    background-image: url('/Content/styles/theme/bootstrap/images/product01.png');
+    background-repeat: no-repeat;
+    min-height: 260px;
+    background-size: contain;
+    background-position: center;
+}
+
+.product05 {
+    background-image: url('/Content/styles/theme/bootstrap/images/product01.png');
+    background-repeat: no-repeat;
+    min-height: 260px;
+    background-size: contain;
+    background-position: center;
+}
+
+.homebanner {
+    background-image: url('http://placehold.it/1920x400/eef/333');
+    min-height: 405px;
+    width: 100%;    
+    background-position: center;
+}
+
+.join01 {
+    background-image: url('http://placehold.it/285/f99/333');
+    min-height: 285px;
+    width: 100%;
+    margin-bottom: 20px;
+    background-position: center;
+    background-size: cover;
+}
+
+.join02 {
+    background-image: url('http://placehold.it/285/9f9/333');
+    min-height: 285px;
+    width: 100%;
+    margin-bottom: 20px;
+    background-position: center;
+    background-size: cover;
+}
+
+.join03 {
+    background-image: url('http://placehold.it/285/99f/333');
+    min-height: 285px;
+    width: 100%;
+    margin-bottom: 20px;
+    background-position: center;
+    background-size: cover;
+}
+
+

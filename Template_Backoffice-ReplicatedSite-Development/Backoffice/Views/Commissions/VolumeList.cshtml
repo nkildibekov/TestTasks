@@ -1,0 +1,57 @@
+﻿@{
+    ViewBag.Title = Resources.Common.Volumes;
+}
+
+
+<h2>@ViewBag.Title</h2>
+
+<div class="row">
+    <div class="col-sm-3">
+        @Html.Navigation()
+    </div>
+
+    <div class="col-sm-9">
+        <div id="grid" class="condensed-grid" style="height: 600px"></div>
+    </div>
+</div>
+
+
+@section scripts
+{
+    <script>
+        require(["jquery", "kendogrids"],
+            function ($, kendoGrid) {
+
+                kendoGrid.create("#grid",
+                {
+                    columns: [
+                        { field: "PeriodID", hidden: true, type: "number" },
+                        {
+                            field: "PeriodDescription", title: "@Resources.Common.Period",
+                            sortable: false,
+                            filterable: false
+                        },
+                        {
+                            field: "StartDate", title: "@Resources.Common.StartDate",
+                            type: "date",
+                            format: "{0:M/d/yyyy}"
+                        },
+                        { field: "EndDate", title: "@Resources.Common.EndDate", type: "date", format: "{0:M/d/yyyy}" },
+                        { field: "PaidRankDescription", title: "@Resources.Common.PaidRank" },
+                        @{
+                            var buckets = new int[] { 1,2,3 };
+                        }
+                        { field: "@("Volume" + buckets[0])", title: "@CommonResources.Volumes(buckets[0])", type: "number", format: "{0:N0}", attributes: { "class": "text-right" } },
+                        { field: "@("Volume" + buckets[1])", title: "@CommonResources.Volumes(buckets[1])", type: "number", format: "{0:N0}", attributes: { "class": "text-right" } },
+                        { field: "@("Volume" + buckets[2])", title: "@CommonResources.Volumes(buckets[2])", type: "number", format: "{0:N0}", attributes: { "class": "text-right" } },
+                    ],
+                    dataSource: {
+                        sort: {
+                            field: "PeriodID", dir:
+                            "desc"
+                        }
+                    }
+                });
+            });
+    </script>
+}

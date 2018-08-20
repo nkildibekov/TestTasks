@@ -1,0 +1,26 @@
+﻿[
+  {
+    "outputFile": "Content/styles/site.css",
+    "inputFile": "Content/styles/site.scss"
+  },
+  {
+    "outputFile": "Content/styles/theme/bellezza/theme.css",
+    "inputFile": "Content/styles/theme/bellezza/theme.scss"
+  },
+  {
+    "outputFile": "Content/styles/theme/bootstrap/theme.css",
+    "inputFile": "Content/styles/theme/bootstrap/theme.scss"
+  },
+  {
+    "outputFile": "Content/styles/theme/illuminel/theme.css",
+    "inputFile": "Content/styles/theme/illuminel/theme.scss"
+  },
+  {
+    "outputFile": "Content/styles/theme/purecare/theme.css",
+    "inputFile": "Content/styles/theme/purecare/theme.scss"
+  },
+  {
+    "outputFile": "Content/styles/theme/dayzero/theme.css",
+    "inputFile": "Content/styles/theme/dayzero/theme.scss"
+  }
+]

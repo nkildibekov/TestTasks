@@ -1,0 +1,562 @@
+﻿@import "../../mixins/_mixins";
+
+//Colors
+$blue: #0081ef;
+$ltblue: #00adef;
+$dkblue: #0047a7;
+$white: #fff;
+$ltgray: #EDF1E9;
+$dkgray: #768185;
+$textgray: #2e3b4c;
+
+body {
+
+    .view-sitelogin:before {
+        background-color: red;
+    }
+
+    #site-content {       
+        padding-bottom:50px;
+    }
+
+    color: $textgray;
+
+
+    h1, h2, h3, h4, h5, h6 {
+        color: $blue;
+    }
+
+    p {
+        color: $textgray;
+    }
+}
+
+.card {
+    border-radius: 0;
+    background-color: rgba(255,255,255,0.75);
+}
+
+.card-default {
+    border: none;
+    border-color: transparent;
+    box-shadow: none;
+
+    .list-group-item {
+        background-color: transparent;
+    }
+}
+
+.card-default > .card-heading {
+    color: $blue;
+    background-color: transparent;
+    border-radius: 0;
+    text-align: center;
+    border:none;
+
+    h3 {
+        margin: 0 30px 5px 30px;
+        padding-bottom: 5px;
+        border-bottom: 2px solid $blue;
+    }
+}
+
+#site-content {
+    background-image: url('../purecare/images/bg.png');
+    background-repeat: repeat;
+
+    .container {
+        padding-top: 20px;
+    }
+}
+
+.top-head {
+    height: 45px;
+    padding-top: 10px;
+    background-color: $white;
+    border: none;
+    border-top: 3px solid $blue;
+    border-bottom: 1px solid $ltgray;
+
+    a {
+        color: $textgray;
+        font-weight: normal;
+        margin-left: 20px;
+        text-decoration: none;
+
+
+        &:hover, &:active {
+            color: $dkblue;
+        }
+    }
+
+    .yourcart {
+        background-color: $blue;
+        color: $white;
+
+        &:hover, &:active {
+            background-color: $dkblue;
+            color: $white;
+        }
+    }
+
+    .join-link {
+        background-color: $blue;
+        color: $white;
+
+        &:hover, &:active {
+            background-color: $dkblue;
+            color: $white;
+        }
+    }
+}
+
+.featured-product {
+    background-color: transparent;
+}
+
+.navbar-default {
+    background-color: $white;
+    border-bottom: 1px solid $ltgray;
+    color: $dkgray;
+
+    #cart-list {
+        padding: 10px;
+    }
+
+    .amount {
+        color: $textgray;
+    }
+
+    .product-link {
+        color: $blue;
+
+        &:hover, &:active, &:focus {
+            color: $dkblue;
+        }
+    }
+
+    a {
+        color: $dkgray;
+
+        &:hover, &:active {
+            color: $blue;
+        }
+    }
+
+    .order-preview {
+        color: $textgray;
+    }
+
+    .btn-default {
+        color: $textgray;
+
+        &:hover, &:active {
+            color: $textgray;
+        }
+    }
+}
+
+.hidden-xs {
+    .dropdown-menu > li > a {
+        color: $dkgray;
+
+        &:hover, &:active, &:focus {
+            color: $dkgray;
+            background-color: $ltgray;
+        }
+    }
+
+    .navbar-default .navbar-nav > .open > a, .navbar-default .navbar-nav > .open > a:hover, .navbar-default .navbar-nav > .open > a:focus {
+        color: $white;
+        background-color: $blue;
+    }
+
+    .navbar-default .navbar-nav > li > a {
+        color: $white;
+
+        &:hover, &:active, &:focus {
+            color: $white;
+            background-color: $dkblue;
+        }
+    }
+
+    .navbar-default {
+        background-color: $blue;
+        border: none;
+        color: $white;
+
+        #cart-list {
+            padding: 10px;
+        }
+
+        .amount {
+            color: $textgray;
+        }
+
+        .product-link {
+            color: $blue;
+
+            &:hover, &:active, &:focus {
+                color: $dkblue;
+            }
+        }
+
+        a {
+            color: $white;
+
+            &:hover, &:active {
+                color: $ltgray;
+            }
+        }
+
+        .order-preview {
+            color: $textgray;
+        }
+
+        .btn-default {
+            color: $textgray;
+
+            &:hover, &:active {
+                color: $textgray;
+            }
+        }
+    }
+}
+
+.navbar-default .navbar-nav > .open > a, .navbar-default .navbar-nav > .open > a:hover, .navbar-default .navbar-nav > .open > a:focus {
+    color: $blue;
+    background-color: $white;
+}
+
+.navbar-default .navbar-nav > li > a {
+    color: $dkgray;
+
+    &:hover, &:active, &:focus {
+        color: $blue;
+        background-color: $white;
+    }
+}
+
+.navbar {
+    margin-bottom: 0;
+    border-radius: 0;
+}
+
+a {
+    color: $blue;
+
+    &:hover, &:active {
+        color: $dkblue;
+    }
+}
+
+footer {
+    background-color: $white;
+    border: none;
+    border-top: 1px solid $dkgray;
+}
+
+.btn {
+    border-radius: 0;
+}
+
+.btn-info {
+    background-color: $blue;
+    color: $white;
+
+    &:hover, &:active {
+        background-color: $dkblue;
+        color: $white;
+    }
+}
+
+.btn-primary {
+    background-color: $blue;
+    color: $white;
+
+    &:hover, &:active {
+        background-color: $dkblue;
+        color: $white;
+    }
+}
+
+.form {
+    text-align: left;
+}
+
+.well {
+    background-color: $white;
+    border: 1px solid $ltgray;
+    border-radius: 0;
+}
+
+.panel-default > .panel-heading {
+    background-color: $white;
+    border: none;
+    border-radius: 0;
+}
+
+
+.nav-pills > li.active > a, .nav-pills > li.active > a:hover, .nav-pills > li.active > a:focus {
+    background-color: $blue;
+}
+
+.blue-section {
+    background-image: url("/Content/styles/theme/images/bluebg.jpg");
+    background-size: cover;
+    background-position: left top;
+}
+
+.white-text {
+    color: $white;
+}
+
+.product-link {
+    color: $blue;
+
+    &:hover, &:active {
+        color: $dkblue;
+    }
+}
+
+.list-group-item.active, .list-group-item.active:hover, .list-group-item.active:focus {
+    background-color: $blue;
+    border-color: $blue;
+    border-radius: 0;
+}
+
+.text-info {
+    color: $ltblue;
+}
+
+
+/*Kendo*/
+.k-state-selected, .k-state-selected:link, .k-state-selected:visited, .k-list > .k-state-selected, .k-list > .k-state-highlight, .k-panel > .k-state-selected, .k-ghost-splitbar-vertical, .k-ghost-splitbar-horizontal, .k-draghandle.k-state-selected:hover, .k-scheduler .k-scheduler-toolbar .k-state-selected, .k-scheduler .k-today.k-state-selected, .k-marquee-color {
+    background-color: $blue;
+    border-color: $blue;
+}
+
+.k-link:link, .k-link:visited, .k-nav-current.k-state-hover .k-link {
+    color: $blue;
+}
+
+/*Panel*/
+.panel-info {
+    border-color: $ltblue;
+    border-radius: 0;
+
+    .panel-heading {
+        color: $white;
+        background-color: $ltblue;
+        border-color: $ltblue;
+    }
+}
+
+.dropdown-menu > .active > a, .dropdown-menu > .active > a:hover, .dropdown-menu > .active > a:focus {
+    background-color: $blue;
+}
+
+//logo
+
+.logonav {
+    background-image: url('/Content/styles/theme/purecare/images/logonav.png');
+    background-repeat: no-repeat;
+    min-height: 30px;
+    min-width: 77px;
+    background-size: contain;
+    max-width:135px; 
+    margin-top: -7px;
+}
+
+.logomain {
+    background-image: url('/Content/styles/theme/purecare/images/logo.png');
+    background-repeat: no-repeat;
+    min-height: 100px;
+    width: 100%;
+    background-size: contain;
+}
+
+
+//Login
+
+#view-sitelogin {
+    width: 320px;
+    height: 320px;
+    padding: 40px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-left: -160px;
+    margin-top: -160px;
+    background-color: rgba(255,255,255,0.75);
+    border: none;
+    color: $textgray;
+}
+
+
+//Cards
+
+.card-default > .card-footer {
+    color: $white;
+    background-color: $blue;
+    border-color: transparent;
+    text-align: center !important;
+    padding: 8px;
+    height: 33px;
+    font-weight: bold;
+}
+
+a.card-footer:hover {
+    background-color: $dkblue;
+    text-decoration: none;
+}
+
+@media (min-width: 768px) {
+    .navbar-nav > li > a {
+        padding-top: 15px;
+     }
+}
+
+.dial-chart {
+    color: $blue !important;
+}
+
+.card-recentorders .media-object {
+    font-size: 25px;
+    color:$dkblue;
+}
+
+.row {
+    //Col A
+    @media (min-width: 768px) {
+        .col-sm-6 .col-md-4, .col-a {
+            width: 100% !important;
+        }
+    }
+
+    @media (min-width: 992px) {
+        .col-sm-6 .col-md-4, .col-a {
+            width: 100% !important;
+        }
+    }
+
+    @media (min-width: 1200px) {
+        .col-sm-6 .col-md-4, .col-a {
+            width: 50% !important;
+        }
+    }
+    //Col B
+    @media (min-width: 768px) {
+        .col-sm-6 .col-md-4, .col-b {
+            width: 100% !important;
+        }
+    }
+
+    @media (min-width: 992px) {
+        .col-sm-6 .col-md-4, .col-b {
+            width: 100% !important;
+        }
+    }
+
+    @media (min-width: 1200px) {
+        .col-sm-6 .col-md-4, .col-b {
+            width: 50% !important;
+        }
+    }
+    //Col C
+    .col-c {
+        .card-title {
+            font-size: 14px;
+        }
+    }
+
+    @media (min-width: 768px) {
+        .col-sm-6 .col-md-4, .col-c {
+            width: 50% !important;
+        }
+    }
+
+    @media (min-width: 992px) {
+        .col-sm-6 .col-md-4, .col-c {
+            width: 50% !important;
+        }
+    }
+
+    @media (min-width: 1200px) {
+        .col-sm-6 .col-md-4, .col-c {
+            width: 25% !important;
+        }
+    }
+    //Col D
+    .col-d {
+        .card-title {
+            font-size: 14px;
+        }
+    }
+
+    @media (min-width: 768px) {
+        .col-sm-6 .col-md-4, .col-d {
+            width: 50% !important;
+        }
+    }
+
+    @media (min-width: 992px) {
+        .col-sm-6 .col-md-4, .col-d {
+            width: 50% !important;
+        }
+    }
+
+    @media (min-width: 1200px) {
+        .col-sm-6 .col-md-4, .col-d {
+            width: 25% !important;
+        }
+    }
+    //Col E
+    .col-e {
+        .card-title {
+            font-size: 14px;
+        }
+    }
+
+    @media (min-width: 768px) {
+        .col-sm-6 .col-md-4, .col-e {
+            width: 50% !important;
+        }
+    }
+
+    @media (min-width: 992px) {
+        .col-sm-6 .col-md-4, .col-e {
+            width: 50% !important;
+        }
+    }
+
+    @media (min-width: 1200px) {
+        .col-sm-6 .col-md-4, .col-e {
+            width: 25% !important;
+        }
+    }
+    //Col F
+    .col-f {
+        .card-title {
+            font-size: 14px;
+        }
+    }
+
+    @media (min-width: 768px) {
+        .col-sm-6 .col-md-4, .col-f {
+            width: 50% !important;
+        }
+    }
+
+    @media (min-width: 992px) {
+        .col-sm-6 .col-md-4, .col-f {
+            width: 50% !important;
+        }
+    }
+
+    @media (min-width: 1200px) {
+        .col-sm-6 .col-md-4, .col-f {
+            width: 25% !important;
+        }
+    }
+}

@@ -1,0 +1,226 @@
+﻿@model List<ItemSalesByCategoryCollection>
+
+<style>
+    @@media (min-width: 768px) {
+        .table-responsive { max-height: 900px; overflow: auto; }
+    }
+</style>
+
+<div class="table-responsive">
+    <table class="table table-condensed table-striped table-hover">
+        <thead>
+            <tr>
+                <th class="text-center">
+                    Product Description
+                </th>
+                <th colspan="4" class="text-center border-left border-right">
+                    Daily<br />
+                    <small class="text-muted">@ViewBag.Date.ToString("M/d/yyyy")</small>
+                </th>
+                <th colspan="4" class="text-center border-left border-right">
+                    Month to Date<br />
+                    <small class="text-muted">@ViewBag.BeginningOfMonthDate.ToString("M/d/yyyy") - @ViewBag.Date.ToString("M/d/yyyy")</small>
+                </th>
+                <th colspan="4" class="text-center border-left border-right">
+                    Year to Date<br />
+                    <small class="text-muted">@ViewBag.BeginningOfYearDate.ToString("M/d/yyyy") - @ViewBag.Date.ToString("M/d/yyyy")</small>
+                </th>
+                <th colspan="4" class="text-center border-left border-right">
+                    Last Year<br />
+                    <small class="text-muted">1/01/@(ViewBag.Date.Year - 1) - 12/31/@(ViewBag.Date.Year - 1)</small>
+                </th>
+            </tr>
+        </thead>
+
+
+        <thead>
+            <tr>
+                <th>&nbsp;</th>
+
+                <th class="border-left text-right">#</th>
+                <th class="text-right">Amount</th>
+                <th class="text-right">Tax</th>
+                <th class="border-right text-right">Total</th>
+
+                <th class="border-left text-right">#</th>
+                <th class="text-right">Amount</th>
+                <th class="text-right">Tax</th>
+                <th class="border-right text-right">Total</th>
+
+                <th class="border-left text-right">#</th>
+                <th class="text-right">Amount</th>
+                <th class="text-right">Tax</th>
+                <th class="border-right text-right">Total</th>
+
+                <th class="border-left text-right">#</th>
+                <th class="text-right">Amount</th>
+                <th class="text-right">Tax</th>
+                <th class="border-right text-right">Total</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach(var collection in Model)
+            { 
+                <tr class="info">
+                    <th class="text-left">@collection.Category - SALES</th>
+                    <th colspan="4" class="border-left border-right">&nbsp;</th>
+                    <th colspan="4" class="border-left border-right">&nbsp;</th>
+                    <th colspan="4" class="border-left border-right">&nbsp;</th>
+                    <th colspan="4" class="border-left border-right">&nbsp;</th>
+                </tr>
+
+                foreach (var record in collection.Sales)
+                {
+                    <tr>
+                        <td style="max-width: 250px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; padding-left: 20px; border-left: 10px solid #D9EDF7;" class="hidden-xs" title="@record.ItemDescription">@record.ItemDescription</td>
+                        <td style="width: 120px;" class="visible-xs" title="@record.ItemDescription">@record.ItemCode</td>
+
+                        <td style="min-width: 40px;" class="border-left text-right">@((record.QuantityPerDay != 0) ? record.QuantityPerDay.ToString("N0") : "-")</td>
+                        <td class="text-right">@((record.AmountPerDay != 0) ? record.AmountPerDay.ToString("C") : "-")</td>
+                        <td class="text-right">@((record.TaxPerDay != 0) ? record.TaxPerDay.ToString("C") : "-")</td>
+                        <td class="border-right text-right">@((record.TotalPerDay != 0) ? record.TotalPerDay.ToString("C") : "-")</td>
+
+                        <td style="min-width: 40px;" class="border-left text-right">@((record.QuantityPerMonth != 0) ? record.QuantityPerMonth.ToString("N0") : "-")</td>
+                        <td class="text-right">@((record.AmountPerMonth != 0) ? record.AmountPerMonth.ToString("C") : "-")</td>
+                        <td class="text-right">@((record.TaxPerMonth != 0) ? record.TaxPerMonth.ToString("C") : "-")</td>
+                        <td class="border-right text-right">@((record.TotalPerMonth != 0) ? record.TotalPerMonth.ToString("C") : "-")</td>
+
+                        <td style="min-width: 40px;" class="border-left text-right">@((record.QuantityPerYear != 0) ? record.QuantityPerYear.ToString("N0") : "-")</td>
+                        <td class="text-right">@((record.AmountPerYear != 0) ? record.AmountPerYear.ToString("C") : "-")</td>
+                        <td class="text-right">@((record.TaxPerYear != 0) ? record.TaxPerYear.ToString("C") : "-")</td>
+                        <td class="border-right text-right">@((record.TotalPerYear != 0) ? record.TotalPerYear.ToString("C") : "-")</td>
+
+                        <td style="min-width: 40px;" class="border-left text-right">@((record.QuantityPerLastYear != 0) ? record.QuantityPerLastYear.ToString("N0") : "-")</td>
+                        <td class="text-right">@((record.AmountPerLastYear != 0) ? record.AmountPerLastYear.ToString("C") : "-")</td>
+                        <td class="text-right">@((record.TaxPerLastYear != 0) ? record.TaxPerLastYear.ToString("C") : "-")</td>
+                        <td class="border-right text-right">@((record.TotalPerLastYear != 0) ? record.TotalPerLastYear.ToString("C") : "-")</td>
+                    </tr>
+                }
+                
+                <tr>
+                    <th class="text-right" style="border-left: 10px solid #D9EDF7;"></th>
+
+                    <th class="border-left text-right">@collection.Sales.Sum(c => c.QuantityPerDay).ToString("N0")</th>
+                    <th class="text-right">@collection.Sales.Sum(c => c.AmountPerDay).ToString("C")</th>
+                    <th class="text-right">@collection.Sales.Sum(c => c.TaxPerDay).ToString("C")</th>
+                    <th class="border-right text-right">@collection.Sales.Sum(c => c.TotalPerDay).ToString("C")</th>
+
+                    <th class="border-left text-right">@collection.Sales.Sum(c => c.QuantityPerMonth).ToString("N0")</th>
+                    <th class="text-right">@collection.Sales.Sum(c => c.AmountPerMonth).ToString("C")</th>
+                    <th class="text-right">@collection.Sales.Sum(c => c.TaxPerMonth).ToString("C")</th>
+                    <th class="border-right text-right">@collection.Sales.Sum(c => c.TotalPerMonth).ToString("C")</th>
+
+                    <th class="border-left text-right">@collection.Sales.Sum(c => c.QuantityPerYear).ToString("N0")</th>
+                    <th class="text-right">@collection.Sales.Sum(c => c.AmountPerYear).ToString("C")</th>
+                    <th class="text-right">@collection.Sales.Sum(c => c.TaxPerYear).ToString("C")</th>
+                    <th class="border-right text-right">@collection.Sales.Sum(c => c.TotalPerYear).ToString("C")</th>
+
+                    <th class="border-left text-right">@collection.Sales.Sum(c => c.QuantityPerLastYear).ToString("N0")</th>
+                    <th class="text-right">@collection.Sales.Sum(c => c.AmountPerLastYear).ToString("C")</th>
+                    <th class="text-right">@collection.Sales.Sum(c => c.TaxPerLastYear).ToString("C")</th>
+                    <th class="border-right text-right">@collection.Sales.Sum(c => c.TotalPerLastYear).ToString("C")</th>
+                </tr>
+
+                
+                <tr style="background-color: white;">
+                    <th colspan="17"></th>
+                </tr>
+                
+                <tr class="danger">
+                    <th class="text-left">@collection.Category - REFUNDS</th>
+                    <th colspan="4" class="border-left border-right">&nbsp;</th>
+                    <th colspan="4" class="border-left border-right">&nbsp;</th>
+                    <th colspan="4" class="border-left border-right">&nbsp;</th>
+                    <th colspan="4" class="border-left border-right">&nbsp;</th>
+                </tr>
+                
+                foreach (var record in collection.Refunds)
+                {
+                    <tr>
+                        <td style="max-width: 250px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; padding-left: 20px; border-left: 10px solid #EBCCCC;" class="hidden-xs" title="@record.ItemDescription">@record.ItemDescription</td>
+                        <td style="width: 120px;" class="visible-xs" title="@record.ItemDescription">@record.ItemCode</td>
+
+                        <td style="min-width: 40px;" class="border-left text-right">@((record.QuantityPerDay != 0) ? record.QuantityPerDay.ToString("N0") : "-")</td>
+                        <td class="text-right">@((record.AmountPerDay != 0) ? record.AmountPerDay.ToString("C") : "-")</td>
+                        <td class="text-right">@((record.TaxPerDay != 0) ? record.TaxPerDay.ToString("C") : "-")</td>
+                        <td class="border-right text-right">@((record.TotalPerDay != 0) ? record.TotalPerDay.ToString("C") : "-")</td>
+
+                        <td style="min-width: 40px;" class="border-left text-right">@((record.QuantityPerMonth != 0) ? record.QuantityPerMonth.ToString("N0") : "-")</td>
+                        <td class="text-right">@((record.AmountPerMonth != 0) ? record.AmountPerMonth.ToString("C") : "-")</td>
+                        <td class="text-right">@((record.TaxPerMonth != 0) ? record.TaxPerMonth.ToString("C") : "-")</td>
+                        <td class="border-right text-right">@((record.TotalPerMonth != 0) ? record.TotalPerMonth.ToString("C") : "-")</td>
+
+                        <td style="min-width: 40px;" class="border-left text-right">@((record.QuantityPerYear != 0) ? record.QuantityPerYear.ToString("N0") : "-")</td>
+                        <td class="text-right">@((record.AmountPerYear != 0) ? record.AmountPerYear.ToString("C") : "-")</td>
+                        <td class="text-right">@((record.TaxPerYear != 0) ? record.TaxPerYear.ToString("C") : "-")</td>
+                        <td class="border-right text-right">@((record.TotalPerYear != 0) ? record.TotalPerYear.ToString("C") : "-")</td>
+
+                        <td style="min-width: 40px;" class="border-left text-right">@((record.QuantityPerLastYear != 0) ? record.QuantityPerLastYear.ToString("N0") : "-")</td>
+                        <td class="text-right">@((record.AmountPerLastYear != 0) ? record.AmountPerLastYear.ToString("C") : "-")</td>
+                        <td class="text-right">@((record.TaxPerLastYear != 0) ? record.TaxPerLastYear.ToString("C") : "-")</td>
+                        <td class="border-right text-right">@((record.TotalPerLastYear != 0) ? record.TotalPerLastYear.ToString("C") : "-")</td>
+                    </tr>
+                }
+
+                <tr>
+                    <th class="text-right" style="border-left: 10px solid #EBCCCC;"></th>
+
+                    <th class="border-left text-right">@collection.Refunds.Sum(c => c.QuantityPerDay).ToString("N0")</th>
+                    <th class="text-right">@collection.Refunds.Sum(c => c.AmountPerDay).ToString("C")</th>
+                    <th class="text-right">@collection.Refunds.Sum(c => c.TaxPerDay).ToString("C")</th>
+                    <th class="border-right text-right">@collection.Refunds.Sum(c => c.TotalPerDay).ToString("C")</th>
+
+                    <th class="border-left text-right">@collection.Refunds.Sum(c => c.QuantityPerMonth).ToString("N0")</th>
+                    <th class="text-right">@collection.Refunds.Sum(c => c.AmountPerMonth).ToString("C")</th>
+                    <th class="text-right">@collection.Refunds.Sum(c => c.TaxPerMonth).ToString("C")</th>
+                    <th class="border-right text-right">@collection.Refunds.Sum(c => c.TotalPerMonth).ToString("C")</th>
+
+                    <th class="border-left text-right">@collection.Refunds.Sum(c => c.QuantityPerYear).ToString("N0")</th>
+                    <th class="text-right">@collection.Refunds.Sum(c => c.AmountPerYear).ToString("C")</th>
+                    <th class="text-right">@collection.Refunds.Sum(c => c.TaxPerYear).ToString("C")</th>
+                    <th class="border-right text-right">@collection.Refunds.Sum(c => c.TotalPerYear).ToString("C")</th>
+
+                    <th class="border-left text-right">@collection.Refunds.Sum(c => c.QuantityPerLastYear).ToString("N0")</th>
+                    <th class="text-right">@collection.Refunds.Sum(c => c.AmountPerLastYear).ToString("C")</th>
+                    <th class="text-right">@collection.Refunds.Sum(c => c.TaxPerLastYear).ToString("C")</th>
+                    <th class="border-right text-right">@collection.Refunds.Sum(c => c.TotalPerLastYear).ToString("C")</th>
+                </tr>
+                
+                
+                <tr style="background-color: white;">
+                    <th colspan="17"></th>
+                </tr>
+                
+                <tr class="success">
+                    <th class="text-right">TOTALS</th>
+
+                    <th class="border-left text-right">@((collection.Sales.Sum(c => c.QuantityPerDay) + (collection.Refunds.Sum(c => c.QuantityPerDay) * -1)).ToString("N0"))</th>
+                    <th class="text-right">@((collection.Sales.Sum(c => c.AmountPerDay) + (collection.Refunds.Sum(c => c.AmountPerDay))).ToString("C"))</th>
+                    <th class="text-right">@((collection.Sales.Sum(c => c.TaxPerDay) + (collection.Refunds.Sum(c => c.TaxPerDay))).ToString("C"))</th>
+                    <th class="border-right text-right">@((collection.Sales.Sum(c => c.TotalPerDay) + (collection.Refunds.Sum(c => c.TotalPerDay))).ToString("C"))</th>
+
+                    <th class="border-left text-right">@((collection.Sales.Sum(c => c.QuantityPerMonth) + (collection.Refunds.Sum(c => c.QuantityPerMonth) * -1)).ToString("N0"))</th>
+                    <th class="text-right">@((collection.Sales.Sum(c => c.AmountPerMonth) + (collection.Refunds.Sum(c => c.AmountPerMonth))).ToString("C"))</th>
+                    <th class="text-right">@((collection.Sales.Sum(c => c.TaxPerMonth) + (collection.Refunds.Sum(c => c.TaxPerMonth))).ToString("C"))</th>
+                    <th class="border-right text-right">@((collection.Sales.Sum(c => c.TotalPerMonth) + (collection.Refunds.Sum(c => c.TotalPerMonth))).ToString("C"))</th>
+
+                    <th class="border-left text-right">@((collection.Sales.Sum(c => c.QuantityPerYear) + (collection.Refunds.Sum(c => c.QuantityPerYear) * -1)).ToString("N0"))</th>
+                    <th class="text-right">@((collection.Sales.Sum(c => c.AmountPerYear) + (collection.Refunds.Sum(c => c.AmountPerYear))).ToString("C"))</th>
+                    <th class="text-right">@((collection.Sales.Sum(c => c.TaxPerYear) + (collection.Refunds.Sum(c => c.TaxPerYear))).ToString("C"))</th>
+                    <th class="border-right text-right">@((collection.Sales.Sum(c => c.TotalPerYear) + (collection.Refunds.Sum(c => c.TotalPerYear))).ToString("C"))</th>
+
+                    <th class="border-left text-right">@((collection.Sales.Sum(c => c.QuantityPerLastYear) + (collection.Refunds.Sum(c => c.QuantityPerLastYear) * -1)).ToString("N0"))</th>
+                    <th class="text-right">@((collection.Sales.Sum(c => c.AmountPerLastYear) + (collection.Refunds.Sum(c => c.AmountPerLastYear))).ToString("C"))</th>
+                    <th class="text-right">@((collection.Sales.Sum(c => c.TaxPerLastYear) + (collection.Refunds.Sum(c => c.TaxPerLastYear))).ToString("C"))</th>
+                    <th class="border-right text-right">@((collection.Sales.Sum(c => c.TotalPerLastYear) + (collection.Refunds.Sum(c => c.TotalPerLastYear))).ToString("C"))</th>
+                </tr>
+                     
+                <tr style="background-color: white;">
+                    <th colspan="17">&nbsp;</th>
+                </tr>           
+            }
+        </tbody>
+
+    </table>
+</div>

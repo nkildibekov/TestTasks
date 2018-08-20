@@ -1,0 +1,76 @@
+﻿@model AccountRegistrationViewModel
+@{
+    ViewBag.Title = Resources.Common.CreateAnAccount;
+}
+
+<div id="view-account-registration">
+    <div class="row">
+        <div class="col-sm-offset-1 col-sm-9">
+            <h2>@ViewBag.Title</h2>
+
+            @if (Model.HasError)
+            {
+                <div class="alert alert-danger">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <strong>@Resources.Common.Error</strong>
+                    @Model.ErrorMessage
+                </div>
+            }
+
+            @using (Html.BeginForm())
+            {                
+                @Html.AntiForgeryToken()                
+                @Html.HiddenFor(c => c.ReturnUrl)                
+
+                <!-- Name -->
+                <div class="row">
+                    <div class="col-sm-6">
+                        @Html.LabelFor(c => c.Customer.FirstName)
+                        @Html.EditorFor(c => c.Customer.FirstName, new { @class = "form-control", placeholder = Resources.Common.FirstName })
+                    </div>
+                    <div class="col-sm-6">
+                        @Html.LabelFor(c => c.Customer.LastName)
+                        @Html.EditorFor(c => c.Customer.LastName, new { @class = "form-control", placeholder = Resources.Common.LastName })
+                    </div>
+                </div>                
+
+                <div class="row">
+                    <!-- Email -->
+                    <div class="col-sm-6">
+                        @Html.LabelFor(c => c.Customer.Email)
+                        @Html.EditorFor(c => c.Customer.Email, new { @class = "form-control", placeholder = Resources.Common.Email })
+                    </div>
+
+                    <!-- Username -->
+                    <div class="col-sm-6">
+                        @Html.LabelFor(c => c.Customer.LoginName)
+                        @Html.EditorFor(c => c.Customer.LoginName, new { @class = "form-control", placeholder = Resources.Common.Username })
+                    </div>
+                </div>                
+
+                <!-- Password -->
+                <div class="row">
+                    <div class="col-sm-6">
+                        @Html.LabelFor(c => c.Password)
+                        @Html.EditorFor(c => c.Password, new { @class = "form-control", placeholder = Resources.Common.Password })
+                    </div>
+                    <div class="col-sm-6">
+                        @Html.LabelFor(c => c.ConfirmPassword)
+                        @Html.EditorFor(c => c.ConfirmPassword, new { @class = "form-control", placeholder = Resources.Common.ConfirmPassword })
+                    </div>
+                </div>                
+
+                <!-- Opt In -->
+                <div class="checkbox">
+                    <label for="@Html.IdFor(c => c.Customer.IsOptedIn)">
+                        @Html.CheckBoxFor(c => c.Customer.IsOptedIn) @Resources.Common.IWouldLikeToRecieveEmails
+                    </label>
+                </div>
+
+                <button type="submit" id="submit" class="btn btn-primary">@Resources.Common.SubmitRegistration</button>                
+            }
+        </div>
+    </div>
+</div>

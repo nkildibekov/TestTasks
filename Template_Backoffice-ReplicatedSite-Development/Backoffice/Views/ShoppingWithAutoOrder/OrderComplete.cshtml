@@ -1,0 +1,10 @@
+﻿@{
+    ViewBag.Title = Resources.Common.ThankYou;
+}
+<div class="row">
+    <div class="col-sm-12">
+        <h2>@Resources.Common.ThankYou</h2>
+        <p>@Resources.Common.WeHaveRecievedYourOrder</p>
+        <p>@Html.Raw(Resources.Common.ClickToViewAllOrders.FormatWith(Url.Action("OrderList", "orders")))</p>
+    </div>
+</div>

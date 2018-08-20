@@ -1,0 +1,99 @@
+﻿<script>
+    require(["jquery", "cookies", "bootstrap"], function ($, cookies) {
+
+        //Spin Up Instruction: Theme Switcher - Remove
+        $(function () {
+            var cookieName = "selectedStyle";
+            selectedStyle = cookies.get(cookieName);
+
+            if (selectedStyle != "" && selectedStyle != null) {
+                $('#selectStyles option[value=' + selectedStyle + ']').prop('selected', true);
+            }
+
+            var themeName = $('#selectStyles option:selected').val();
+
+            // Get the expiration date of the cookie
+            var expires = new Date();
+            expires.setDate(expires.getDate() + 365);
+
+            // Set the cookie
+            cookies.set(cookieName, themeName, {
+                expires: expires,
+                path: "/"
+            });
+
+            $(".fa-paint-brush").on("click", function () {
+                $(".style-switcher").toggleClass("extended");
+            });
+
+            var head = document.getElementsByTagName('head')[0];
+            var link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.type = 'text/css';
+            var host = window.location.protocol + '//' + window.location.host;
+            link.href = host + '/Content/styles/theme/' + themeName + '/theme.min.css';
+            link.media = 'all';
+            head.appendChild(link);
+
+            $('#selectStyles').change(function () {
+                var newValue = $(this).val();
+
+                // Get the expiration date of the cookie
+                var expires = new Date();
+                expires.setDate(expires.getDate() + 365);
+
+                // Set the cookie
+                cookies.set(cookieName, newValue, {
+                    expires: expires,
+                    path: "/"
+                });
+
+                window.location = window.location;
+            });
+        });
+        // End Spin Up Instruction
+
+        // Event Handlers
+        function registerEventHandlers() {
+            $('[data-language]').on("click", function () {
+
+                cookies.set('@GlobalSettings.Globalization.LanguageCookieName', $(this).data("language"), {
+                    expires: new Date('@DateTime.Now.AddYears(1).ToShortDateString()'),
+                    path: '/'
+                });
+
+                window.location = window.location;
+            });
+
+            $("body").on("keyup, change", "[name$='Quantity']", function (e) {
+                var $this = $(this),
+                    allowZero = $(this).hasClass("allow-zero"),
+                    quantity = $this.val();
+
+
+                if (quantity.indexOf(".") >= 0) {
+                    $this.val(quantity.replace(".", ""));
+                    return;
+                }
+
+                if (quantity < 1 && !allowZero) {
+                    $this.val("1");
+                    return;
+                }
+                if (quantity < 0 && allowZero) {
+                    $this.val("0");
+                    return;
+                }
+            });
+        }
+
+        // Initialization
+        function init() {
+            registerEventHandlers();
+
+            $('[data-toggle="popover"]').popover();
+        }
+
+        init();
+    });
+</script>

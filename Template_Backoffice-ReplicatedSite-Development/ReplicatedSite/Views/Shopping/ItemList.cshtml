@@ -1,0 +1,283 @@
+﻿@model ItemListViewModel
+@{
+    ViewBag.Title = Resources.Common.Shopping;
+}
+
+<h2>@ViewBag.Title</h2>
+
+<div id="view-item-list">
+    <div class="row margin-10">
+        <div class="col-md-3 hidden-sm hidden-xs">
+            <div id="categories-container">
+                <!-- Desktop Nav -->
+                @* Normal Menu *@
+                <div class="hidden-xs hidden-sm" id="shopping-nav">
+                    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                        @foreach (var category in Model.Categories)
+                        {
+                            var hasSubcategories = (category.Subcategories != null && category.Subcategories.Count() > 0);
+                            <div class="panel panel-default">
+                                <div class="panel-heading" role="tab" id="heading@(category.WebCategoryID)" data-category="@category.WebCategoryID">
+                                    <div class="panel-title">
+                                        <a class="pull-left" data-categoryid="@category.WebCategoryID">
+                                            @category.WebCategoryDescription
+                                        </a>
+                                        @if (hasSubcategories)
+                                        {
+                                            <a class="pull-right category-toggle" href="#collapse@(category.WebCategoryID)" data-toggle="collapse" data-categoryid="@category.WebCategoryID" data-parent="#accordion" aria-expanded="true" aria-controls="collapse@(category.WebCategoryID)">
+                                                <i class="fa-plus"></i>
+                                            </a>
+                                        }
+                                        <div class="clearfix"></div>
+                                    </div>
+                                </div>
+                                <div id="collapse@(category.WebCategoryID)" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+                                    @if (hasSubcategories)
+                                    {
+                                        <div class="panel-body">
+                                            <ul class="subcategory-list list-unstyled">
+                                                @foreach (var subcategory in category.Subcategories)
+                                                {
+                                                    <li class="navbar-link" data-nav-id="@subcategory.WebCategoryID" data-parent-categoryid="@category.WebCategoryID">
+                                                        <a data-categoryid="@subcategory.WebCategoryID">@subcategory.WebCategoryDescription</a>
+                                                    </li>
+                                                }
+                                            </ul>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-9 col-sm-12">
+            <!-- Mobile Category Menu -->
+            <div class="visible-sm visible-xs" style="margin-bottom: 20px;">
+
+                <select id="mobile-shopping-nav" class="form-control col-xs-12">
+                    <option value="0" data-categoryid="0" selected="selected">@Resources.Common.AllProducts</option>
+                    @foreach (var category in Model.Categories)
+                    {
+                        <option value="@category.WebCategoryID" data-categoryid="@category.WebCategoryID">@category.WebCategoryDescription</option>
+                        if (category.Subcategories != null && category.Subcategories.Count() > 0)
+                        {
+                            foreach (var subcategory in category.Subcategories)
+                            {
+                                <option class="nested-subcategory" data-categoryid="@subcategory.WebCategoryID">@category.WebCategoryDescription - @subcategory.WebCategoryDescription</option>
+                            }
+                        }
+                    }
+                </select>
+                <div class="space-50"></div>
+            </div>
+
+            <div class="row margin-15" id="itemList">
+                <p class="text-center">
+                    <!-- Dynamically Injected -->
+                    <img class="img-responsive" src="@Url.Content("~/Content/images/loading/circle-48.gif")" />
+                </p>
+            </div>
+        </div>
+    </div>
+
+    @if (Settings.ShowChooseEnrollerInShopping)
+    {
+        <!-- How did you hear about us modal -->
+        <div class="modal fade" data-backdrop="static" data-keyboard="false" id="hearAboutUsModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">@Resources.Common.EnrollerSearchHeader</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <a id="chooseConsulant" class="btn btn-primary text-uppercase">
+                                    @Resources.Common.ChooseEnroller
+                                </a>
+                            </div>
+                            <div class="col-sm-6">
+                                <a id="notReferred" class="btn btn-primary text-uppercase">@Resources.Common.NotReferredShopNow</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+
+@section scripts
+{
+    <script>
+        require(["jquery", "ajax", "shopping", "toastr", "extensions", "pubsub"],
+            function($, ajax, shopping, toastr) {
+                var itemListUrl = "@Url.Action("GetItemList")",
+                    model = @Model.CategoryID,
+                    context = "#view-item-list",
+                    $context = $(context),
+                    addItemUrl = '@Url.Action("additemtocart")',
+                    loadingImageUrl = '@Url.Content("~/Content/images/loading/circle-48.gif")',
+                    // If we need to trigger the 'Choose Enroller' modal..
+                    askForEnroller = @Settings.ShowChooseEnrollerInShopping.ToString().ToLower(),
+                    chooseEnrollerUrl = '@Url.Action("GetEnrollerSearchModal", "App")',
+                    noReferredUrl = '@Url.Action("SetNoReferred", "Shopping")';
+
+                function registerEventHandlers() {
+                    $("#shopping-nav [data-categoryid]:not(.category-toggle)").on('click', function(){
+                        var categoryID = $(this).data('categoryid'),
+                            $mobileListItem = $("#mobile-shopping-nav").find("[data-categoryid='" + categoryID + "']").parents("li").first();
+
+                        $("#shopping-nav li").removeClass("active");
+                        $("#mobile-shopping-nav li").removeClass("active");
+                        $(this).addClass("active");
+                        $mobileListItem.addClass("active");
+                        helpers.showLoadingImage();
+                        actions.loadItemList(categoryID);
+                    });
+
+                    $("#mobile-shopping-nav").on('change', function() {
+                        var $this = $(this).children("option:selected"),
+                            categoryID = $this.data('categoryid'),
+                            $parentListItem = $this.parents("li").first(),
+                            $nonMobileListItem = $("#shopping-nav").find("[data-categoryid='" + categoryID + "']");
+
+                        $("#shopping-nav li").removeClass("active");
+                        $nonMobileListItem.addClass("active");
+                        helpers.showLoadingImage();
+                        actions.loadItemList(categoryID);
+                    });
+
+                    $(".category-toggle").on("click", function () {
+                        var $this = $(this),
+                            $currentIcon = $this.find("i"),
+                            category = $this.parents('[data-category]').data("category");
+
+                        // Handle the current selected category
+                        $currentIcon.toggleClass("fa-minus").toggleClass("fa-plus");
+
+                        // Then toggle the other category icons as they close
+                        $(".category-toggle").each(function () {
+                            if ($(this).parents("[data-category]").data("category") != category) {
+                                $(this).find("i").removeClass("fa-minus").addClass("fa-plus");
+                            }
+                        });
+                    });
+
+                    $context.on("click", ".cart-btn", function() { actions.addItemToCart(this); });
+
+                    $('#notReferred').on("click", function() { actions.notReferred(); });
+                    $('#chooseConsulant').on("click", function() { actions.chooseEnroller(); });
+                }
+
+                var actions = {
+                    loadItemList: function (categoryid) {
+                        var categoryID = (categoryid == undefined) ? model.CategoryID :  categoryid;
+                        ajax.json({
+                            url: itemListUrl,
+                            data: { categoryID: categoryID },
+                            success: function (response) {
+                                if (response.success) {
+                                    var $html = $("#itemList");
+                                    $html.html(response.html);
+                                }
+                            },
+                            error: function (xhr, error, data) {
+                                console.log("error loading itemlist", xhr);
+                            }
+                        });
+                    },
+                    addItemToCart: function(_item) {
+                        var $item = $(_item);
+                        $item.button("loading");
+                        var itemcode = $item.attr("data-itemcode");
+
+                        ajax.json({
+                            url: addItemUrl,
+                            data: {
+                                item: {
+                                    ItemCode: itemcode,
+                                    Quantity: 1
+                                }
+                            },
+                            success: function(response) {
+                                if (response.success) {
+                                    toastr.success(("<strong>{0}</strong> " + Resources.Common.HasBeenAddedToOrder)
+                                        .format($('.item-row[data-itemcode="' + itemcode + '"]')
+                                        .find('.itemdescription').text()));
+                                    $("#cartCount").html(parseInt($("#cartCount").html()) + 1);
+                                    $('#cartCountContainer').not(':contains("(0)")').fadeIn();
+                                }
+                            },
+                            complete: function() {
+                                $item.button("reset");
+                            }
+                        });
+                    },
+                    notReferred: function () {
+                        ajax.json({
+                            url:noReferredUrl,
+                            success: function (response) {
+                                if (response.success) {
+                                    $("#hearAboutUsModal").modal("hide");
+                                }
+                                else {
+                                    toastr.error(Resources.Common.SearchNoResults, Resources.Common.WereSorry);
+                                }
+                            }
+                        });
+                    },
+                    chooseEnroller: function () {
+                        ajax.json({
+                            url: chooseEnrollerUrl,
+                            success: function(response) {
+                                if (response.success) {
+                                    $('#hearAboutUsModal .modal-body').html(response.html);
+
+                                    // Pubsub event for enroller selection
+                                    window.on('enrollment.showenrollerinfo', function (enroller) {
+                                        window.location.replace('/' + enroller.WebAlias.trim() + '/products');
+                                    });
+                                } else {
+                                    console.log(response);
+                                }
+                            }
+                        });
+                    }
+                }
+
+                var helpers = {
+                    showLoadingImage: function() {
+                        $('#itemList').html('<p class="text-center"><img class="img-responsive" src="{0}" /></p>'.format(loadingImageUrl));
+                    },
+                    formatItem: function (item) {
+                        // Quantity checking
+                        item.Quantity = item.Quantity || 0;
+                        if (isNaN(item.Quantity)) item.Quantity = 0;
+                        else item.Quantity = parseFloat(item.Quantity);
+
+                        return item;
+                    }
+                }
+
+                function _init() {
+                    registerEventHandlers();
+                    actions.loadItemList();
+
+                    if (askForEnroller) {
+                        var currentWebAlias = '@Identity.Owner.WebAlias';
+                        var defaultWebAlias = '@GlobalSettings.ReplicatedSites.DefaultWebAlias';
+
+                        var selectedDistributor = '@Model.PropertyBag.SelectedDistributor';
+                        if (currentWebAlias == defaultWebAlias && selectedDistributor == '') {
+                            $("#hearAboutUsModal").modal("show");
+                        }
+                    }
+                }
+                _init();
+            });
+    </script>
+}

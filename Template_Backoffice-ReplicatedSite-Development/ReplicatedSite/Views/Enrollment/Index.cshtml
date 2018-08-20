@@ -1,0 +1,98 @@
+﻿@{
+    ViewBag.Title = Resources.Common.JoinTheFamily;
+}
+
+<!-- Spin Up Instruction: Theme Switcher - Remove -->
+<div class="bannerjoin">
+    <div class="card-section">
+        <div class="banner-text">
+            <h2>@Resources.Common.Join</h2>
+        </div>
+    </div>
+</div>
+
+<div class="card-section">
+    @*@if (GlobalSettings.Exigo.ContentManager.IsEditModeOn)
+        {
+            @Html.ContentBlock("34EAD27C-94B8-4EE1-A603-EA46F985ED67")
+
+        }
+        else
+        {*@
+    <h2>@Resources.Common.JoinTheFamily</h2>
+    <div class="space-20"></div>
+    @Html.Raw(Greeking.Paragraph)
+    <div class="space-20"></div>
+    @if (!@Identity.Owner.WebAlias.Equals(@GlobalSettings.ReplicatedSites.DefaultWebAlias) && @GlobalSettings.ReplicatedSites.SkipJoinEnroller)
+    {
+        @Html.ActionLink(@Resources.Common.SignMeUp, "SetEnroller", "Enrollment", null, new { @class = "btn btn-primary btn-lg" })
+    }
+    else
+    {
+        @Html.ActionLink(@Resources.Common.SignMeUp, "enrollmentconfiguration", "Enrollment", null, new { @class = "btn btn-primary btn-lg" })
+    }
+
+    @*<a href="@Url.Action("enrollmentconfiguration")" class="btn btn-primary btn-lg ">@Resources.Common.SignMeUp</a>*@
+    <div class="space-20"></div>
+    @*}*@
+</div>
+<div class="row">
+    <div class="col-sm-4">
+        <div class="card-section">
+            <div class="join01 img-responsive"></div>
+            <h3>@Resources.Common.EnrollmentOptionOneHeader</h3>
+            @Html.Raw(Greeking.Paragraph)
+            <div class="space-20"></div>
+            <a href="@Url.Action("enrollmentconfiguration")" class="btn btn-primary btn-lg ">@Resources.Common.SignMeUp</a>
+        </div>
+    </div>
+    <div class="col-sm-4">
+        <div class="card-section">
+            <div class="join02 img-responsive"></div>
+            <h3>@Resources.Common.EnrollmentOptionTwoHeader</h3>
+            @Html.Raw(Greeking.Paragraph)
+            <div class="space-20"></div>
+            <a href="@Url.Action("enrollmentconfiguration")" class="btn btn-primary btn-lg ">@Resources.Common.SignMeUp</a>
+        </div>
+    </div>
+    <div class="col-sm-4">
+        <div class="card-section">
+            <div class="join03 img-responsive"></div>
+            <h3>@Resources.Common.EnrollmentOptionThreeHeader</h3>
+            @Html.Raw(Greeking.Paragraph)
+            <div class="space-20"></div>
+            <a href="@Url.Action("enrollmentconfiguration")" class="btn btn-primary btn-lg ">@Resources.Common.SignMeUp</a>
+        </div>
+    </div>
+</div>
+<!-- End Spin Up Instruction -->
+<!-- Spin Up Instruction: Theme Switcher - Add -->
+@*<h2>@ViewBag.Title</h2>
+    @Html.Raw(Greeking.Paragraph)
+    <a href="@Url.Action("enrollmentconfiguration")" class="btn btn-primary btn-lg ">@Resources.Common.SignMeUp</a>
+    <div class="space-40"></div>
+
+    <div class="row">
+        <div class="col-sm-4">
+            <img src="https://placehold.it/300x285" class="img-responsive">
+            <h3>@Resources.Common.EnrollmentOptionOneHeader</h3>
+            @Html.Raw(Greeking.Paragraph)
+            <div class="space-20"></div>
+            <a href="@Url.Action("enrollmentconfiguration")" class="btn btn-primary btn-lg ">@Resources.Common.SignMeUp</a>
+        </div>
+        <div class="col-sm-4">
+            <img src="https://placehold.it/300x285" class="img-responsive">
+            <h3>@Resources.Common.EnrollmentOptionTwoHeader</h3>
+            @Html.Raw(Greeking.Paragraph)
+            <div class="space-20"></div>
+            <a href="@Url.Action("enrollmentconfiguration")" class="btn btn-primary btn-lg ">@Resources.Common.SignMeUp</a>
+        </div>
+        <div class="col-sm-4">
+            <img src="https://placehold.it/300x285" class="img-responsive">
+            <h3>@Resources.Common.EnrollmentOptionThreeHeader</h3>
+            @Html.Raw(Greeking.Paragraph)
+            <div class="space-20"></div>
+            <a href="@Url.Action("enrollmentconfiguration")" class="btn btn-primary btn-lg ">@Resources.Common.SignMeUp</a>
+        </div>
+    </div>*@
+<!-- End Spin Up Instruction -->

@@ -1,0 +1,26 @@
+﻿@model CompanyNewsViewModel
+
+<div id="view-company-news">
+    <h2>@ViewBag.Title</h2>
+
+    <div class="row">
+        <div class="col-sm-12">
+            @if (Model.CompanyNewsItems.Count > 0)
+            {
+                foreach (var NewsItem in Model.CompanyNewsItems)
+                {
+                    <div class="article">
+                        <a class="title text-lg" href="@Url.Action("companynewsdetail", "companynews", new { newsid = NewsItem.NewsID })">@NewsItem.Description</a>
+                        <div class="date">@NewsItem.CreatedDate.ToShortDateString()</div>
+                    </div>
+                    <div class="space-20"></div>
+                }
+            }
+            else
+            {
+                <p>@Resources.Common.NoCurrentNewsDisplay.</p>
+            }
+        </div>
+    </div>
+
+</div>

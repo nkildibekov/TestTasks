@@ -1,0 +1,6 @@
+﻿@{ 
+    ViewBag.Title = Resources.Common.ThankYou;
+}
+<h2>@Resources.Common.ThankYou</h2>
+<p>@Resources.Common.WeHaveRecievedYourOrder</p>
+<p>@Html.Raw(Resources.Common.ClickToViewAllOrders.FormatWith(Url.Action("OrderList", "Orders")))

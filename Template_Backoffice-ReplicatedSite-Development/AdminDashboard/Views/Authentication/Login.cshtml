@@ -1,0 +1,138 @@
+﻿@model LoginViewModel
+@{
+    ViewBag.Title = "Sign In";
+}
+
+<div id="view-sitelogin">
+    <div class="text-center">
+        <img src="~/Content/images/logo.png" class="img-responsive" />
+    </div>
+
+    <div class="space-30"></div>
+
+    @using (Html.BeginForm())
+    {
+        <div class="form-group">
+            @Html.TextBoxFor(c => c.LoginName, new { @class = "form-control", placeholder = "Username" })
+        </div>
+
+        <div class="form-group">
+            @Html.PasswordFor(c => c.Password, new { @class = "form-control", value = Model.Password, placeholder = "Password" })
+        </div>
+
+        <button type="submit" id="loginbutton" class="btn btn-primary">Sign In</button>
+    }
+</div>
+
+
+
+@section scripts
+{
+    <style>
+        body { background-color: #d8d8d8; }
+    </style>
+    <script>
+        require(["ajax", "cookies", "urls", "app"], function (ajax, cookies, url, app) {
+
+            // Settings
+            var context = '#view-sitelogin',
+                $context = $(context),
+                cookiename = '@(GlobalSettings.Globalization.CookieKey)LoginName',
+                landingUrl = '@Url.Action("index", "app")';
+
+
+            // Event Handlers
+            function registerEventHandlers() {
+
+                // Login Form
+                $('#loginbutton', $context).on('click', function (event) {
+                    event.preventDefault();
+                    actions.signin();
+                });
+                $('input', $context).on('keypress', function (event) {
+                    if (event.which == 13) {
+                        event.preventDefault();
+                        actions.signin();
+                    }
+                });
+            }
+
+
+            // Actions
+            var actions = {
+                clearCookies: function () {
+                    cookies.clear(cookiename);
+                },
+                loadCookies: function () {
+                    var savedLoginName = cookies.get(cookiename);
+                    if (savedLoginName) $('#LoginName').val(savedLoginName);
+                },
+                saveCookies: function () {
+                    // Get the expiration date of the cookie
+                    var expires = new Date();
+                    expires.setDate(expires.getDate() + 365);
+
+                    // Set the cookies
+                    cookies.set(cookiename, $('#LoginName').val(), {
+                        expires: expires
+                    });
+                },
+                signin: function () {
+
+                    // Validate the form
+                    if (!$('form').valid()) return false;
+
+
+                    // Submit the form
+                    ajax.json({
+                        url: window.location,
+                        data: $('form').serializeObject(),
+                        beforeSend: function () {
+                            toastr.clear();
+                            $('#loginbutton').loadingbutton('start');
+                        },
+                        success: function (response) {
+                            if (!response.Status) {
+                                actions.throwError("Login Failed", response.ErrorMessage);
+                                $('#loginbutton').loadingbutton('stop');
+                            }
+                            else {
+                                // Save the cookies
+                                actions.saveCookies();
+
+                                // Redirect
+                                window.location = (response.RedirectUrl && response.RedirectUrl != '') ? response.RedirectUrl : decodeURIComponent(url.current.queryKey.ReturnUrl || landingUrl);
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            console.log(xhr);
+                            actions.throwError("Login failed", error);
+                            $('#loginbutton').loadingbutton('stop');
+                        }
+                    });
+                },
+                throwError: function (title, error) {
+                    toastr.error(error, title);
+                    $('#Password').focus();
+                }
+            };
+
+
+            // Initialization
+            function _init() {
+
+                // Register the event handlers
+                registerEventHandlers();
+
+                // Load the saved cookies into the form
+                actions.loadCookies();
+
+                // Focus on the right field
+                if ($('#LoginName').val() == '') $('#LoginName').focus();
+                else $('#Password').focus();
+            }
+            _init();
+
+        });
+    </script>
+}

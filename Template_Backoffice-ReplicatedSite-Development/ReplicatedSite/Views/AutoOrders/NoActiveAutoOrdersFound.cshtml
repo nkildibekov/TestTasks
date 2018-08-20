@@ -1,0 +1,42 @@
+﻿@{
+    ViewBag.Title = @Resources.Common.AutoOrder;
+}
+
+<div id="view-autoorder">
+    <p class="lead">Join the Auto Order program</p>
+    <div class="row">
+        <div class="col-sm-8 col-md-9">
+            <section class="card">
+
+                <div class="embed-responsive embed-responsive-16by9">
+                    <!-- iframed video here -->
+                    <p>@Resources.Common.InfoWhyAutoOrder</p>
+                </div>
+                <div class="card-body">                    
+                    <div class="space-20"></div>
+                    <p><a href="@Url.Action("ManageAutoOrder")" class="btn btn-primary btn-lg">@Resources.Common.CreateYourAutoOrder</a>
+                    </p>
+                </div>
+
+            </section>
+        </div>
+
+        <div class="col-sm-4 col-md-3">
+            <section class="card">
+                <div class="card-header">
+                    <h4 class="card-title">@Resources.Common.FAQ</h4>
+                </div>
+                <div class="card-body">
+                    <dl class="dl-faq m-b-0">
+                        <dt>@Resources.Common.Question @Resources.Common._1</dt>
+                        <dd>@Resources.Common.Answer @Resources.Common._1</dd>
+                        <dt>@Resources.Common.Question @Resources.Common._2</dt>
+                        <dd>@Resources.Common.Answer @Resources.Common._2</dd>
+                    </dl>
+                </div>
+            </section>
+        </div>
+    </div>
+
+</div>
+

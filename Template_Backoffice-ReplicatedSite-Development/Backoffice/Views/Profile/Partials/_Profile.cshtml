@@ -1,0 +1,246 @@
+﻿@model ProfileViewModel
+@{
+    var isCurrentIdentity = Model.Customer.CustomerID == Identity.Current.CustomerID;
+    var isPersonallyEnrolled = ((Model.Customer.EnrollerID == Identity.Current.CustomerID) || Model.IsInEnrollerTree);
+    var canSeePersonalInfo = (isCurrentIdentity || isPersonallyEnrolled);
+
+    var contextID = Guid.NewGuid();
+}
+<div id="view-profile-@contextID" class="tabbeddetails">
+    <div class="row">
+        <div class="col-sm-2">
+            <img src="@Url.Avatar(Model.Customer.CustomerID, AvatarType.Large)" class="avatar" />
+            @if (isCurrentIdentity)
+            {
+                <div class="text-center">
+                    <small><a href="@Url.Action("ManageAvatar", "Account")">@Resources.Common.EditAvatar</a></small>
+                </div>
+            }
+        </div>
+        <div class="col-sm-10">
+            <h3>
+                <strong>@Model.Customer.FullName</strong> <small class="text-muted">#@Model.Customer.CustomerID</small><br />
+                <small class="text-muted">@Model.Customer.CustomerTypeDescription @Resources.Common.since @Model.Customer.CreatedDate.ToShortDateString()</small><br />
+                <small class="text-muted">@Resources.Common.LifetimeRank: @CommonResources.Ranks(Model.Customer.RankID)</small>
+            </h3>
+        </div>
+    </div>
+    <div class="space-30"></div>
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="#tab-1-@contextID" data-toggle="tab">@Resources.Common.General</a></li>
+        <li><a href="#tab-2-@contextID" data-action="@Url.Action("activity", "profile", new { id = Model.Customer.CustomerID })" data-toggle="tab">@Resources.Common.Activity</a></li>
+        <li><a href="#tab-3-@contextID" data-action="@Url.Action("rankadvancement", "profile", new { id = Model.Customer.CustomerID })" data-toggle="tab">@Resources.Common.Next @Resources.Common.Rank</a></li>
+        <li><a href="#tab-4-@contextID" data-action="@Url.Action("volumeslist", "profile", new { id = Model.Customer.CustomerID })" data-toggle="tab">@Resources.Common.Volumes</a></li>
+        <li><a href="#tab-5-@contextID" data-action="@Url.Action("orderslist", "profile", new { id = Model.Customer.CustomerID })" data-toggle="tab">@Resources.Common.Orders</a></li>
+        <li><a href="#tab-6-@contextID" data-action="@Url.Action("autoorderslist", "profile", new { id = Model.Customer.CustomerID })" data-toggle="tab">@Resources.Common.AutoOrders</a></li>
+    </ul>
+    <div class="space-30"></div>
+    <div class="tab-content">
+        <div class="tab-pane active" id="tab-1-@contextID">
+            @if (canSeePersonalInfo)
+            {
+                <div class="row">
+                    <div class="col-sm-6">
+                        <label>@Resources.Common.ContactInformation</label>
+                        <div class="well well-white no-border">
+                            <div class="media">
+                                <i class="pull-left media-object fa-phone"></i>
+                                <div class="media-body">
+                                    @Format.Phone(Model.Customer.PrimaryPhone)
+                                </div>
+                            </div>
+                            <div class="media">
+                                <i class="pull-left media-object fa-envelope"></i>
+                                <div class="media-body">
+                                    @Format.Email(Model.Customer.Email)
+                                </div>
+                            </div>
+                            <div class="media">
+                                <div class="media-body">
+                                    @Resources.Common.Login @(Resources.Common.Name): @Model.Customer.LoginName
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <label>Placement</label>
+                        <div class="well well-white no-border">
+                            <dl class="dl-metric no-margin">
+                                <dt>@Resources.Common.Placement</dt>
+                                <dd>
+                                    @if (Model.Customer.Sponsor != null)
+                                    {
+                                        if (Model.Customer.Sponsor.CustomerID >= Identity.Current.CustomerID)
+                                        {
+                                            <a data-profile="modal" data-id="@Model.Customer.Sponsor.CustomerID" data-token="@Security.Encrypt(Model.Customer.Sponsor.CustomerID, Identity.Current.CustomerID)" style='cursor: pointer; text-decoration: none;'>@Model.Customer.Sponsor.FullName (@Model.Customer.Sponsor.CustomerID)</a>
+                                        }
+                                        else
+                                        {
+                                            <span>@Model.Customer.Sponsor.FullName (@Model.Customer.Sponsor.CustomerID)</span>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <span>---</span>
+                                    }
+                                </dd>
+                                <dt>@Resources.Common.Sponsor</dt>
+                                <dd>
+                                    @if (Model.Customer.Enroller != null)
+                                    {
+                                        if (Model.Customer.Enroller.CustomerID >= Identity.Current.CustomerID)
+                                        {
+                                            <a data-profile="modal" data-id="@Model.Customer.Enroller.CustomerID" data-token="@Security.Encrypt(Model.Customer.Enroller.CustomerID, Identity.Current.CustomerID)" style='cursor: pointer; text-decoration: none;'>@Model.Customer.Enroller.FullName (@Model.Customer.Enroller.CustomerID)</a>
+                                        }
+                                        else
+                                        {
+                                            <span>@Model.Customer.Enroller.FullName (@Model.Customer.Enroller.CustomerID)</span>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <span>---</span>
+                                    }
+                                </dd>
+                                <dt>@Resources.Common.JoinDate</dt>
+                                <dd>@Model.Customer.CreatedDate.ToShortDateString()</dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+                <div class="space-15"></div>
+            }
+            <div class="row">
+                @if (canSeePersonalInfo)
+                {
+                    <div class="col-sm-6">
+                        <label>@Resources.Common.Addresses</label>
+                        <div class="well well-white no-border">
+                            @if (Model.Customer.Addresses.Any())
+                            {
+                                foreach (var address in Model.Customer.Addresses)
+                                {
+                                    <div class="media">
+                                        <i class="pull-left media-object fa-home"></i>
+                                        <div class="media-body">
+                                            <address class="view-address">
+                                                @address.AddressDisplay<br />
+                                                @address.City, @address.State
+                                                @address.Zip, @address.Country
+                                            </address>
+                                        </div>
+                                    </div>
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <p>@Resources.Common.NoAddressesOnFile</p>
+                                                }
+                        </div>
+                    </div>
+                                                }
+                <div class="col-sm-6">
+                    <label>Actions</label>
+                    <div class="well well-white no-border">
+                        <a href="@Url.Action("BinaryTreeViewer", "Organization", new { cid = Model.Customer.CustomerID })">@Resources.Common.ViewGraphicalDownline</a>
+                    </div>
+                </div>
+            </div>
+            <div class="space-15"></div>
+            <label>@Resources.Common.Volumes</label>
+            <div class="well well-white no-border">
+                <dl class="dl-metric no-margin">
+                    @{
+                        var volArray = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 }; //Spin Up Instruction: Volume Buckets - Unilevel SETUP
+
+                        //var volArray = new int[] { 200,199,198,197,196,195,194,193,192,191,190,189,188,187,182,181,178 }; //Spin Up Instruction: Volume Buckets - Binary SETUP
+                        foreach (int thisVol in volArray)
+                        {
+                            var thisVolVal = (decimal)Model.Volumes.GetType().GetProperty("Volume" + thisVol).GetValue(Model.Volumes);
+                            <dt>@CommonResources.Volumes(thisVol)</dt>
+                            if (thisVol == volArray[0])
+                            {
+                                <dd>@Format.Boolean(Convert.ToBoolean(thisVolVal))</dd>
+                            }
+                            else
+                            {
+                                <dd class="text-success">@thisVolVal.ToString("N0")</dd>
+                            }
+                        }
+                    }
+                </dl>
+            </div>
+        </div>
+        <script type="text/x-handlebars-template" id="tab-template">
+            <div class="tab-pane" id="{{id}}">
+                <div class="space-30"></div>
+                <div class="text-center">
+                    <img src="@Url.Content("~/Content/images/loading/circle-64.GIF")" /><br />
+                    <div class="loading-status">@Resources.Common.Loading</div>
+                </div>
+            </div>
+        </script>
+    </div>
+</div>
+<script>
+    require(["jquery", "ajax", "handlebars", "bootstrap"], function ($, ajax, Handlebars) {
+
+        // Settings
+        var context = "#view-profile-@contextID",
+            $context = $(context);
+
+        // Event Handlers
+        function registerEventHandlers() {
+            $('a[data-toggle="tab"]').on('show.bs.tab', function (event) {
+                var $tablink = $(event.target),
+                    tabSelector = $tablink.attr('href'),
+                    $tab = $(context + ' ' + tabSelector);
+
+                if ($tab.length == 0) {
+                    var source = $("#tab-template", $context).html();
+                    var template = Handlebars.compile(source);
+                    var _context = { id: tabSelector.replace('#', '') }
+                    var html = template(_context);
+
+                    $(context).find('.tab-pane:last').after(html);
+
+                    var action = $tablink.data('action');
+                    actions.loadTab(tabSelector, action);
+                }
+            });
+        }
+
+
+        // Actions
+        var actions = {
+            loadTab: function (selector, url) {
+                ajax.html({
+                    url: url,
+                    interval: 3000,
+                    maxAttempts: 10,
+                    success: function (response) {
+                        var $tab = $(selector, $context);
+
+                        $(selector, $context).html(response);
+                    },
+                    repeat: function (attempts) {
+                        if (attempts == 5) {
+                            $(selector, $context).find('.loading-status').html("@Resources.Common.CalculationTakingLonger");
+                        }
+                    },
+                    fail: function () {
+                        $(selector, $context).html("@Resources.Common.LoadingFailed");
+                    }
+                });
+            }
+        };
+
+
+        // Initialization
+        function init() {
+            registerEventHandlers();
+        }
+        init();
+
+    });
+</script>

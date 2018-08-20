@@ -1,0 +1,97 @@
+// Images
+.img-responsive { display: inline-block; }
+
+// Text
+.text-uppercase { text-transform: uppercase; }
+.text-xl { font-size: 1.6em; }
+.text-lg { font-size: 1.3em; }
+.text-sm { font-size: 0.85em; }
+.text-xs { font-size: 0.7em; }
+.text-strong { font-weight: bold; }
+.block { display: block; }
+.text-left-desktop {
+    text-align: left;
+    @media(max-width: 767px) {
+        text-align: center;
+        &.text-right-mobile { text-align: right; }
+    }
+}
+.text-right-desktop {
+    text-align: right;
+    @media(max-width: 767px) {
+        text-align: center;
+        &.text-left-mobile { text-align: left; }
+    }
+}
+
+// Margin, Padding & Border
+.no-padding { padding: 0 !important; }
+.no-margin { margin: 0 !important; }
+.no-border { border: 0 !important; }
+.margin-left-10 { margin-left: 10px; }
+.margin-right-10 { margin-right: 10px; }
+.margin-top-10 { margin-top: 10px; }
+.margin-bottom-10 { margin-bottom: 10px; }
+
+// Aligning text next to buttons and form controls
+.form-control-text-lg,
+.btn-text-lg { padding-top: 12px; }
+.form-control-text,
+.btn-text { padding-top: 7px; }
+.form-control-text-sm,
+.btn-text-sm { padding-top: 5px; }
+
+// Horizontal Rules
+.hr-xl { margin: 40px auto; }
+.hr-lg { margin: 30px auto; }
+.hr-sm { margin: 10px auto; }
+.hr-xs { margin: 5px auto; }
+.hr-dashed { border-top: 1px dashed #eee; }
+.hr-dotted { border-top: 1px dotted #eee; }
+.hr-double { border-top: 3px double #eee; }
+
+// Background Colors
+.bg-primary { color: #fff; background-color: #428bca; }
+a.bg-primary:hover { background-color: #3071a9; } 
+.bg-success { background-color: #dff0d8; }
+a.bg-success:hover { background-color: #c1e2b3; }
+.bg-info { background-color: #d9edf7; }
+a.bg-info:hover { background-color: #afd9ee; }
+.bg-warning { background-color: #fcf8e3; }
+a.bg-warning:hover { background-color: #f7ecb5; }
+.bg-danger { background-color: #f2dede; }
+a.bg-danger:hover { background-color: #e4b9b9; }
+
+// Content Masking
+.smudged { -webkit-filter: blur(5px); -moz-filter: blur(10px); -o-filter: blur(10px); -ms-filter: blur(10px); filter: blur(10px); }
+
+// Z-Indexes
+%z-depth-0 { @include box-shadow(none); }
+%z-depth-1 { @include box-shadow(0 1px 3px 0 rgba(0, 0, 0, .16), 0 1px 5px 0 rgba(0, 0, 0, .12)); }
+%z-depth-2 { @include box-shadow(0 2px 5px 0 rgba(0, 0, 0, .16), 0 2px 10px 0 rgba(0, 0, 0, .12)); }
+%z-depth-3 { @include box-shadow(0 5px 11px 0 rgba(0, 0, 0, .18), 0 4px 15px 0 rgba(0, 0, 0, .15)); }
+%z-depth-4 { @include box-shadow(0 8px 17px 0 rgba(0, 0, 0, .2), 0 6px 20px 0 rgba(0, 0, 0, .19)); }
+%z-depth-5 { @include box-shadow(0 16px 28px 0 rgba(0, 0, 0, .22), 0 25px 55px 0 rgba(0, 0, 0, .21)); }
+%z-depth-6 { @include box-shadow(0 27px 24px 0 rgba(0, 0, 0, .2), 0 40px 77px 0 rgba(0, 0, 0, .22)); }
+
+.z-depth-0 { @extend %z-depth-0; }
+.z-depth-1 { @extend %z-depth-1; }
+.z-depth-2 { @extend %z-depth-2; }
+.z-depth-3 { @extend %z-depth-3; }
+.z-depth-4 { @extend %z-depth-4; }
+.z-depth-5 { @extend %z-depth-5; }
+.z-depth-6 { @extend %z-depth-6; }
+
+// Float
+.pull-left-desktop {
+    float: left;
+    @media(max-width: 767px) {
+        float:none;
+    }
+}
+.pull-right-desktop {
+    float: right;
+    @media(max-width: 767px) {
+        float:none;
+    }
+}

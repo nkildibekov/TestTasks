@@ -1,0 +1,18 @@
+﻿[
+  {
+    "outputFile": "Content/styles/site.css",
+    "inputFile": "Content/styles/site.scss"
+  },
+  {
+    "outputFile": "Content/styles/theme/illuminel/theme.css",
+    "inputFile": "Content/styles/theme/illuminel/theme.scss"
+  },
+  {
+    "outputFile": "Content/styles/views/_global.css",
+    "inputFile": "Content/styles/views/_global.scss"
+  },
+  {
+    "outputFile": "Content/styles/theme/dayzero/theme.css",
+    "inputFile": "Content/styles/theme/dayzero/theme.scss"
+  }
+]

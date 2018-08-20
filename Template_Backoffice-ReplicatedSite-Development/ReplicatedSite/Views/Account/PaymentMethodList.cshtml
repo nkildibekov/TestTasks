@@ -1,0 +1,134 @@
+﻿@model IEnumerable<IPaymentMethod>
+@{
+    ViewBag.Title = Resources.Common.YourAccount;
+    Layout = "~/Views/Account/_Layout.cshtml";
+
+    var availablePaymentMethods = Identity.Customer.Market.AvailablePaymentTypes;
+}
+
+@if (availablePaymentMethods.Any(p => p.CanBeParsedAs<CreditCard>()))
+{
+    <h3 class="page-header no-margin">@Resources.Common.YourCreditCards</h3>
+    <div class="space-20"></div>
+
+    <div class="row">
+
+        @foreach (var method in Model.Where(c => c is CreditCard))
+        {
+            var card = method as CreditCard;
+
+        <div class="col-sm-4">
+
+            @if (card.IsUsedInAutoOrders)
+            {
+                <strong>@Resources.Common.AutoOrderCard</strong>
+                <a data-toggle="popover"
+                   data-title="Auto-order Card"
+                   data-content="@Resources.Common.CreditCardUsedAsAutoOrderPaymentMethod.FormatWith(card.AutoOrderIDs.Count())"
+                   data-placement="top"
+                   data-trigger="hover"><i class="fa-question-circle"></i></a><br />
+            }
+
+            <p>
+                @if (card.IsExpired)
+                { <span class="label label-danger">@Resources.Common.Expired</span><br /> }
+                @card.NameOnCard<br />
+                @Resources.Common.CardEndingIn @card.CardNumber<br />
+                @Resources.Common.Expires: @card.ExpirationDate.ToString("M/yyyy")<br />
+            </p>
+
+            <div class="btn-group">
+                <a href="@Url.Action("ManageCreditCard", new { type = card.Type })" class="btn btn-default"><i class="fa-pencil"></i></a>
+                @if (card.IsUsedInAutoOrders)
+                {
+                    <a class="btn btn-default" data-toggle="popover" data-title="@Resources.Common.UnableToDelete" data-trigger="hover" data-content="@Resources.Common.CardCantBeDeleted_AutoOrder" data-delay='{"show":"500"}'><i class="fa-trash-o"></i></a>
+                }
+                else
+                {
+                    <a href="@Url.Action("DeleteCreditCard", new { type = card.Type })" class="btn btn-default"><i class="fa-trash-o"></i></a>
+                }
+            </div>
+        </div>
+        }
+        @if (Model.Where(c => c is CreditCard).Count() < 2)
+        {
+        <div class="col-sm-4">
+            <div class="text-center">
+                <a href="@Url.Action("AddCreditCard")" class="text-muted">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <i class="fa-plus" style="font-size: 48px;"></i><br />
+                            @Resources.Common.AddNewCreditCard
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+        }
+
+    </div>
+}
+
+@if (availablePaymentMethods.Count() > 1)
+{
+    <div class="space-100"></div>
+}
+
+@if (availablePaymentMethods.Any(p => p.CanBeParsedAs<BankAccount>()))
+{
+    <h3 class="page-header">@Resources.Common.YourBankAccounts</h3>
+    <div class="row">
+
+        @foreach (var method in Model.Where(c => c is BankAccount))
+    {
+        var account = method as BankAccount;
+
+    <div class="col-sm-4">
+
+        @if (account.IsUsedInAutoOrders)
+            {
+            <strong>@Resources.Common.AutoOrderBankAccount</strong>
+            <a data-toggle="popover"
+               data-title="Auto-order Bank Account"
+               data-content="@Resources.Common.BankAccountUsedAsAutoOrderPaymentMethod.FormatWith(account.AutoOrderIDs.Count())"
+               data-placement="top"
+               data-trigger="hover"><i class="fa-question-circle"></i></a><br />
+            }
+
+        <p>
+            @account.NameOnAccount<br />
+            @account.BankName account ending in @account.AccountNumber
+        </p>
+
+        <div class="btn-group">
+            <a href="@Url.Action("ManageBankAccount", new { type = account.Type })" class="btn btn-default"><i class="fa-pencil"></i></a>
+
+            @if (account.IsUsedInAutoOrders)
+                {
+                <a class="btn btn-default" data-toggle="popover" data-title="@Resources.Common.UnableToDelete" data-trigger="hover" data-content="@Resources.Common.AutoOrderBankAccountCannotBeDeleted" data-delay='{"show":"500"}'><i class="fa-trash-o"></i></a>
+                }
+                else
+                {
+                <a href="@Url.Action("DeleteBankAccount", new { type = account.Type })" class="btn btn-default"><i class="fa-trash-o"></i></a>
+                }
+        </div>
+    </div>
+    }
+        @if (Model.Where(c => c is BankAccount).Count() < 1)
+    {
+    <div class="col-sm-4">
+        <div class="text-center">
+            <a href="@Url.Action("AddBankAccount")" class="text-muted">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <i class="fa-plus" style="font-size: 48px;"></i><br />
+                        @Resources.Common.AddNewBankAccount
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+    }
+
+    </div>
+}

@@ -1,0 +1,127 @@
+﻿@model EnrollmentConfigurationViewModel
+@{
+    ViewBag.Title = Resources.Common.EnrollmentConfiguration;
+}
+
+<div id="view-enrollment-configuration">
+    <h2>@ViewBag.Title</h2>
+    <div class="space-20"></div>
+
+    @using (Html.BeginForm())
+    {
+        <input type="hidden" id="market-country-code" name="MarketName" />
+
+            <!-- Choose Enroller -->
+        if (Identity.Owner.CustomerID == GlobalSettings.ReplicatedSites.DefaultAccountID)
+        {
+            <h4><strong>@Resources.Common.ChooseEnrollerSearchInstructions</strong></h4>
+            <div class="row">
+                <div class="col-sm-4">
+                    <a class="btn btn-primary" id="enroller-search" style="margin-right: 10px;">@Resources.Common.ChooseEnroller</a>
+                    <a data-role="corporatesignup" class="btn btn-primary">@Resources.Common.NotReferred</a>
+                </div>
+            </div>
+
+                <!-- Search Message -->
+            <div id="search-message" style="display: none;">
+                <div class="space-20"></div>
+                <div class="row margin-0">
+                    <div class="col-sm-6">
+                        <div class="alert alert-success">
+                            <p class="message"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="space-20"></div>
+        }
+
+            <!-- Choose Market -->
+        var markethiddenClass = (GlobalSettings.Markets.AvailableMarkets.Count > 1) ? "" : "hidden";
+        <div class="@markethiddenClass">
+            <h4><strong>@Resources.Common.SelectYourMarket</strong></h4>
+            <div class="row">
+                <div class="col-sm-4">                  
+                    @Html.DropDownListFor(c => c.MarketName, Model.MarketSelectList,
+                        htmlAttributes: new
+                        {
+                            @class = "form-control countryselect",
+                            data_role = "Country"
+                        })
+                </div>
+            </div>
+            <div class="space-30"></div>
+        </div>
+
+
+
+        <button type="submit" class="btn btn-lg btn-info">@Resources.Common.JoinNow</button>
+        <div class="space-30"></div>
+
+
+           <!-- Enroller Search Modal -->
+        <div class="modal fade" id="distributorSearchModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">@Resources.Common.Close</span></button>
+                        <h4 class="modal-title">@Resources.Common.FindYourReferrer</h4>
+                    </div>
+                    <div class="modal-body">
+                        @Html.Partial("_EnrollerModal")
+                    </div>
+                </div>
+            </div>
+        </div>
+        @Html.AntiForgeryToken()
+    }
+</div>
+
+@section scripts
+{
+    <script>
+        require(["jquery", "forms", "bootstrap", "extensions", "pubsub"], function ($, forms) {
+
+            // Event Handlers
+            function registerEventHandlers() {
+                $('#enroller-search').on('click', function () {
+                    $('#distributorSearchModal').modal();
+                });
+
+                $('[data-role="Country"]').on('click', function () {
+                    $('#market-country-code').val($('[data-role="Country"]').val());
+                });
+
+                $('[data-role="corporatesignup"]').on('click', function () {
+                    window.trigger("enrollment.showenrollerinfo", "corporate");
+                });
+
+                // Pubsub events
+                window.on('enrollment.showenrollerinfo', function (enroller) {
+                    var message = "";
+
+                    if (enroller == "corporate") {
+                        message = Resources.Common.NoDistributorMessage;
+                    }
+                    else {
+                        message = Resources.Common.EnrollerChosenMessage.format(enroller.FullName, enroller.CustomerID);
+                    }
+
+                    $('#distributorSearchModal').modal('hide');
+                    $('#search-message .message').html(message);
+                    $('#search-message').show();
+                    $('button[type="submit"]').attr("disabled", false);
+                });
+            }
+
+            // Initialization
+            function init() {
+                registerEventHandlers();
+
+                $('#market-country-code').val($('[data-role="Country"]').val());
+            }
+
+            init();
+        });
+    </script>
+}

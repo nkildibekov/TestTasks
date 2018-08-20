@@ -1,0 +1,107 @@
+// Mixins
+@import "mixins/_mixins";
+ 
+// Settings
+@import "settings/_colors";
+
+// Components
+@import "components/_cards";
+@import "components/_elements";
+@import "components/_containers"; 
+@import "components/_definitionlists";
+@import "components/_dropdowns";
+@import "components/_forms"; 
+@import "components/_generictree"; 
+@import "components/_images";
+@import "components/_legends"; 
+@import "components/_popovers"; 
+@import "components/_panels";
+@import "components/_progressbars";
+@import "components/_pagination";
+@import "components/_media";
+@import "components/_metrics";
+@import "components/_products"; 
+@import "components/_navbars";
+@import "components/_rows";
+@import "components/_scaffolding";
+@import "components/_site";
+@import "components/_tables";
+@import "components/_tabs";
+@import "components/_textdividers"; 
+@import "components/_wells";
+@import "components/_utilities";
+
+// Vendor Styles
+@import "vendor/_fontawesome";
+@import "vendor/_jcrop";
+@import "vendor/_kendo";
+@import "vendor/_typeahead";
+@import "vendor/_sumoselect";
+
+// Views
+@import "views/_account"; 
+@import "views/_agendas";
+@import "views/_autoship";
+@import "views/_calendars";
+@import "views/_content";
+@import "views/_debug";
+@import "views/_items";
+@import "views/_login";
+@import "views/_orders";
+@import "views/_organization";
+@import "views/_profiles";
+@import "views/_orders";
+@import "views/_resources";
+@import "views/_shopping"; 
+
+@include grid(24);  
+
+// Spin Up Instruction: Theme Switcher - Remove
+#site-logo-container {
+    a { display: block; 
+        .logomain { margin: 0 auto; max-width: 251px; }
+    }
+}
+
+
+.style-switcher { 
+    color: #eee;
+    position: fixed;
+    background-color: rgba(0,0,0,.3);
+    padding: 10px 55px 10px 10px;
+    top: 40px;
+    left: -120px;
+    border-radius: 0 20px 20px 0;
+    -webkit-transition: left .5s;
+    transition: left .5s;
+    z-index:9999999;
+
+    .fa-paint-brush{
+        font-size: 2em;
+        position: absolute;
+        right: 15px;
+        top: 13px;
+    }
+
+    select { 
+        color: #333; 
+        option {
+            padding: 0 0 0 0;
+        }
+    }
+}
+
+    .extended{
+        left:0px;
+        -webkit-transition: left 0.5s; /* Safari */
+        transition: left 0.5s;
+    }
+
+@media (max-width: 767px) {
+    #site-logo { margin-top: -42px; 
+        .logomain { height: 40px; width: 110px; }
+    }
+
+    .side-collapse { top: 95px; }    
+}
+// End Spin Up Instruction

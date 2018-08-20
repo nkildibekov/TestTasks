@@ -1,0 +1,79 @@
+﻿<div class="document-body">
+    <div id="view-salesbyitem">
+        <div class="row margin-10">
+            <div class="col-sm-9 col-xs-12">
+                <h3>Sales by Item</h3>
+            </div>
+            <div class="col-sm-2 col-xs-10">
+                <label>Sales For:</label>
+                <input type="date" data-role="startdate" class="form-control input-sm" value="@DateTime.Now.ToString("yyyy-MM-dd")" />
+            </div>
+            <div class="col-sm-1 col-xs-2">
+                <label>&nbsp;</label>
+                <button type="button" class="btn btn-info btn-sm btn-block" data-role="submit"><i class="fa-search"></i></button>
+            </div>
+        </div>
+        <div class="space-10"></div>
+
+        <div class="panel panel-default" id="view-salesbyitemreport">
+            <div class="loading-indicator"></div>
+        </div>
+    </div>
+
+
+    <script>
+        (function () {
+            require(["ajax"], function (ajax) {
+
+                // Settings
+                var context = "#view-salesbyitem",
+                    $context = $(context);
+
+
+                // Event Handling
+                function registerEventHandlers() {
+                    $('[data-role="submit"]', $context).on('click', function () {
+                        actions.getReport();
+                    });
+                }
+
+
+                // Actions
+                var actions = {
+                    getReport: function () {
+
+                        $('[data-role="submit"]', $context).loadingbutton('start');
+
+                        ajax.json({
+                            url: '@Request.Url.AbsolutePath',
+                            data: {
+                                date: $('[data-role="startdate"]', $context).val()
+                            },
+                            dataType: 'html',
+                            success: function (response) {
+                                if (response.success) {
+                                    $('[data-role="submit"]', $context).loadingbutton('stop');
+                                    $('#view-salesbyitemreport', $context).html(response);
+                                }
+                                else {
+                                    toastr.error("This report has not yet been configured. Contact Exigo for more information.");
+                                }
+                            }
+                        });
+                    }
+                };
+
+
+                // Initialization
+                function init() {
+                    registerEventHandlers();
+                    actions.getReport();
+                }
+                init();
+
+            });
+        })();
+    </script>
+
+
+</div>

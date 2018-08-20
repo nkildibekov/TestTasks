@@ -1,0 +1,33 @@
+﻿@model VolumeCollection
+@if (Model != null)
+{
+    var volArray = new int[] { 1, 2, 3, 4, 5, 6, 7, 8 };
+
+    <div class="card-metric">
+        @foreach (int thisVol in volArray)
+        {
+            var thisVolVal = (decimal)Model.GetType().GetProperty("Volume" + thisVol).GetValue(Model);
+
+            <div class="row">
+                <div class="col-xs-6">
+                    <span title="Volume #@thisVol">@CommonResources.Volumes(thisVol)</span>
+                </div>
+                <div class="col-xs-6">
+                    @if (thisVol == volArray[0])
+                    {
+                        <dd>@Format.Boolean(Convert.ToBoolean(thisVolVal))</dd>
+                    }
+                    else
+                    {
+                        <span class="text-success">@thisVolVal.ToString("N0")</span>
+                    }
+                </div>
+            </div>
+            <div class="space-5"></div>
+        }
+    </div>
+}
+else
+{
+    <p>@Resources.Common.CardFailedToLoad</p>
+}

@@ -1,0 +1,301 @@
+﻿@model OrderReviewViewModel
+@{
+    ViewBag.Title = Resources.Common.Review;
+
+    var orderItems = Model.Items.Where(c => c.Type == ShoppingCartItemType.Order);
+    var hasOrder = orderItems.Count() > 0;
+    var autoOrderItems = Model.Items.Where(c => c.Type == ShoppingCartItemType.AutoOrder);
+    var hasAutoOrder = autoOrderItems.Count() > 0;
+    var controller = ViewContext.RouteData.Values["controller"].ToString();
+    var submitLoadingImageContainerVisibility = (Model.PropertyBag.IsSubmitting) ? "inline" : "none";
+    var submitButtonVisibility = (Model.PropertyBag.IsSubmitting) ? "none" : "block";
+    var submitButtonText = (hasOrder) ? Resources.Common.PlaceOrder : Resources.Common.CreateAutoOrder;
+}
+
+<div id="view-shoppingreview">
+
+    <h3>@ViewBag.Title</h3>
+
+    <div class="row margin-15">
+        <div class="col-sm-9">
+
+            <div class="panel panel-default">
+                <div class="panel-body">
+
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <h5>@Resources.Common.ShippingAddress</h5>
+                            @Html.DisplayFor(c => c.PropertyBag.ShippingAddress)
+
+                            <div class="space-10"></div>
+                            <a href="@Url.Action("Shipping")"><i class="fa-edit"></i> @Resources.Common.Edit</a>
+                        </div>
+                        <div class="col-sm-4">
+                            <h5>@Resources.Common.PaymentMethod</h5>
+                            @Html.DisplayFor(c => c.PropertyBag.PaymentMethod, "PaymentMethod")
+
+                            <div class="space-10"></div>
+                            <a href="@Url.Action("Payment")"><i class="fa-edit"></i> @Resources.Common.Edit</a>
+                        </div>
+                        <div class="col-sm-4">
+                            <h5>@Resources.Common.ChooseShippingMethod:</h5>
+                            <div id="shipmethods">
+                                @using (Html.BeginForm("setshipmethodid", controller))
+                                {
+                                    foreach (var shipMethod in Model.ShipMethods.OrderBy(c => c.Price))
+                                    {
+                                        <div class="radio">
+                                            <label>
+                                                @Html.RadioButton("ShipMethodID", shipMethod.ShipMethodID, shipMethod.Selected)
+                                                @shipMethod.ShipMethodDescription <small class="text-muted">@shipMethod.Price.ToString("C")</small>
+                                            </label>
+                                        </div>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @if (hasOrder)
+            {
+                <hr />
+                @Html.Partial("Partials/Cart/PaneledCart", orderItems, new ViewDataDictionary {
+                        { "PanelTitle", Resources.Common.YouArePurchasing },
+                        { "Type", ShoppingCartItemType.Order },
+                        { "HideControls", true }
+                    })
+            }
+
+            @if (hasAutoOrder)
+            {
+                <hr />
+                @Html.Partial("Partials/Cart/PaneledCart", autoOrderItems, new ViewDataDictionary {
+                        { "PanelTitle", Resources.Common.TheseItemsWillBeShipped.FormatWith(CommonResources.FrequencyTypes(Exigo.GetFrequencyTypeID(Model.PropertyBag.AutoOrderFrequencyType)), Model.PropertyBag.AutoOrderStartDate) },
+                        { "Type", ShoppingCartItemType.AutoOrder },
+                        { "HideControls", true }
+                    })
+            }
+
+        </div>
+        <div class="col-sm-3">
+            @if (hasOrder)
+            {
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        @Resources.Common.TodaysOrder
+                    </div>
+                    <div class="panel-body order-totals">
+                        <div class="row">
+                            <div class="col-xs-6 col-sm-8">
+                                <strong>@Resources.Common.Subtotal:</strong>
+                            </div>
+                            <div class="col-xs-6 col-sm-4 no-padding">
+                                @Model.OrderTotals.Subtotal.ToString("C")
+                            </div>
+                            <div class="col-xs-6 col-sm-8">
+                                <strong>@Resources.Common.Shipping:</strong>
+                            </div>
+                            <div class="col-xs-6 col-sm-4 no-padding">
+                                @Model.OrderTotals.Shipping.ToString("C")
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-body order-totals">
+                        <div class="row">
+                            <div class="col-xs-6 col-sm-8">
+                                <strong>@Resources.Common.TotalBeforeTax:</strong>
+                            </div>
+                            <div class="col-xs-6 col-sm-4 no-padding">
+                                @((Model.OrderTotals.Subtotal + Model.OrderTotals.Shipping).ToString("C"))
+                            </div>
+                            <div class="col-xs-6 col-sm-8">
+                                <strong>@Resources.Common.Tax:</strong>
+                            </div>
+                            <div class="col-xs-6 col-sm-4 no-padding">
+                                @Model.OrderTotals.Tax.ToString("C")
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-body order-totals">
+                        <div class="row">
+                            <div class="col-xs-6 col-sm-8 text-right">
+                                <strong>@Resources.Common.GrandTotal:</strong>
+                            </div>
+                            <div class="col-xs-6 col-sm-4 no-padding">@Model.OrderTotals.Total.ToString("C")</div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            @if (hasAutoOrder)
+            {
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        @Resources.Common.YourAutoOrder
+                    </div>
+                    <div class="panel-body order-totals">
+                        <div class="row">
+                            <div class="col-xs-6 col-sm-8 text-right">
+                                <strong>@Resources.Common.Frequency:</strong>
+                            </div>
+                            <div class="col-xs-6 col-sm-4 no-padding">
+                                @Model.PropertyBag.AutoOrderFrequencyType.ToString()
+                            </div>
+                            <div class="col-xs-6 col-sm-8 text-right">
+                                <strong>@Resources.Common.StartDate:</strong>
+                            </div>
+                            <div class="col-xs-6 col-sm-4 no-padding">
+                                @Model.PropertyBag.AutoOrderStartDate.ToString("M/d/yyyy")
+                            </div>
+                        </div>
+                        <div class="space-10"></div>
+                        <div class="row">
+                            <div class="col-xs-6 col-sm-8">&nbsp;</div>
+                            <div class="col-xs-6 col-sm-4 no-padding">
+                                <a href="@Url.Action("autoorder")"><i class="fa-edit"></i> Edit</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-body order-totals">
+                        <div class="row">
+                            <div class="col-xs-6 col-sm-8 text-right">
+                                <strong>
+                                    @Resources.Common.Subtotal:
+                                </strong>
+                            </div>
+                            <div class="col-xs-6 col-sm-4 no-padding">@Model.AutoOrderTotals.Subtotal.ToString("C")</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6 col-sm-8 text-right">
+                                <strong>@Resources.Common.Estimated @Resources.Common.Shipping:</strong>
+                            </div>
+                            <div class="col-xs-6 col-sm-4 no-padding">@Model.AutoOrderTotals.Shipping.ToString("C")</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6 col-sm-8 text-right">
+                                <strong>@Resources.Common.Estimated @Resources.Common.Tax:</strong>
+                            </div>
+                            <div class="col-xs-6 col-sm-4 no-padding">@Model.AutoOrderTotals.Tax.ToString("C")</div>
+                        </div>
+                    </div>
+                    <div class="panel-body order-totals">
+                        <div class="row">
+                            <div class="col-xs-6 col-sm-8 text-right">
+                                <strong>@Resources.Common.Estimated @Resources.Common.Total:</strong>
+                            </div>
+                            <div class="col-xs-6 col-sm-4 no-padding">@Model.AutoOrderTotals.Total.ToString("C")</div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <button id="submit" class="btn btn-primary btn-block btn-lg" style="display: @submitButtonVisibility">@submitButtonText</button>
+
+            <div id="submit-loading" style="display: @submitLoadingImageContainerVisibility">
+                <p class="text-center">
+                    <img src="~/Content/images/loading/circle-32.gif" />
+                </p>
+                <p>@Resources.Common.OrderSubmittingMessage</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts
+{
+    <script>
+        require(["jquery", "ajax", "toastr", "forms", "bootstrap"], function ($, ajax, toastr) {
+            // Settings
+            var context = "#view-shoppingreview",
+                $context = $(context),
+                submitCheckoutUrl = '@Url.Action("SubmitCheckout")',
+                orderCompleteUrl = '@Url.Action("OrderComplete")',
+                checkOrderSubmissionStatusUrl = '@Url.Action("CheckOrderSubmissionStatus")',
+                isSubmitting = ('@Model.PropertyBag.IsSubmitting' == "True") ? true : false;
+
+
+            // Event Handlers
+            function registerEventHandlers() {
+                $('[name="ShipMethodID"]', $context).on('change', function () {
+                    $(this).parents('form')[0].submit();
+                });
+
+                $('#submit', $context).on('click', function () {
+                    actions.submit();
+                });
+            }
+
+
+            // Actions
+            var actions = {
+                submit: function () {
+                    var $submitButton = $('#submit'),
+                    $orderProcessingContainer = $("#submit-loading");
+
+                    if (isSubmitting == false) {
+                        isSubmitting = true;
+                        $submitButton.hide();
+                        $orderProcessingContainer.show();
+
+                        ajax.json({
+                            url: submitCheckoutUrl,
+                            success: function (response) {
+                                if (response.success) {
+                                    window.location = orderCompleteUrl;
+                                }
+                                else {
+                                    isSubmitting = false;
+                                    $submitButton.show();
+                                    $orderProcessingContainer.hide();
+                                    toastr.error(response.message);
+                                }
+                            }
+                        });
+                    }
+                    else {
+                        return false;
+                    }
+                },
+                checkOrderStatus: function () {
+                    ajax.json({
+                        url: checkOrderSubmissionStatusUrl,
+                        success: function (response) {
+                            if (response.success) {
+                                window.location = orderCompleteUrl;
+                            }
+                            else {
+                                if (response.orderHadException) {
+                                    var $submitButton = $('#submit'),
+                                        $orderProcessingContainer = $("#submit-loading");
+
+                                    $submitButton.show();
+                                    $orderProcessingContainer.hide();
+
+                                    toastr.error(response.exceptionMessage);
+                                }
+                                else {
+                                    setTimeout(actions.checkOrderStatus(), 3000);
+                                }
+                            }
+                        }
+                    });
+                }
+            };
+
+
+            // Initialization
+            function init() {
+                registerEventHandlers();
+
+                // if the user refreshed the page during submission, check to see repeatedly if the order has been placed or had an error
+                if (isSubmitting) {
+                    actions.checkOrderStatus();
+                }
+            }
+            init();
+        });
+    </script>
+}

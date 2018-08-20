@@ -1,0 +1,101 @@
+﻿@model CartViewModel
+@{
+    ViewBag.Title = Resources.Common.Cart;
+}
+<h2>@ViewBag.Title</h2>
+<div id="view-cart">
+    @if (Model.Items.Count() == 0)
+    {
+        <p>@Resources.Common.NoItemsInCart</p>
+    }
+    else
+    {
+        <div class="row">
+            <div class="col-sm-9">
+                @Html.Partial("Partials/Cart/PaneledCart", Model.Items)
+            </div>
+            <div class="col-sm-3">
+                <div class="panel panel-default">
+                    <div class="panel-body well">
+                        @if (Model.Items.Count() > 0)
+                        {
+                            <div class="text-center">
+                                <div class="lead">
+                                    @Resources.Common.Subtotal (<span data-text="orderquantity">@Model.Items.Sum(c => c.Quantity).ToString("N0")</span> @Resources.Common.Items.ToLower()):<br />
+                                    <strong><span data-text="ordersubtotal">@Model.Items.Sum(c => c.Quantity * c.Price).ToString("C")</span></strong>
+                                </div>
+                            </div>
+                        }
+                        <div class="text-center">
+                            <a href="@Url.Action("Checkout")" class="btn btn-primary btn-block">@Resources.Common.Checkout</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    <a class="btn btn-primary" href="@Url.Action("ItemList")">@Resources.Common.BackToProducts</a>
+
+    <div class="space-20"></div>
+</div>
+
+@section scripts
+{
+    <script>
+
+        require(["jquery", "pubsub", "ajax", "extensions"], function ($, pubsub, ajax) {
+
+            $('#cartCountContainer').not(':contains("(0)")').fadeIn();
+            $('#cartCountContainer:contains("(0)")').fadeOut();
+
+            window.on('cart.updateitemquantity', function (data) {
+                ajax.json({
+                    url: '@Url.Action("updateitemquantity")',
+                    data: data,
+                    success: function (response) {
+                        if (response.success) {
+                            window.trigger('cart.cartupdated', response);
+                        }
+                    }
+                });
+            });
+            window.on('cart.removeitemfromcart', function (id) {
+                ajax.json({
+                    url: '@Url.Action("removeitemfromcart")',
+                    data: {
+                        id: id
+                    },
+                    success: function (response) {
+                        if (response.success) {
+                            window.trigger('cart.itemremoved', id);
+                            window.trigger('cart.cartupdated', response);
+                        }
+                    }
+                });
+            });
+
+            window.on('cart.cartupdated', function (data) {
+                var updatedItem = data.item,
+                    items = data.items;
+
+                if (updatedItem.Quantity == 0) {
+                    window.trigger('cart.itemremoved', updatedItem.ID);
+                }
+
+
+                var quantity = 0;
+                for (var i = 0, max = items.length; i < max; i++) {
+                    var item = items[i];
+                    quantity += item.Quantity;
+                }
+
+                $('[data-text="orderquantity"]').html(quantity.format("N0"));
+                $('[data-text="ordersubtotal"]').html(data.subtotal.format("C"));
+                $('#cartCountContainer').not(':contains("(0)")').fadeIn();
+                $('#cartCountContainer:contains("(0)")').fadeOut();
+            });
+
+        });
+
+    </script>
+}

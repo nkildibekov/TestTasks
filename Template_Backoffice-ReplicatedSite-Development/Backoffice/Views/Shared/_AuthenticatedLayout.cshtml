@@ -1,0 +1,246 @@
+﻿@using System.Linq
+@{
+    Layout = "~/Views/Shared/_MasterLayout.cshtml";
+    var languages = Exigo.GetLanguages();
+}
+@section styles { @RenderSection("styles", required: false) }
+@section header { @RenderSection("header", required: false) }
+
+<div class="hidden-print">
+    <div class="navbar-mobile-fixed-top-offset"></div>
+    <div class="hidden-xs">
+        <div class="navbar-fixed-top-offset"></div>
+        <nav class="navbar navbar-default navbar-fixed-top" role="navigation" id="site-top-navigation">
+            <div class="container">
+                <ul class="nav navbar-nav">
+                    @if (languages.Count() > 1)
+                    {
+                        var languageID = Exigo.GetSelectedLanguageID();
+                        var languageImage = "";
+
+                        switch (languageID)
+                        {
+                            case Languages.English:
+                                languageImage = "/Content/images/country-flags/16/US.png";
+                                break;
+                            case Languages.Spanish:
+                                languageImage = "/Content/images/country-flags/16/ES.png";
+                                break;
+                            default:
+                                break;
+                        }
+
+                        <li class="dropdown ">
+                            <a class="dropdown-toggle" data-toggle="dropdown">
+                                <img src="@languageImage" />&nbsp;@CommonResources.Languages(languageID)&nbsp;<b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu">
+                                @foreach (var item in languages.Distinct())
+                                {
+                                    <li><a data-language="@item.CultureCode" href="@Url.Action("setlanguagepreference", "app", new { id = item.LanguageID })">@CommonResources.Languages(item.LanguageID)</a></li>
+                                }
+                            </ul>
+                        </li>
+                    }
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown">
+                            <img src="@Url.Avatar(Identity.Current.CustomerID, type: AvatarType.Small, cache: false)" class="avatar avatar-xs" /> @Identity.Current.DisplayName <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu col-2 dropdown-menu-unstyled">
+                            <li>
+                                <div class="panel panel-default">
+                                    <div class="panel-body">
+                                        <div class="row margin-15">
+                                            <div class="col-sm-4">
+                                                <div class="text-center">
+                                                    <a href="@Url.Action("manageavatar", "account")" title="@Resources.Common.Edit">
+                                                        <img src="@Url.Avatar(Identity.Current.CustomerID, cache: false)" class="avatar" />
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-8">
+                                                <h5>@Identity.Current.DisplayName</h5>
+                                                <small class="text-muted">@(Resources.Common.ID)# @Identity.Current.CustomerID</small>
+                                                <div class="space-10"></div>
+                                                <a href="@Url.Action("index", "profile", new { token = Security.Encrypt(Identity.Current.CustomerID, Identity.Current.CustomerID)})" class="btn btn-primary btn-xs">@Resources.Common.ViewProfile</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel-footer">
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <a href="@Url.Action("index", "account")" class="btn btn-default btn-sm">@Resources.Common.ChangeSettings</a>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <a href="@Url.Action("logout", "authentication")" class="btn btn-default btn-sm pull-right">@Resources.Common.SignOut</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="hidden-xs" data-toggle="tooltip" data-placement="left" title="Expand View"><a data-toggle="container"><i class="fa-expand"></i></a></li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+    @* Country/Language Selectors and Log-In Alert Menu Button *@
+    @*@if (Utilities.IsContentManagerAdmin(Request))
+    {
+        <div id="contentEditorNavigation" class="contentEditorNavigation">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-3 col-lg-offset-4 col-xs-6">
+                        @Html.DropDownList("Countries", Html.Countries(), new { @class = "form-control", @id = "contentCountries" })
+                    </div>
+                    <div class="col-sm-3 col-xs-6">
+                        @Html.DropDownList("Language", Html.Languages(), new { @class = "form-control", @id = "contentLanguages" })
+                    </div>
+                    <div class="col-md-2 col-sm-3 col-xs-12">
+                        <a data-toggle="modal" data-target="#logInAlertMenu">
+                            <div id="logInAlertMenuButton" class="text-left-desktop editMode btn btn-default logInAlertMenuButton pull-right">
+                                <div class="glyphicon glyphicon-bell"></div> @Resources.Common.LoginAlerts
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }*@
+    <header id="site-header">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12" id="site-logo-container">
+                    <!-- Spin Up Instruction: Theme Switcher - Remove -->
+                    <a href="@Url.Action("index", "dashboard")" id="site-logo">
+                        <div class="logomain img-responsive"></div>
+                    </a>
+                    <!-- End Spin Up Instruction -->
+                    <!-- Spin Up Instruction: Theme Switcher - Add -->
+                    @*<a href="@Url.Action("index", "dashboard")" id="site-logo">
+                            <img src="https://placehold.it/250x100&text=@GlobalSettings.Company.Name" class="img-responsive" />
+                        </a>*@
+                    <!-- End Spin Up Instruction -->
+                </div>
+            </div>
+            <!-- This content block section can optinally replace the row above if the client needs to be able to change their logo -->
+        </div>
+    </header>
+    <nav class="navbar navbar-default navbar-mobile-fixed-top" style="border:none;" role="navigation" id="site-main-navigation">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse-side" data-target="#site-navigation-navbar-collapse" data-target-2="#site-content">
+                <span class="sr-only">@Resources.Common.ToggleNavigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+        <div class="side-collapse in" id="site-navigation-navbar-collapse">
+            <div class="container">
+                <ul class="nav navbar-nav">
+                    @{
+                        var excludedCategoryIDs = new[] { "account" };
+                        var nodes = Settings.SiteMap.Current.Items.Where(c => !excludedCategoryIDs.Contains(c.ID));
+                    }
+                    @foreach (var node in nodes.Cast<NavigationSiteMapNode>())
+                    {
+                        if (node.Children.Any())
+                        {
+                            <li class="dropdown dropdown-hover @node.DeviceVisibilityCssClass">
+                                <a class="dropdown-toggle" data-toggle="dropdown">@node.Label <b class="caret"></b></a>
+                                <ul class="dropdown-menu col-2">
+                                    @foreach (var item in node.Children.Where(c => c.IsVisible()))
+                                    {
+
+                                        // Dividers
+                                        var dividerItem = item as DividerNode;
+                                        if (dividerItem != null)
+                                        {
+                                            <li class="divider"></li>
+
+                                            continue;
+                                        }
+
+                                        // Headings
+                                        var headingItem = item as HeadingNode;
+                                        if (headingItem != null)
+                                        {
+                                            <li role="presentation" class="dropdown-header">@headingItem.Label</li>
+
+                                            continue;
+                                        }
+
+                                        // Links
+                                        var linkItem = item as NavigationSiteMapNode;
+                                        if (linkItem != null)
+                                        {
+                                            <li class="@linkItem.DeviceVisibilityCssClass @(linkItem.IsActive() ? "active" : "")">
+                                                <a href="@linkItem.Url" target="@linkItem.Target">
+                                                    @if (linkItem.HasIcon)
+                                                    {
+                                                        <i class="@linkItem.Icon"></i>
+                                                    }
+                                                    @item.Label
+                                                </a>
+                                            </li>
+                                        }
+                                    }
+                                </ul>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="@node.DeviceVisibilityCssClass">
+                                <a href="@node.Url" target="@node.Target">
+                                    @if (node.HasIcon)
+                                    {
+                                        <i class="@node.Icon"></i>
+                                    }
+                                    @node.Label
+                                </a>
+                            </li>
+                        }
+                    }
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    @{
+                        var ShoppingCartName = Common.GlobalSettings.Globalization.CookieKey + "BackofficeShopping";
+                        var cartCount = Exigo.PropertyBags.Get<ShoppingCartItemsPropertyBag>(ShoppingCartName + "Cart").Items.Sum(c => c.Quantity);
+                    }
+                    <li><a href = "@Url.Action("cart", "Shopping")" ><span id="cartCountContainer" style="@(cartCount > 0 ? "" : "display:none")">(<span id="cartCount" data-text="orderquantity">@cartCount.ToString("N0")</span>)</span> <i class="fa-shopping-cart"></i> @Resources.Common.MyCart</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</div>
+<main id="site-content">
+    <div class="container container-expandable side-collapse-container">
+        @RenderBody()
+    </div>
+</main>
+@* Content Manager partials. Only available to customer type Master. *@
+@*if (GlobalSettings.Exigo.ContentManager.IsEditModeOn && Identity.Current == null ? false : Identity.Current.CustomerTypeID == Common.CustomerTypes.Master)*@
+@*@if (GlobalSettings.Exigo.ContentManager.IsEditModeOn && Identity.Current == null ? false : Identity.Current.CustomerTypeID == Common.CustomerTypes.PreferredCustomer)
+{
+    @Html.Partial("~/Views/Content/Partials/_ContentEditorModal.cshtml")
+
+    @Html.Partial("~/Views/Content/Partials/_ContentPreviewModal.cshtml")
+
+    @Html.Partial("~/Views/Content/Partials/_LogInAlertMenuModal.cshtml")
+
+    @Html.Partial("~/Views/Content/Partials/_AddAlertModal.cshtml")
+
+    @Html.Partial("~/Views/Content/Partials/_DeleteAlertModal.cshtml")
+
+    @Html.Partial("_GlobalScripts")
+}*@
+<div id="quickshop-container">
+    <div class="modal"></div>
+</div>
+@section scripts
+{
+    @RenderSection("scripts", required: false)
+}

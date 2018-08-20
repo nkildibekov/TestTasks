@@ -1,0 +1,80 @@
+﻿@model SummaryReportResultViewModel
+@{
+    // Formatter to help us format data consistently
+    Func<decimal, string> FormatValue = (value) =>
+    {
+        switch (Model.Settings.ValueFormat)
+        {
+            case SummaryReportFormatType.Currency:
+                return value.ToCurrency("es-MX");
+
+            case SummaryReportFormatType.Int:
+            default:
+                return value.ToString("N0");
+        }
+    };
+}
+
+<div class="table-responsive table-overflow no-margin no-border">
+    <table class="table table-condensed table-hover table-bordered no-margin">
+        <thead>
+            <tr>
+                <th></th>
+
+                <th class="text-right">Total</th>
+                <th class="text-right">&nbsp;</th>
+
+                @{ var dates = Model.Groups.First().Rows.First().Columns.Select(c => c.Date).Distinct(); }
+                @foreach(var date in dates)
+                { 
+                <th class="text-right">@date.ToString("d-MMM")</th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var group in Model.Groups)
+            { 
+                <tr class="info text-strong">
+                    <td>@group.Title</td>
+
+                    <td class="text-right warning">@FormatValue(group.Rows.Sum(c => c.Total))</td>
+                    <td class="text-right warning"></td>
+
+                    @foreach (var date in dates)
+                    {
+                        <td class="text-right">@FormatValue(group.Rows.Sum(c => c.Columns.Where(d => d.Date == date).Sum(d => d.Value)))</td>
+                    }
+
+                </tr>
+                if(group.Rows.Count > 1 || (group.Rows.Count == 1 && (!string.IsNullOrEmpty(group.Rows.First().Description) && group.Rows.First().Description != group.Title)))
+                { 
+                    foreach (var row in group.Rows)
+                    {
+                        var percentTotal = (row.Total / group.Rows.Sum(c => c.Total)) * 100M;
+                        
+                        <tr class="subrow">
+                            <td class="description active" style="position: relative;">
+                                <div style="position: absolute; z-index: 2000;">@row.Description</div>
+                                <div class="progress progress-xs no-margin no-background" style="position: absolute; top: 0; left: 0; right: 0; z-index: 0; height: 27px; border-radius: 0;">
+                                    <div class="progress-bar" role="progressbar" aria-valuenow="@percentTotal" aria-valuemin="0" aria-valuemax="100" style="position: relative; z-index: 0; width: @percentTotal%; height: 30px; border-radius: 0; background-color: #e3e3e3;"></div>
+                                </div>
+                            </td>
+                            <td class="text-right warning">@FormatValue(row.Total)</td>
+                            <td class="text-right warning">@percentTotal.ToString("N0")%</td>
+
+                            @foreach (var column in row.Columns)
+                            {
+                                var tdCssClass = "";
+                                if (column.Date.IsWeekend()) { tdCssClass += "weekend"; }
+                                var value = (column.Value != 0) ? FormatValue(column.Value) : "<span style='color: #ccc;'>-</span>";
+                        
+                                <td class="text-right @tdCssClass">@Html.Raw(value)</td>
+                            }
+
+                        </tr>
+                    }
+                }
+            }
+        </tbody>
+    </table>
+</div>

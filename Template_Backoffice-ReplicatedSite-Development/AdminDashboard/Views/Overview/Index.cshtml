@@ -1,0 +1,243 @@
+﻿<div class="document-body">
+
+    <div id="view-overview">
+        <div class="overview">
+
+            <h3>Business Summary (@DateTime.Now.ToString("MMMM yyyy"))</h3>
+
+            <div id="ordertotals">
+                <div class="loading-indicator"></div>
+            </div>
+            <script id="ordertotals-template" data-target="#ordertotals" type="text/x-handlebars-template">
+                <div class="row margin-0" id="ordersummary">
+                    <div class="col-sm-3 color-green">
+                        <div class="amounts">
+                            <div class="icon"></div>
+                            <div class="title">Accepted Orders</div>
+                            <div class="value">{{money AcceptedOrdersTotal}}</div>
+                        </div>
+                        <div class="list">
+                            <div class="item"><strong>{{int AcceptedOrdersCount}}</strong>Accepted</div>
+                            <div class="item"><strong>{{int PrintedOrdersCount}}</strong>Printed</div>
+                            <div class="item"><strong>{{int ShippedOrdersCount}}</strong>Shipped</div>
+                        </div>
+                    </div>
+                    <div class="col-sm-3 color-blue">
+                        <div class="amounts">
+                            <div class="icon"></div>
+                            <div class="title">Pending CC</div>
+                            <div class="value">{{money CCPendingOrdersTotal}}</div>
+                            <div class="title">Pending Autoships</div>
+                            <div class="value">{{int PendingAutoshipsTotal}}</div>
+                        </div>
+                        <div class="list">
+                            <div class="item"><strong>{{int PendingOrdersCount}}</strong>Pending</div>
+                            <div class="item"><strong>{{int CCPendingOrdersCount}}</strong>CC Pending</div>
+                            <div class="item"><strong>{{int ACHPendingOrdersCount}}</strong>ACH Pending</div>
+                        </div>
+                    </div>
+                    <div class="col-sm-3 color-orange">
+                        <div class="amounts">
+                            <div class="icon"></div>
+                            <div class="title">Declined Orders</div>
+                            <div class="value">{{money DeclinedOrdersTotal}}</div>
+                        </div>
+                        <div class="list">
+                            <div class="item"><strong>{{int CCDeclinedOrdersCount}}</strong>CC Declined</div>
+                            <div class="item"><strong>{{int ACHDeclinedOrdersCount}}</strong>ACH Declined</div>
+                            <div class="item"><strong>{{int IncompleteOrdersCount}}</strong>Incomplete</div>
+                        </div>
+                    </div>
+                    <div class="col-sm-3 color-red">
+                        <div class="amounts">
+                            <div class="icon"></div>
+                            <div class="title">Cancelled Orders</div>
+                            <div class="value">{{money CancelledOrdersTotal}}</div>
+                        </div>
+                        <div class="list">
+                            <div class="item"><strong>{{int CancelledOrdersCount}}</strong>Cancelled</div>
+                        </div>
+                    </div>
+                </div>
+            </script>
+
+            <div class="hidden-xs">
+                <div class="row margin-15">
+                    <div class="col-sm-6">
+                        <div class="panel panel-default" id="s1">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">Enrollments by Type</h3>
+                            </div>
+                            <div class="panel-body">
+                                <div id="s1chart">
+                                    <div class="loading-indicator"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="panel panel-default" id="s2">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">Revenue by Month</h3>
+                            </div>
+                            <div class="panel-body">
+                                <div id="s2chart">
+                                    <div class="loading-indicator"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row margin-15">
+                    <div class="col-sm-6">
+                        <div class="panel panel-default" id="s3">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">Revenue by Top 10 Products</h3>
+                            </div>
+                            <div class="panel-body">
+                                <div id="s3chart">
+                                    <div class="loading-indicator"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="panel panel-default" id="s4">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">Sales by Source</h3>
+                            </div>
+                            <div class="panel-body">
+                                <div id="s4chart">
+                                    <div class="loading-indicator"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function () {
+            require(["ajax", "handlebars"], function (ajax, Handlebars) {
+
+                var context = '#view-overview',
+                    $context = $(context)
+
+
+                function contextIsAlive() {
+                    return $(context).length > 0;
+                }
+
+
+                // Order Totals
+                ajax.json({
+                    url: '@Url.Action("getordertotals")',
+                    success: function (response) {
+                        Handlebars.render('#ordertotals-template', response.data);
+                    }
+                });
+
+
+                // Charts
+                var chartEnrollmentsByType;
+                ajax.json({
+                    url: '@Url.Action("getenrollmentsbytype")',
+                    success: function (response) {
+                        if (!contextIsAlive()) return;
+
+                        if (chartEnrollmentsByType != null && chartEnrollmentsByType.id != null) {
+                            chartEnrollmentsByType.dispose();
+                        }
+
+                        chartEnrollmentsByType = chartEnrollmentsByType || new FusionCharts("@Url.Content("~/Content/scripts/vendor/fusioncharts/MSLine.swf")", "overview_chartEnrollmentsByType",
+                        {
+                            renderAt: "s1chart",
+                            width: "100%",
+                            height: "300",
+                            dataFormat: "xml",
+                            dataSource: response.xml
+                        });
+
+                        FusionCharts.render(chartEnrollmentsByType);
+                    }
+                });
+
+
+                var chartRevenueByMonth;
+                ajax.json({
+                    url: '@Url.Action("getrevenuebymonth")',
+                    success: function (response) {
+                        if (!contextIsAlive()) return;
+
+                        if (chartRevenueByMonth != null && chartRevenueByMonth.id != null) {
+                            chartRevenueByMonth.dispose();
+                        }
+
+                        chartRevenueByMonth = chartRevenueByMonth || new FusionCharts("@Url.Content("~/Content/scripts/vendor/fusioncharts/Column3D.swf")", "overview_chartRevenueByMonth",
+                        {
+                            renderAt: "s2chart",
+                            width: "100%",
+                            height: "300",
+                            dataFormat: "xml",
+                            dataSource: response.xml
+                        });
+
+                        FusionCharts.render(chartRevenueByMonth);
+                    }
+                });
+
+
+                var chartRevenueByTopProducts;
+                ajax.json({
+                    url: '@Url.Action("getrevenuebytopproducts")',
+                    success: function (response) {
+                        if (!contextIsAlive()) return;
+
+                        if (chartRevenueByTopProducts != null && chartRevenueByTopProducts.id != null) {
+                            chartRevenueByTopProducts.dispose();
+                        }
+
+                        chartRevenueByTopProducts = chartRevenueByTopProducts || new FusionCharts("@Url.Content("~/Content/scripts/vendor/fusioncharts/Doughnut3D.swf")", "overview_chartRevenueByTopProducts",
+                        {
+                            renderAt: "s3chart",
+                            width: "100%",
+                            height: "400",
+                            dataFormat: "xml",
+                            dataSource: response.xml
+                        });
+
+                        FusionCharts.render(chartRevenueByTopProducts);
+                    }
+                });
+
+
+                var chartSalesBySource;
+                ajax.json({
+                    url: '@Url.Action("getsalesbysource")',
+                    success: function (response) {
+                        if (!contextIsAlive()) return;
+
+                        if (chartSalesBySource != null && chartSalesBySource.id != null) {
+                            chartSalesBySource.dispose();
+                        }
+
+                        chartSalesBySource = chartSalesBySource || new FusionCharts("@Url.Content("~/Content/scripts/vendor/fusioncharts/Pie2D.swf")", "overview_chartSalesBySource",
+                        {
+                            renderAt: "s4chart",
+                            width: "100%",
+                            height: "400",
+                            dataFormat: "xml",
+                            dataSource: response.xml
+                        });
+
+                        FusionCharts.render(chartSalesBySource);
+                    }
+                });
+            });
+        })();
+    </script>
+
+</div>

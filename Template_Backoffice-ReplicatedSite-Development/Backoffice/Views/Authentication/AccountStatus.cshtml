@@ -1,0 +1,11 @@
+﻿@{
+    Layout = "~/Views/Shared/_PublicLayout.cshtml";
+    ViewBag.Title = "Account Status";
+}
+
+<div id="view-account-status">
+    <h1>@ViewBag.Title</h1>
+    <p>@Resources.Common.IncompleteAccount @GlobalSettings.Company.Phone.</p>
+
+    <a class="btn btn-primary" href="@Url.Action("Logout", "Authentication")">@Resources.Common.BackToSignIn</a>
+</div>

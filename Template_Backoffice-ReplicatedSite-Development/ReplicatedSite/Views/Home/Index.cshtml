@@ -1,0 +1,91 @@
+﻿@model List<Item>
+@{
+    ViewBag.Title = Resources.Common.Home;
+}
+
+@section banner
+{
+    @*@Html.Partial("~/Views/Content/Partials/_LogInAlert.cshtml")*@
+    @Html.Partial("~/Views/Home/Partials/CarouselBannerPart.cshtml")
+}
+
+<div class="row">
+    @Html.Partial("~/Views/Home/Partials/_HomeItemCard.cshtml", Model.Take(2).ToList())
+</div>
+<div class="space-20"></div>
+
+<div class="hidden-xs">
+    @Html.Partial("~/Views/Home/Partials/StaticBannerPart.cshtml")
+    @*<img src = "https://placehold.it/1140x300" class="img-responsive">*@
+    <div class="space-20"></div>
+
+    <!--   <div class="hidden-xs">
+           <img src="https://placehold.it/1140x300" class="img-responsive">
+           <div class="space-20"></div>
+       </div>
+    -->
+</div>
+<div class="home-products">
+    <div class="row">
+        @*No Description on last 3 items*@
+        @Html.Partial("~/Views/Home/Partials/_HomeItemCard.cshtml", Model.Skip(2).Select(c => { c.LongDetail1 = null; return c; }).ToList())
+        @*Description on last 3 items*@
+        @*@Html.Partial("~/Views/Home/Partials/_HomeItemCard.cshtml", Model.Skip(2).ToList())*@
+    </div>
+</div>
+
+@section scripts
+{
+    <script>
+        require(["jquery", "ajax", "cookies", "kendo"], function ($, ajax, cookies, kendo) {
+
+            // Settings
+            var logInAlertCookieName = '@GlobalSettings.Globalization.LogInAlertCookieName',
+                logInAlertExpiration = '@DateTime.Now.AddYears(1).ToShortDateString()';
+
+            // Actions
+            var actions = {
+                filterAlert: function () {
+                    ajax.json({
+                        url: '@Url.Action("FilterAlert", "content")',
+                        success: function (response) {
+                            if (!response.success) {
+                                return;
+                            }
+                            if (response.alertToDisplay != null && cookies.get(logInAlertCookieName + response.alertToDisplay.ContentItemID) == null) {
+                                $("#logInAlertTitleDisplay").html(response.alertToDisplay.ContentDescription);
+                                $('#logInAlertDisplay').html(response.alertToDisplay.Content);
+                                $('#logInAlert').modal('show');
+
+                                var options = {};
+                                options.expires = new Date(logInAlertExpiration);
+                                options.path = "/";
+                                options.domain = false;
+                                options.secure = false;
+
+                                cookies.set(logInAlertCookieName + response.alertToDisplay.ContentItemID, "false", options);
+                            }
+                        },
+                        error: function (xhr, error, status) {
+                            console.log("@Resources.Common.Error: ", xhr, error, status);
+                        }
+                    });
+                }
+            };
+
+            // Event Handlers
+            function registerEventHandlers() {
+                // Display log in alert after validation.
+                $(function () {
+                    actions.filterAlert();
+                });
+            }
+
+            // Initialization
+            function init() {
+                registerEventHandlers();
+            }
+            init();
+        });
+    </script>
+}

@@ -1,0 +1,85 @@
+﻿@import "../settings/_colors";
+
+// Button font size for Add to Cart buttons and Details button in Item List
+$addbuttonsize: 15px;
+$addbuttonsize-mobile: 13px;
+
+#view-item-list { min-height: 600px;
+    #shopping-nav {
+        ul { list-style: none; padding-left: 0;
+            li { width: 100% !important; cursor: pointer; color: $blue; transition: color .3s;
+                &.active { color: #FFF; background-color: $blue;
+                    &:hover { color: #FFF; background-color: darken($blue, 10); }
+                }
+                &:hover { color: $darkblue; }
+            }
+        }
+    }
+}
+
+.no-decorate { text-decoration: none !important; }
+
+.ptag { color: blue; }
+
+.img-rounded { border-radius: 6px; }
+
+.panel { margin-bottom: 20px; background-color: #fff; border: 1px solid transparent; border-radius: 4px; -webkit-box-shadow: 0 1px 1px rgba(0,0,0,.05); box-shadow: 0 1px 1px rgba(0,0,0,.05); }
+
+.panel-default { border-color: #ddd; }
+
+.addDetailsContainer { 
+    .addDetails { white-space: nowrap; font-size: 13px; display: block; margin-bottom: 10px; margin-top: 10px; }
+    .addDetailsSub { text-align: left; }
+}
+
+.work-item-img { overflow: hidden; border-radius: 6px; position: relative; width: 100%; display: inline-block; z-index: 1; }
+.work-item-img:hover .work-overlay { opacity: 1; }
+
+.text-white { color: #fff; }
+
+.work-item-img .work-overlay { overflow: hidden; position: absolute; left: 0; top: 0; width: 100%; height: 100%; opacity: 0; transition: all 0.5s; z-index: 2; background-color: transparent; border-radius: 6px; }
+
+.btnContainer { margin-top: 50px;  
+     @media (max-width: 800px) {
+        margin-top: 10px;
+    }
+    &.autoorder { margin-top: 35px; }
+}
+
+.details-btn { background-color: lightslategray; border-radius: 6px; font-size: $addbuttonsize; border: none; color: white; padding: 7px; /*float: left;*/ 
+    @media (max-width: 1200px) {
+        font-size: $addbuttonsize-mobile;
+    }
+    @media (max-width: 767px) {
+        font-size: $addbuttonsize;
+    }
+}
+
+.cart-btn { border-radius: 6px; font-size: $addbuttonsize; border: none; color: white; padding: 7px; /*float: right;*/ 
+    
+    @media (max-width: 1200px) {
+        font-size: $addbuttonsize-mobile;
+    }
+    @media (max-width: 767px) {
+        font-size: $addbuttonsize;
+    }
+    &.autoorder-cart-btn { margin-top: 10px;
+        @media (max-width: 767px) {
+            margin-top: 0; margin-right: 10px;
+        }
+        @media (max-width: 430px) {
+            margin-top: 10px;
+            margin-right: 0;
+        }
+    }
+}
+
+
+.custom-hover { background: rgba(26,26,26,0.75); opacity: 0; overflow: hidden; display: inline-block; position: absolute; left: 0; top: 0; vertical-align: top; width: 100%; height: 100%; padding: 50%; z-index: 1; border-radius: 100%; transform: scale(0); transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.5s; }
+
+.work-item-img:hover .custom-hover { overflow: hidden; opacity: 1; transform: scale(1.55); }
+
+.shortDetailContainer { overflow-y: auto; height: 100px; margin-top: 11px; }
+
+.shortDetail { font-size: 16px; }
+

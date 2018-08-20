@@ -1,0 +1,130 @@
+﻿@model CommissionSummaryViewModel
+
+<div class="document-body">
+    <div id="view-commissions">
+
+        <div class="reportgridwrapper">
+
+            <section class="section hidden-xs" id="s1">
+                <header>
+                    <h2>Commission Payouts by Bonus (@(DateTime.Now.AddYears(-1).ToString("MMMM yyyy")) - @(DateTime.Now.ToString("MMMM yyyy")))</h2>
+                </header>
+                <article>
+                    <div id="s1chart"></div>
+                </article>
+                <footer></footer>
+            </section>
+
+
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="reportgrid">
+                        <h3>Commission Earnings Highlights</h3>
+
+                        <div class="panel panel-default">
+                            <div class="table-responsive">
+                                <table class="table table-striped table-condensed table-hover">
+                                    <colgroup>
+                                        <col style="width: 50%" />
+                                        <col style="width: auto" />
+                                    </colgroup>
+                                    <tr>
+                                        <th>Description</th>
+                                        <th class="text-right">Value</th>
+                                    </tr>
+
+                                    <tr>
+                                        <td>Highest Weekly Payout</td>
+                                        <td class="text-right">@Model.HighestWeeklyPayout.ToString("C") <br /><small class="text-muted">@Model.HighestWeeklyPayoutDate.ToString("MMMM yyyy")</small></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Lowest Weekly Payout</td>
+                                        <td class="text-right">@Model.LowestWeeklyPayout.ToString("C") <br /><small class="text-muted">@Model.LowestWeeklyPayoutDate.ToString("MMMM yyyy")</small></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Average Weekly Payout</td>
+                                        <td class="text-right">@Model.AverageWeeklyPayout.ToString("C")</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Highest Monthly Payout</td>
+                                        <td class="text-right">@Model.HighestMonthlyPayout.ToString("C") <br /><small class="text-muted">@Model.HighestWeeklyPayoutDate.ToString("MMMM yyyy")</small></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>Lowest Monthly Payout</td>
+                                        <td class="text-right">@Model.LowestMonthlyPayout.ToString("C") <br /><small class="text-muted">@Model.LowestMonthlyPayoutDate.ToString("MMMM yyyy")</small></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Average Monthly Payout</td>
+                                        <td class="text-right">@Model.AverageMonthlyPayout.ToString("C")</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="space-30 visible-xs"></div>
+                </div>
+
+
+                <div class="col-sm-6">
+                    <div class="reportgrid">
+                        <h3>Commission Earnings Breakdown</h3>
+
+                        <div class="panel panel-default">
+                            <div class="table-responsive">
+                                <table class="table table-striped table-condensed table-hover">
+                                    <colgroup>
+                                        <col style="width: 70%" />
+                                        <col style="width: auto" />
+                                    </colgroup>
+                                    <tr>
+                                        <th>Description</th>
+                                        <th class="text-right">Earnings</th>
+                                    </tr>
+                                    @foreach (var detail in Model.CommissionEarningsDetails.OrderByDescending(c => c.CommissionRunID).GroupBy(c => new { c.CommissionRunDescription }, (key, group) => new { key.CommissionRunDescription, Earnings = group.Sum(a => a.Earnings) }))
+                                    {
+                                        <tr>
+                                            <td>@detail.CommissionRunDescription</td>
+                                            <td class="text-right">@detail.Earnings.ToString("C")</td>
+                                        </tr>
+                                    }
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <script>
+            (function () {
+                var dataLineChart = "@Html.Raw(Model.CommissionBonusesChartXml)";
+
+
+                var linechart;
+                if (linechart != null && linechart.id != null) {
+                    linechart.dispose();
+                }
+                linechart = new FusionCharts("@Url.Content("~/Content/scripts/vendor/fusioncharts/StackedColumn3D.swf")", "overview_commissionslinechart",
+                {
+                    renderAt: "s1chart",
+                    width: "100%",
+                    height: "500",
+                    dataFormat: "xml",
+                    dataSource: dataLineChart
+                });
+
+
+                function renderCharts() {
+                    FusionCharts.render(linechart);
+                }
+
+                $(function () {
+                    renderCharts();
+                });
+            })();
+        </script>
+
+    </div>
+</div>

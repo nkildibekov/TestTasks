@@ -1,0 +1,20 @@
+﻿@model List<Customer>
+
+@if (Model.Count() > 0)
+{
+    <div class="row margin-10">
+        @foreach (var distributor in Model)
+        {
+            <div class="col-xs-3">
+                <a href="@Url.Action("index", "profile", new { token = Security.Encrypt(distributor.CustomerID, Identity.Current.CustomerID) })" data-profile="popover modal" data-id="@distributor.CustomerID" data-token="@Security.Encrypt(distributor.CustomerID, Identity.Current.CustomerID)" data-placement="top">
+                    <img src="@Url.Avatar(distributor.CustomerID, AvatarType.Small, false)" class="avatar avatar-sm" />
+                </a>
+                <div class="space-10"></div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <p>@Resources.Common.NoRecentEnrollments</p>
+}

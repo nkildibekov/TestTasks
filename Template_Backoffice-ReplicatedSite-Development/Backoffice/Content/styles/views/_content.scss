@@ -1,0 +1,262 @@
+﻿//2017-01-16 Pedro M. Content Manager
+//2016-01-17 Pedro M. This file mirrors _global.scss in Backoffice. Changes to this file might also need to be made in the other.
+
+// Authenticated Layout
+
+// Log-In Alert
+.logInAlert{
+    .modal-dialog{
+        width: 1140px;
+
+        .modal-content{
+            border-radius: 0;
+
+            .modal-header{
+                border: none;
+            }
+
+            .modal-body{
+                padding: 0;
+                margin: 0;
+
+                .container{
+                    padding: 0;
+                    margin: 0;
+
+                    .logInAlertTitleDisplay{
+                        text-align: center;
+                    }
+
+                    .logInAlertDisplay{
+                        text-align: center;
+                    }
+                }
+            }
+        }
+    }
+}
+
+// Log-In Alert Navbar
+.contentEditorNavigation{
+    background-color: #e7e7e7;
+    padding-top: 8px;
+    border: 1px solid #d6cdcd;
+    box-shadow: 0 3px 20px #e2dcdc inset;
+}
+
+// Content Editor modal
+.editContent{
+    .modal-dialog{
+        width: 1170px;
+        margin: 5% auto;
+        .modal-content{
+            border-radius: 0;
+
+            .modal-header{
+                border: none;
+            }
+
+            .content{
+                min-height: 500px;
+            }
+        }
+    }
+    .btn {
+        width: 100%;
+    }
+
+    .container {
+        padding: 0;
+    }
+    @media (min-width: 1200px) {
+        .container { max-width: 1140px; }
+	} 
+}
+
+// Content Preview modal
+.previewContent{
+    .modal-content{
+        border-radius: 0;
+    }
+    .modal-dialog{
+        width: 1140px;
+
+        .modal-header{
+                border: none;
+            }
+    }
+    @media (min-width: 1200px) {
+        .container { max-width: 1140px; }
+	} 
+}
+
+// Log-In alert list menu
+.logInAlertMenu{
+    padding: 0;
+    margin: 0;
+
+    #alertList{
+        table, th, td {
+            border-left: none;
+            border-right: none;
+        }
+    }
+
+    .modal-dialog{
+        width: 1140px;
+
+        .modal-content{
+            border-radius: 0;
+
+            .modal-header{
+                border: none;
+            }
+
+            .alertListContainer{
+                position: relative;
+                overflow-y: auto;
+                padding: 0;
+                margin: 0;
+
+                .alertListTarget{
+                    max-height: 100%;
+                    padding: 0;
+                    margin: 0;
+                }
+            }
+
+            .container .row{
+                margin: 0;
+
+                button{
+                    width: 100%;
+                }
+            }
+        }
+    }
+    @media (min-width: 1200px) {
+        .container { max-width: 1140px; }
+	} 
+}
+
+// Add Log-In alert form
+.logInAlertMenuAdd{
+    padding: 0;
+    margin: 0;
+
+    .modal-dialog{
+        width: 1140px;
+
+        .modal-content{
+            border-radius: 0;
+
+            .modal-header{
+                border: none;
+            }
+        }
+
+        .modal-body{
+            padding: 0;
+            margin: 0;
+
+            .select-all{
+                height: 40px;
+            }
+
+            .logInAlertContentDescription{
+                height: 34px;
+            }
+
+            .PostDate{
+                width: 100%;
+            }
+
+            button{
+                width: 100%;
+            }
+        }
+    }
+    @media (min-width: 1200px) {
+        .container { max-width: 1140px; }
+	} 
+}
+
+// Delete alert confirmation modal
+.deleteAlert{
+    .modal-content{
+        border-radius: 0;
+    }
+    @media (min-width: 1200px) {
+        .container { max-width: 1140px; }
+	} 
+}
+
+//Added styles for the content blocks
+.cmcontent {
+    position: relative;
+    width: 100%;
+}
+
+.cmcontentedit {
+    opacity: .4;
+    background-color: #bce8f1;
+    height: 100%;
+    min-height: 80px;
+    width: 100%;
+    position: relative;
+    overflow:hidden;
+    top: 0;
+    -webkit-transition: all 500ms ease-in-out;
+    -moz-transition: all 500ms ease-in-out;
+    -o-transition: all 500ms ease-in-out;
+    -ms-transition: all 500ms ease-in-out;
+    transition: all 500ms ease-in-out;
+
+    .glyphicon-edit {
+        color: white;
+        font-size: 40px;
+        margin: 14px;
+        position: absolute;
+    }
+}
+
+.cmcontentedit:hover {
+    opacity: .5;
+    -webkit-transition: all 500ms ease-in-out;
+    -moz-transition: all 500ms ease-in-out;
+    -o-transition: all 500ms ease-in-out;
+    -ms-transition: all 500ms ease-in-out;
+    transition: all 500ms ease-in-out;
+    cursor: pointer;
+}
+
+#contentEditorNavigation{
+    .logInAlertMenuButton{
+        text-align: center;
+    }
+    [class*="col"] {
+        padding-bottom: 8px;
+    }
+}
+
+.glyphicon-refresh-animate {
+    -animation: spin .7s infinite linear;
+    -ms-animation: spin .7s infinite linear;
+    -webkit-animation: spinw .7s infinite linear;
+    -moz-animation: spinm .7s infinite linear;
+}
+
+@keyframes spin {
+    from { transform: scale(1) rotate(0deg);}
+    to { transform: scale(1) rotate(360deg);}
+}
+  
+@-webkit-keyframes spinw {
+    from { -webkit-transform: rotate(0deg);}
+    to { -webkit-transform: rotate(360deg);}
+}
+
+@-moz-keyframes spinm {
+    from { -moz-transform: rotate(0deg);}
+    to { -moz-transform: rotate(360deg);}
+}

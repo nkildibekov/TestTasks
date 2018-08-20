@@ -1,0 +1,58 @@
+﻿@model AutoOrderListViewModel
+@{
+    ViewBag.Title = Resources.Common.AutoOrder;
+}
+
+<div id="view-autoorder-list">
+    <h4>Your Auto Orders</h4>
+
+    @if ((Request["success"] ?? "") == "1")
+            {
+        <div class="alert alert-success alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            @Resources.Common.AutoOrderChanges
+        </div>
+    }
+
+    <a href="@Url.Action("ManageAutoOrder")" class="btn btn-primary pull-right">@Resources.Common.CreateNewAutoOrder</a>
+    <div class="clearfix"></div>
+    <div class="space-50"></div>
+
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>@Resources.Common.ID</th>
+                    <th class="text-xs-nowrap">@Resources.Common.Schedule</th>
+                    <th>@Resources.Common.Products</th>
+                    <th>@Resources.Common.EstimatedTotal</th>
+                    <th>&nbsp;</th>
+                </tr>
+            </thead>
+            <tbody class="text-middle">
+                @foreach (var autoOrder in Model.AutoOrders)
+                {
+                    <tr>
+                        <th scope="row" class="text-xs-nowrap" style="width: 70px;">@autoOrder.AutoOrderID</th>
+                        <td class="text-xs-nowrap" style="width: 300px;">
+                            @Resources.Common.Runs @Exigo.GetAutoOrderScheduleSummary(autoOrder.StartDate, autoOrder.FrequencyTypeID)<br />
+                            @Resources.Common.NextDate @autoOrder.NextRunDate.Value.ToLongDateString() <span class="text-muted">(@DateTime.Now.ToExigoTime().BeginningOfDay().RelativeDateUntil(autoOrder.NextRunDate))</span>
+                        </td>
+                        <td>
+                            @foreach (var detail in autoOrder.Details)
+                            {
+                            @:[@detail.Quantity.ToString("N0")] @detail.ItemDescription<br />
+                            }
+                        </td>
+                        <td class="text-xs-nowrap">@autoOrder.Subtotal.ToString("C", new System.Globalization.CultureInfo(GlobalUtilities.GetCultureCodeFormatBasedOnCurrency(autoOrder.CurrencyCode, autoOrder.ShippingAddress.Country)))</td>
+                        <td class="text-xs-nowrap" style="width: 150px;">
+                            <a href="@Url.Action("ManageAutoOrder", new {id = autoOrder.AutoOrderID})" class="btn btn-primary">@Resources.Common.Edit</a>
+                            <a href="@Url.Action("DeleteAutoOrder", new {id = autoOrder.AutoOrderID})" class="btn btn-primary">@Resources.Common.Cancel</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+

@@ -1,0 +1,6 @@
+#site-header { border-top: 10px solid #CCC; padding: 15px 0 10px 0; }
+#site-content { padding: 20px 0; 
+    @media (max-width: 992px) {
+        padding: 20px;
+    }
+}

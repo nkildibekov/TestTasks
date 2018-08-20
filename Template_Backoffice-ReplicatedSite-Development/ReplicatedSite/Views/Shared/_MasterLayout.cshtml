@@ -1,0 +1,416 @@
+﻿@{
+    // Market and Language properties
+    var availableMarkets = GlobalSettings.Markets.AvailableMarkets;
+    var availableLanguages = Exigo.GetLanguages();
+    var selectedCountryCode = GlobalUtilities.GetSelectedCountryCode();
+    var selectedMarket = availableMarkets.FirstOrDefault(c => c.Countries.Contains(selectedCountryCode));
+    var selectedCountry = selectedMarket == null ? CommonResources.Countries(availableMarkets.FirstOrDefault(m => m.IsDefault).CookieValue) : CommonResources.Countries(selectedMarket.CookieValue);
+    var selectedLanguage = CommonResources.Languages(Exigo.GetSelectedLanguageID());
+    var isEnrollment = Request.Url.ToString().ToLower().Contains("enrollment");
+    var countryHiddenClass = (availableMarkets.Count > 1) ? "" : "hidden";
+    var languageHiddenClass = (availableLanguages.Count() > 1) ? "" : "hidden";
+    var modalHeaderText = "";
+
+    if (availableMarkets.Count > 1 && availableLanguages.Count() > 1)
+    {
+        modalHeaderText = Resources.Common.SelectCountLang;
+    }
+    else if (availableMarkets.Count > 1)
+    {
+        modalHeaderText = Resources.Common.SelectCountry;
+    }
+    else
+    {
+        modalHeaderText = Resources.Common.SelectLanguage;
+    }
+
+
+}
+
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html lang="en" class="lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html lang="en" class="lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html lang="en" class="lt-ie9"> <![endif]-->
+<!--[if IE 9]>         <html lang="en" class="ie9"> <![endif]-->
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no">
+    <meta name="mobileoptimized" content="0" />
+    <meta name="published" content="@MvcApplication.ApplicationStartDate" />
+
+    <title>@ViewBag.Title - @GlobalSettings.Company.Name</title>
+
+    <link rel="app" id="apppath" href="@Request.ApplicationPath" />
+    <link rel="app" id="appauthenticated" href="@Request.IsAuthenticated.ToString()" />
+    <link rel="app" id="appsessiontimeout" href="@GlobalSettings.ReplicatedSites.SessionTimeout" />
+
+    <link rel="shortcut icon" href="~/favicon.ico" type="image/x-icon" />
+    <link rel="apple-touch-icon" href="~/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" sizes="57x57" href="~/apple-touch-icon-57x57.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="~/apple-touch-icon-72x72.png" />
+    <link rel="apple-touch-icon" sizes="76x76" href="~/apple-touch-icon-76x76.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="~/apple-touch-icon-114x114.png" />
+    <link rel="apple-touch-icon" sizes="120x120" href="~/apple-touch-icon-120x120.png" />
+    <link rel="apple-touch-icon" sizes="144x144" href="~/apple-touch-icon-144x144.png" />
+    <link rel="apple-touch-icon" sizes="152x152" href="~/apple-touch-icon-152x152.png" />
+
+    @* Styles *@
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.2/toastr.min.css" rel="stylesheet" />
+    @Styles.Render("~/bundles/styles/vendor")
+    <link href="~/Content/styles/site.min.css" rel="stylesheet" />
+    @RenderSection("styles", required: false)
+
+    @* Scripts *@
+    <script src="@RouteJs.RouteJsHandler.HandlerUrl"></script>
+    <script src="@Url.Action("culture", "app")"></script>
+    <script src="@Url.Action("Resource", "App", new { name = "Resources.Common", path = "Common" })"></script>
+
+    <!-- RequireJS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.20/require.min.js" data-main="@Url.Content("~/Content/scripts/main.js")"></script>
+    <script>
+        require.config({
+            baseUrl: '@Url.Content("~/Content/scripts")',
+            @if (Request.IsLocal) { <text>urlArgs: "bust=" + (new Date()).getTime(),</text> }
+            paths: {
+                'addresses': 'modules/addresses',
+                'app': 'modules/app',
+                'ajax': 'modules/ajax',
+                'browser': 'modules/browser',
+                'calendars': 'modules/calendars',
+                'console': 'modules/console',
+                'containers': 'modules/containers',
+                'cookies': 'modules/cookies',
+                'debug': 'modules/debug',
+                'encryptions': 'modules/encryptions',
+                'extensions': 'modules/extensions',
+                'forms': 'modules/forms',
+                'guids': 'modules/guids',
+                'idletimeout': 'modules/idletimeout',
+                'kendogrids': 'modules/kendogrids',
+                'passwords': 'modules/passwords',
+                'popups': 'modules/popups',
+                'pubsub': 'modules/pubsub',
+                'shopping': 'modules/shopping',
+                'urls': 'modules/urls',
+                'widgets': 'modules/widgets',
+
+                'bootstrap': 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min',
+                'bootstrap-hover-dropdown': 'vendor/bootstrap-hover-dropdown.min',
+                'handlebars': '@Scripts.Url("~/bundles/scripts/handlebars")',
+                // OLD FROM CDN
+                //'jquery': 'https://code.jquery.com/jquery-1.11.3.min',
+                // Local
+                'jquery': 'vendor/jquery-1.11.3.min',
+                'jquery-ui': 'https://code.jquery.com/ui/1.11.4/jquery-ui.min',
+                'jquery-validate': 'vendor/jquery.validate.min',
+                'jquery-validate-unobtrusive': 'vendor/jquery.validate.unobtrusive.min',
+                'jquery-validate-unobtrusive-custom': 'vendor/jquery.validate.unobtrusive.custom',
+                'jquery-unobtrusive-ajax': 'vendor/jquery.unobtrusive-ajax',
+                'jquery-sumoselect': 'vendor/jquery.sumoselect.min',
+                'kendo': 'vendor/kendo/scripts/kendo.web.min',
+                'kendo-cultures': 'vendor/kendo/scripts/kendo.culture.min',
+                'moment': 'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment-with-locales.min',
+                'toastr': 'https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.2/toastr.min',
+                'tinymce': '//cdn.tinymce.com/4/tinymce.min'
+            },
+            shim: {
+                'bootstrap': {
+                    deps: ["jquery", "bootstrap-hover-dropdown"]
+                },
+                'jquery-validate-unobtrusive': {
+                    deps: ['jquery-validate']
+                },
+                'jquery-unobtrusive-ajax': {
+                    deps: ['jquery']
+                },
+                'jquery-sumoselect': {
+                    deps: ['jquery']
+                },
+                'handlebars': {
+                    exports: 'Handlebars'
+                }
+            },
+            deps: ["bootstrap", "extensions", "forms"]
+        });
+    </script>
+
+    <!--[if lt IE 9]>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    @RenderSection("header", required: false)
+    @if (!GlobalSettings.ReplicatedSites.GoogleAnalyticsWebPropertyID.IsNullOrEmpty())
+    {
+      <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', '@GlobalSettings.ReplicatedSites.GoogleAnalyticsWebPropertyID', 'auto');
+      ga('send', 'pageview');
+
+      </script>
+    }
+</head>
+<body style="overflow-x: hidden;">
+    <!-- Spin Up Instruction: Theme Switcher - Remove -->
+    <div class="style-switcher hidden-print">
+        <select id="selectStyles" name="selectStyles" class="form-control">
+            <option selected value="dayzero">Template</option>
+            <option selected value="bootstrap">Bootstrap</option>
+            <option value="bellezza">Bellezza</option>
+            <option value="purecare">Purecare</option>
+            <option value="illuminel">Illuminel</option>
+        </select>
+        <span class="fa-paint-brush"></span>
+    </div>
+    <!-- End Spin Up Instruction -->
+
+    <header class="hidden-print">
+        <!-- Debug Watermark -->
+        @Html.Raw(GlobalUtilities.DisplayDebugWatermark())
+
+        <div id="site-header">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-8 col-sm-7 col-xs-6">
+                        <!-- Spin Up Instruction: Theme Switcher - Remove -->
+                        <a href="@Url.Action("index", "home")">
+                            <div class="logomain img-responsive"></div>
+                        </a>
+                        <!-- End Spin Up Instruction -->
+                        <!-- Spin Up Instruction: Theme Switcher - Add -->
+                        @*<a href="@Url.Action("index", "home")">
+                                <img src="https://placehold.it/250x100&text=@GlobalSettings.Company.Name" class="img-responsive" />
+                            </a>*@
+                        <!-- End Spin Up Instruction -->
+                    </div>
+                    @if (Identity.Owner.WebAlias != GlobalSettings.ReplicatedSites.DefaultWebAlias)
+                    {
+                    <div class="col-md-4 col-sm-5 col-xs-6">
+                        <div class="dist-section">
+                            <div class="row">
+                                <div class="col-lg-4 col-md-5 col-sm-4 hidden-xs">
+                                    <img src="@Url.Avatar(Identity.Owner.CustomerID)" class="img-responsive prof-img" />
+                                </div>
+                                <div class="col-lg-8 col-md-7 col-sm-8 col-xs-12">
+                                    <div class="hidden-xs">
+                                        @Html.Partial("~/Views/Shared/_OwnerInfo.cshtml")
+                                    </div>
+                                    <div class="visible-xs">
+                                        <ul class="list-unstyled">
+                                            <li class="text-blue text-strong" style="font-size: 18px;">@Identity.Owner.FirstName @Identity.Owner.LastName</li>
+                                            <li><span class="label label-primary label-as-badge" style="cursor: pointer;" data-toggle="modal" data-target="#owner-info-modal">@Resources.Common.MoreInfo</span></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Nav -->
+        <nav class="navbar navbar-default" role="navigation">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                        <span class="sr-only">@Resources.Common.ToggleNavigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                </div>
+
+                <div class="container">
+                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                        <ul class="nav navbar-nav">
+                            @{
+                                var excludedCategoryIDs = new[] { "account" };
+                                var nodes = Settings.SiteMap.Current.Items.Where(c => !excludedCategoryIDs.Contains(c.ID)).Where(c => c.IsVisible());
+                            }
+                            @foreach (var node in nodes.Cast<NavigationSiteMapNode>())
+                            {
+                                if (node.Children.Any())
+                                {
+                                    <li class="dropdown dropdown-hover @node.DeviceVisibilityCssClass">
+                                        <a class="dropdown-toggle" data-toggle="dropdown">@node.Label <b class="caret"></b></a>
+                                        <ul class="dropdown-menu col-2">
+                                            @foreach (var item in node.Children.Where(c => c.IsVisible()))
+                                            {
+
+                                                // Dividers
+                                                var dividerItem = item as DividerNode;
+                                                if (dividerItem != null)
+                                                {
+                                                    <li class="divider"></li>
+
+                                                    continue;
+                                                }
+
+                                                // Headings
+                                                var headingItem = item as HeadingNode;
+                                                if (headingItem != null)
+                                                {
+                                                    <li role="presentation" class="dropdown-header">@headingItem.Label</li>
+
+                                                    continue;
+                                                }
+
+                                                // Links
+                                                var linkItem = item as NavigationSiteMapNode;
+                                                if (linkItem != null)
+                                                {
+                                                    <li class="@linkItem.DeviceVisibilityCssClass @(linkItem.IsActive() ? "active" : "")">
+                                                        <a href="@linkItem.Url" target="@linkItem.Target">
+                                                            @if (linkItem.HasIcon)
+                                                            {
+                                                                <i class="@linkItem.Icon"></i>
+                                                            }
+                                                            @item.Label
+                                                        </a>
+                                                    </li>
+                                                }
+                                            }
+                                        </ul>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li class="@node.DeviceVisibilityCssClass">
+                                        <a href="@node.Url">
+                                            @if (node.HasIcon)
+                                            {
+                                                <i class="@node.Icon"></i>
+                                            }
+                                            @node.Label
+                                        </a>
+                                    </li>
+                                }
+                            }
+                        </ul>
+
+                        <ul class="nav navbar-nav pull-right-desktop text-right-desktop text-left-mobile">
+                            @if (availableMarkets.Count() > 0)
+                            {
+                                <li id="main-header-language-display"><a href="javascript:;" data-toggle="language">@selectedCountry | @selectedLanguage</a></li>
+                            }
+                            @if (!isEnrollment)
+                            {
+                                var cartItems = Exigo.PropertyBags.Get<ShoppingCartItemsPropertyBag>(GlobalSettings.Globalization.CookieKey + "ReplicatedSiteShopping" + "Cart").Items;
+                                var cartCount = cartItems.Sum(c => c.Quantity);
+                                <li><a href="@Url.Action("cart", "Shopping")"><span id="cartCountContainer" style="@(cartCount > 0 ? "" : "display:none")">(<span id="cartCount" data-text="orderquantity">@cartCount.ToString("N0")</span>)</span> <i class="fa-shopping-cart"></i> @Resources.Common.MyCart</a></li>
+                            }
+                        </ul>
+                        <div class="clearfix"></div>
+
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Page Banner -->
+        @RenderSection("banner", required: false)
+    </header>
+
+    @RenderBody()
+    <footer class="hidden-print">
+        <div class="space-20"></div>
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-10 footer-bottom-links">
+                    <div class="copyright">@Resources.Common.Copyright @DateTime.Now.Year @GlobalSettings.Company.Name @Resources.Common.AllRightsReserved</div>
+                </div>
+            </div>
+        </div>
+        <div class="space-20"></div>
+        <div class="clearfix"></div>
+    </footer>
+
+
+    <!-- Language Modal -->
+    <div class="modal fade" id="language" tabindex="-1" role="dialog" aria-labelledby="language" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">@modalHeaderText</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="country @countryHiddenClass">
+                        <label>@Resources.Common.ChooseCountry</label><br />
+                        <select name="Country" id="CountrySelector" class="form-control">
+                            @foreach (var item in availableMarkets)
+                            {
+                                var selected = (selectedMarket == item) ? "selected='selected'" : "";
+                                <option value="@item.Countries.FirstOrDefault()" @selected>@item.Description</option>
+                            }
+                        </select>
+                        <div class="space-20"></div>
+                    </div>
+                    <div class="language @languageHiddenClass">
+                        <label>@Resources.Common.ChooseLang</label><br />
+                        <select name="Language" class="form-control">
+                            @foreach (var lang in availableLanguages)
+                            {
+                                <option value="@lang.CultureCode">@CommonResources.Languages(lang.LanguageID)</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="space-10"></div>
+                    <a class="btn btn-primary pull-right" id="languageSubmit">@Resources.Common.Submit</a>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Site Owner Info -->
+    <div class="modal fade" id="owner-info-modal" tabindex="-1" role="dialog" aria-labelledby="owner-info" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">@Resources.Common.SiteOwnerInformation</h4>
+                </div>
+                <div class="modal-body">
+                    @Html.Partial("~/Views/Shared/_OwnerInfo.cshtml")
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* Content Manager partials. Only available to customer type Master. *@
+    @*@if (GlobalSettings.Exigo.ContentManager.IsEditModeOn && Identity.Customer == null ? false : Identity.Customer.CustomerTypeID == Common.CustomerTypes.PreferredCustomer)
+    {
+        @Html.Partial("~/Views/Content/Partials/_ContentEditorModal.cshtml")
+
+        @Html.Partial("~/Views/Content/Partials/_ContentPreviewModal.cshtml")
+
+        @Html.Partial("~/Views/Content/Partials/_LogInAlertMenuModal.cshtml")
+
+        @Html.Partial("~/Views/Content/Partials/_AddAlertModal.cshtml")
+
+        @Html.Partial("~/Views/Content/Partials/_DeleteAlertModal.cshtml")
+    }*@
+
+
+    @* Global Javascript *@
+    @Html.Partial("_GlobalScripts")
+    @*@Html.Partial("_ContentScripts")*@
+
+    <!-- Page Scripts -->
+    @RenderSection("scripts", required: false)
+    @Html.PartialScripts()
+    @Html.AntiForgeryToken()
+
+</body>
+</html>

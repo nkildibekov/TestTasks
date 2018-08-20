@@ -1,0 +1,412 @@
+﻿@model ResourceListViewModel
+
+@{
+    ViewBag.Title = "Resource Items";
+
+}
+
+<script src="http://kendo.cdn.telerik.com/2016.1.226/js/kendo.ui.core.min.js"></script>
+<div id="view-Resources">
+    <div class="container">
+        <div class="row">
+            <div class="space-30"></div>
+
+            <div class="col-lg-9">
+                <div class="row">
+                    <div class="col-sm-2 col-sm-offset-1">
+                        <text>@Resources.Common.Name</text>
+                    </div>
+                    <div class="col-sm-8">
+                        @Html.TextBoxFor(model => model.Title, new { @class = "form-control", @Value = Model.Resource.Title })
+                        <span class="title-required text-danger" style="display:none">@Resources.Common.Required</span>
+                    </div>
+                </div>
+                <div class="space-20"></div>
+                <div class="row">
+                    <div class="col-sm-2 col-sm-offset-1">
+                        <text>@Resources.Common.Category</text>
+                    </div>
+                    <div class="col-sm-8 ">
+                        <div class="form-control CategoryList" id="Categories">
+                            <div class="row">
+                                @foreach (var category in Model.ResourceCategories.Where(rc => rc.ParentID == Guid.Empty))
+                                {
+                                    var CurrentCategory = string.Empty;
+                                    <div class="col-xs-6">
+                                        @if (Model.IsEdit)
+                                        {
+                                            CurrentCategory = Model.Resource.ResourceCategoryItems.Where(v => v.CategoryID == category.CategoryID).FirstOrDefault() != null ? "checked" : "";
+                                        }
+                                        <label class="control-label"><input type="checkbox" name="@category.CategoryDescription" value="@category.CategoryID" @CurrentCategory /> <span> @category.CategoryDescription</span></label>
+                                    @foreach (var childcategory in Model.ResourceCategories.Where(rc => rc.ParentID == category.CategoryID))
+                                    {
+                                        <br />
+                                        var CurrentChild = string.Empty;
+                                        if (Model.IsEdit)
+                                        {
+                                            CurrentChild = Model.Resource.ResourceCategoryItems.Where(v => v.CategoryID == childcategory.CategoryID).FirstOrDefault() != null ? "checked" : "";
+                                        }
+                                        <label class="control-label" style="padding-left:40px;"><input type="checkbox" name="@childcategory.CategoryDescription" value="@childcategory.CategoryID" @CurrentChild /> <span> @childcategory.CategoryDescription</span></label>
+                                    }
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                        <span class="categories-required text-danger" style="display:none">@Resources.Common.PleaseChooseCategory</span>
+                    </div>
+                </div>
+                <div class="space-20"></div>
+                <div class="row">
+                    <div class="col-sm-2 col-sm-offset-1">
+                        <text>@Resources.Common.URL</text>
+                    </div>
+                    <div class="col-sm-8">
+                        <div id="hyperlinkCreate">@Html.TextBoxFor(model => model.Url, new { @class = "form-control", @Value = Model.Resource.Url })</div>
+                        <span class="url-required text-danger" style="display:none">@Resources.Common.Required</span>
+                    </div>
+                </div>
+                <div class="space-20"></div>
+                <div class="row">
+                    <div class="col-sm-2 col-sm-offset-1">
+                        <text>@Resources.Common.Thumbnail @Resources.Common.URL</text>
+                    </div>
+                    <div class="col-sm-8">
+                        <div id="thumbnailCreate">@Html.TextBoxFor(model => model.UrlThumbnail, new { @class = "form-control", @Value = Model.Resource.UrlThumbnail })</div>
+                    </div>
+                </div>
+                <div class="space-20"></div>
+                <div class="row">
+                    <div class="col-sm-2 col-sm-offset-1">
+                        <text>@Resources.Common.FileType</text>
+                    </div>
+                    <div class="col-sm-4">
+                        @Html.DropDownListFor(model => model.TypeID, new SelectList(Model.ResourceTypes, "TypeID", "TypeDescription", Model.Resource.TypeID), new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="space-20"></div>
+                <div class="row">
+                    <div class="col-sm-2 col-sm-offset-1">
+                        <text>@Resources.Common.Status</text>
+                    </div>
+                    <div class="col-sm-4">
+                        @Html.DropDownListFor(model => model.Status, new SelectList(Model.Statuses, "StatusID", "StatusDescription", Model.Resource.StatusID), new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="space-20"></div>
+                <div class="row">
+                    <div class="col-sm-2 col-sm-offset-1">
+                        <text>@Resources.Common.PublishOnDate</text>
+                    </div>
+                    <div class="col-sm-4 col-sm-offset-right-5">
+                        @Html.TextBoxFor(model => model.PostDate, new { @class = "form-control", @Value = Model.Resource.PostDate })
+                    </div>
+                </div>
+                <div class="space-20"></div>
+                <div class="row">
+                    <div class="col-sm-2 col-sm-offset-1">
+                        <text>@Resources.Common.Market</text>
+                    </div>
+                    <div class="col-sm-8">
+                        <div class="form-control MarketList" id="MarketLanguages">
+                            <div class="row">
+
+                                @foreach (var market in Model.CountryAvailability)
+                                {
+                                    var marketName = market.Description;
+                                    var checking = Model.Resource.ResourceAvailabilities == null ? "" : Model.Resource.ResourceAvailabilities.Where(c => c.Market == marketName).FirstOrDefault() != null ? "checked" : "";
+                                    <div class="col-xs-6">
+
+                                        <label class="control-label"><input type="checkbox" id="@marketName" value="@marketName" @checking /> <span> @marketName</span></label>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                        <span class="marketLanguages-required text-danger" style="display:none">@Resources.Common.PleaseChooseCategory</span>
+                    </div>
+                </div>
+                @if (!Model.IsEdit)
+                {
+                    <div class="space-20"></div>
+                    <div class="row">
+                        <div class="col-sm-2 col-sm-offset-1">
+                            <text>@Resources.Common.Language</text>
+                        </div>
+                        <div class="col-sm-6">
+                            <div id="Keywords">
+                                @Html.DropDownListFor(model => model.Language, new SelectList(Model.Languages, "LanguageDescription", "LanguageDescription"), new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="col-sm-1">
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    @Html.HiddenFor(model => model.Language, new { @Value = Model.Resource.Language })
+                }
+                <div class="space-20"></div>
+                <div class="row">
+                    <div class="col-sm-2 col-sm-offset-1">
+                        <text>@Resources.Common.Keywords</text>
+                    </div>
+                    <div class="col-sm-6">
+                        <div id="Keywords">
+                            @Html.DropDownListFor(model => model.Tags, new MultiSelectList(Model.Tags, "Name", "Name"), new { @class = "form-control", multiple = "multiple" })
+                        </div>
+                    </div>
+                    <div class="col-sm-1">
+                    </div>
+                </div>
+                <div class="space-20"></div>
+                <div class="row">
+                    <div class="col-sm-2 col-sm-offset-1">
+                        <text>@Resources.Common.Description</text>
+                    </div>
+                    <div class="col-sm-8">
+                        <textarea class="form-control" id="itemDescription">@Model.Resource.ItemDescription</textarea>
+                    </div>
+                    <div class="col-sm-1">
+
+                    </div>
+                </div>
+                <div class="space-20"></div>
+                <div class="row">
+                    <div class="col-sm-2 col-sm-offset-7">
+                        <div class="text-center">
+                            @if (!Model.IsEdit)
+                            {
+                                <button class="btn btn-primary fullwidth" data-role="createResource">@Resources.Common.Create</button>
+                            }
+                            else
+                            {
+                                <button class="btn btn-primary fullwidth" data-role="editResource">@Resources.Common.Save</button>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="col-sm-2 ">
+                        <div class="text-center">
+                            <a class="btn btn-primary fullwidth" href="@Url.Action("manageresources","resources")">@Resources.Common.Cancel</a>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="space-25"></div>
+            </div>
+            <div class="col-lg-3">
+                <div class="panel hidden-xs">
+                    <div class="panel-heading">@Resources.Common.ToolTips</div>
+                    <ul class="list-group">
+                        <li class="list-group-item"><small>@Resources.Common.ToolTip1</small></li>
+                        <li class="list-group-item"><small>@Resources.Common.ToolTip2</small></li>
+                        <li class="list-group-item"><small>@Resources.Common.ToolTip3</small></li>
+                    </ul>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+    require(["jquery", "ajax", "jquery-ui", "kendo", "select2"], function ($, ajax, jqueryui, kendo, select2) {
+
+        // Settings
+        var context = "#view-Resources",
+            $context = $(context),
+            isEdit = @Model.IsEdit.ToString().ToLowerInvariant(),
+            categoryids = [],
+            markets = [],
+            createResource = {};
+
+
+        // Event Handlers
+        function registerEventHandlers() {
+
+
+            $('#PostDate').kendoDateTimePicker({
+                timeFormat: "HH:mm",
+                format: "MM/dd/yyyy HH:mm",
+                parseFormats: ["MM/dd/yyyy hh:mmtt", "MM/dd/yyyy HH:mm", "MM/dd/yyyy", "HH:mm"],
+                min: new Date($.now())
+
+            });
+
+            $context.on("click","[data-role='createResource']", function () {
+                categoryids = [];
+                markets = [];
+                actions.createResourceObject();
+                if(actions.validate(createResource)){
+                    //console.log(createResource)
+                    actions.Createresource(createResource);
+                }
+
+            });
+
+            $context.on("change", $("#Title"), function(){
+                if($("#Title").val() != ""){
+                    $("#Title").css("border-color","#ccc")
+                    $(".title-required").css("display", "none");
+                }
+            });
+
+            $context.on("change", $("#Categories"), function(){
+                if($("#Categories").find("input:checked").length > 0){
+                    $("#Categories").css("border-color","#ccc")
+                    $(".categories-required").css("display", "none");
+                }
+            });
+
+            $context.on("change", $("#Url"), function(){
+                if($("#Url").val() != ""){
+                    $("#Url").css("border-color","#ccc")
+                    $(".url-required").css("display", "none");
+                }
+            });
+
+            $context.on("change", $("#MarketLanguages"), function(){
+                if($("#MarketLanguages").find("input:checked").length > 0){
+                    $("#MarketLanguages").css("border-color","#ccc")
+                    $(".marketLanguages-required").css("display", "none");
+                }
+            });
+
+            $context.on("click","[data-role='editResource']", function () {
+                categoryids = [];
+                markets = []
+                actions.createResourceObject();
+                console.log(createResource);
+                if(actions.validate(createResource)){
+                    actions.editResource(createResource);
+                }
+            });
+
+            $(document).ready(function(){
+                actions.createSelectList();
+            });
+
+        }
+
+
+
+        // Actions
+        var actions = {
+
+            createResourceObject: function(){
+
+                $("#Categories").find("input:checked").each(function () { categoryids.push($(this).attr('value')); });
+
+                $("#MarketLanguages").find("input:checked").each(function () { markets.push($(this).attr('value')); });
+
+                createResource = {
+                    Title: $("#Title").val(),
+                    CategoryID: categoryids,
+                    Url: $("#Url").val(),
+                    UrlThumbnail: $("#UrlThumbnail").val(),
+                    TypeID: $("#TypeID").val(),
+                    StatusID: $("#Status").val(),
+                    PostDate: $('#PostDate').val(),
+                    Keywords: $("#Tags").val(),
+                    Language: $('#Language').val(),
+                    Markets: markets,
+                    ItemDescription: $("textarea#itemDescription").val(),
+                }
+                return createResource;
+            },
+
+            Createresource: function(createResource) {
+
+                ajax.json({
+                    url: '@Url.Action("createresource","resources")',
+                    data: { res: createResource },
+                    success: function (response) {
+                        if (!response.success) {
+                            console.log(response.message);
+                            return;
+                        }
+                        window.location = '@Url.Action("ManageResources", "resources")'
+
+
+                    },
+                    error: function (response) {
+                        console.log(response.message, "Error");
+                    }
+                });
+            },
+
+            editResource: function(createResource) {
+
+                ajax.json({
+                    url: '@Url.Action("editresource","resources")',
+                    data: { res: createResource, editID : "@Model.Resource.ItemID" },
+                    success: function (response) {
+                        if (!response.success) {
+                            console.log(response.message);
+                            return;
+                        }
+                        window.location = '@Url.Action("ManageResources", "resources")'
+
+
+                    },
+                    error: function (response) {
+                        console.log(response.message, "Error");
+                    }
+                });
+            },
+
+            createSelectList: function(){
+                $("#Tags").select2({
+                    value:"",
+                    tags: true,
+                    multiple:true,
+                    placeholder: '@Resources.Common.SelectAKeyword',
+
+                });
+                if(isEdit){
+
+                    var taggs = ["@Html.Raw(String.Join("\",\"", Model.CurrentTags.ToArray()))"];
+
+                    $("#Tags").val(taggs).trigger('change');
+
+                }
+
+            },
+
+            validate: function(){
+                if($("#Title").val() == ""){
+                    $("#Title").css("border-color","red").focus();
+                    $(".title-required").css("display", "");
+                    return false;
+                }
+                if(categoryids.length == 0){
+                    $("#Categories").css("border-color","red").focus();
+                    $(".categories-required").css("display", "");
+                    return false;
+                }
+                if($("#Url").val() == ""){
+                    $("#Url").css("border-color","red").focus();
+                    $(".url-required").css("display", "");
+                    return false;
+                }
+                if(markets.length == 0){
+                    $("#MarketLanguages").css("border-color","red").focus();
+                    $(".marketLanguages-required").css("display", "");
+                    return false;
+                }
+
+                return true;
+            }
+
+        };
+
+        // Initialization
+        function init() {
+            registerEventHandlers();
+
+        }
+        init();
+
+    });
+</script>

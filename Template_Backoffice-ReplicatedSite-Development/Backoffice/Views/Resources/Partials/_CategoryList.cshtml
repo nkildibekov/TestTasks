@@ -1,0 +1,45 @@
+﻿@model SubcategoryListViewModel
+@{
+    ViewBag.Title = "_CategoryList";
+}
+
+<div class="well categories clearfix">
+    @if (!String.IsNullOrEmpty(Model.ParentCategoryDescription))
+    {
+        <h4>@Resources.Common.SubcategoriesFor @Model.ParentCategoryDescription</h4>
+    }
+    else
+    {
+        <h4>@Resources.Common.Subcategories</h4>
+    }
+    <div class="table-responsive">
+        <table class="table table-hover table-bordered">
+            <thead>
+                <tr class="active">
+                    <th class="row-move"><i class="fa fa-arrows"></i></th>
+                    <th class="descriptionHeader">@Resources.Common.Description</th>
+                    <th class="actionsHeader">@Resources.Common.Actions</th>
+                </tr>
+            </thead>
+            <tbody data-sort-group="@CustomSortGroups.ResourceCategories"
+                   data-parent-ID="@Model.ParentCategoryID"
+                   data-save-url="@Url.Action("SaveResourceCategorySort", "CustomSort")">
+                @foreach (var category in Model.ResourceCategories)
+                {
+                    <tr data-sort-node="@category.CategoryID">
+                        <td><i class="fa fa-bars sortable-handle"></i></td>
+                        <td class="black-font">
+                            @category.CategoryDescription
+                        </td>
+                        <td>
+                            <a class="bigger-icon editCategory" data-id="@category.CategoryID" data-parent="@category.ParentID" title="@Resources.Common.Edit"><i class="fa-pencil-square"></i></a>
+                            <a class="bigger-icon deleteCategory" data-id="@category.CategoryID" title="@Resources.Common.Delete"><i class="fa-times-circle"></i></a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+
+        </table>
+    </div>
+    <button class="btn-category-sort btn btn-success pull-right" data-sort-target="@Model.ParentCategoryID">@Resources.Common.SaveSortOrder</button>
+</div>

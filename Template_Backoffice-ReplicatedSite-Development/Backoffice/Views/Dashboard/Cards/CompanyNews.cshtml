@@ -1,0 +1,25 @@
+﻿@model List<CompanyNewsItem>
+
+@if (Model != null)
+{
+    if (Model.Any())
+    {
+        <ul class="list-group" style="width:90%;">
+            @foreach (var news in Model.Distinct())
+            {
+                <li class="list-group-item">
+                    @news.Description <br />
+                    <small>@Format.SocialDate(news.CreatedDate)</small>
+                </li>
+            }
+        </ul>
+    }
+    else
+    {
+        <p>@Resources.Common.NoNews</p>
+    }
+}
+else
+{
+    <p>@Resources.Common.ThisCardFailed</p>
+}
