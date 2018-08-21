@@ -3,22 +3,44 @@
 }
 
 <h2>Test</h2>
-
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
 <body>
     <div class="container">
         <div class="box-container">
-            <div class="top box profile">
-                <p class="top-title">profile</p>
+            <div class="top box profile col">
+                <p class="top-title">NIKITA KILDIBEKOV</p>
+                <p class="top-id"> <img class="id-ava" src="~/Content/images/avatars/id_avatar.png" alt="face" height="11" width="11" /> 0000007 </p>
+                <div class="row top-line">
+                    <div>
+                        <img src="~/Content/images/avatars/avatar-3.png" class="user-avatar" />
+                    </div>
+                </div>
+                <div class="row bottom-line">
+                    <div>     
+                        <p class="user-email">nickkildibekov@gmail.com</p>
+                        <p class="user-phone">099-317-43-20</p>             
+                    </div>
+                </div>
+                <div class="row top-line">
+                    <div class="left-stat-top-name">Avg. Piece Price</div>
+                    <div class="right-stat-top-name">Pieces sold</div>
+                </div>
+                <div class="row top-line">
+                    <div class="left-stat-value"><span>&#36;</span>54.17</div>
+                    <div class="right-stat-value"><span>&#36;</span>2035.5</div>
+                </div>
             </div>
             <div class="top box my-summary col">
                 <p class="top-title">MY SUMMARY</p>
                 <div class="row top-line">
-                    <div class="left-stat-top-name">Personal Retail Sales</div>                   
-                    <div class="right-stat-top-name">Goal</div>                    
+                    <div class="left-stat-top-name">Personal Retail Sales</div>
+                    <div class="right-stat-top-name">Goal</div>
                 </div>
                 <div class="row bottom-line">
-                    <div class="left-stat-value">110.108</div>
-                    <div class="right-stat-value">100.000</div>
+                    <div class="left-stat-value"><span>&#36;</span>110.108</div>
+                    <div class="right-stat-value"><span>&#36;</span>100.000</div>
                 </div>
                 <div class="row top-line">
                     <div class="left-stat-top-name">Sales Gross Profit</div>
@@ -41,8 +63,8 @@
                     <div class="right-stat-top-name">Pieces sold</div>
                 </div>
                 <div class="row top-line">
-                    <div class="left-stat-value">54.17</div>
-                    <div class="right-stat-value">2035.5</div>
+                    <div class="left-stat-value"><span>&#36;</span>54.17</div>
+                    <div class="right-stat-value"><span>&#36;</span>2035.5</div>
                 </div>
             </div>
             <div class="top box team-summary">
@@ -52,8 +74,8 @@
                     <div class="right-stat-top-name">Goal</div>
                 </div>
                 <div class="row bottom-line">
-                    <div class="left-stat-value">110.108</div>
-                    <div class="right-stat-value">100.000</div>
+                    <div class="left-stat-value"><span>&#36;</span>110.108</div>
+                    <div class="right-stat-value"><span>&#36;</span>100.000</div>
                 </div>
                 <div class="row top-line">
                     <div class="left-stat-top-name">Sales Gross Profit</div>
@@ -76,8 +98,8 @@
                     <div class="right-stat-top-name">Pieces sold</div>
                 </div>
                 <div class="row top-line">
-                    <div class="left-stat-value">54.17</div>
-                    <div class="right-stat-value">2035.5</div>
+                    <div class="left-stat-value"><span>&#36;</span>54.17</div>
+                    <div class="right-stat-value"><span>&#36;</span>2035.5</div>
                 </div>
             </div>
             <div class="top box qualifications">
@@ -87,8 +109,8 @@
                     <div class="right-stat-top-name">Goal</div>
                 </div>
                 <div class="row bottom-line">
-                    <div class="left-stat-value">110.108</div>
-                    <div class="right-stat-value">100.000</div>
+                    <div class="left-stat-value"><span>&#36;</span>110.108</div>
+                    <div class="right-stat-value"><span>&#36;</span>100.000</div>
                 </div>
                 <div class="row top-line">
                     <div class="left-stat-top-name">Sales Gross Profit</div>
@@ -111,19 +133,108 @@
                     <div class="right-stat-top-name">Pieces sold</div>
                 </div>
                 <div class="row top-line">
-                    <div class="left-stat-value">54.17</div>
-                    <div class="right-stat-value">2035.5</div>
+                    <div class="left-stat-value"><span>&#36;</span>54.17</div>
+                    <div class="right-stat-value"><span>&#36;</span>2035.5</div>
                 </div>
             </div>
             <div class="box retention">
-                <p class="top-title">retention</p>
+                <p class="top-title">RETENTION</p>
+                <div class="row">
+                    <div class="col-5">
+                        <div id="container" style="width:240px; height:240px;"></div>
+                    </div>
+                    <div class="col-2">
+                    </div>
+                    <div class="col-5">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-5">
+                    </div>
+                    <div class="col-2">
+                    </div>
+                    <div class="col-5">
+                    </div>
+                </div>
             </div>
             <div class="box acquisition">
-                <p class="top-title">acquisition</p>
+                <p class="top-title">ACQUISITION</p>
             </div>
             <div class="box profit">
-                <p class="top-title">profit</p>
+                <p class="top-title">PROFIT</p>
             </div>
         </div>
     </div>
+    <script>
+        $(function () {           
+            var myChart = Highcharts.chart('container', {
+                chart: {
+                    type: 'column'
+                },
+                credits: {
+                    enabled: false
+                },
+                legend: {
+                    layout: 'horizontal',
+                    itemStyle: {
+                        fontSize:8
+                    },
+                    symbolHeight: 5,
+                    marker: {
+                        symbol: 'square',
+                    },
+                    itemDistance: 5,
+                    margin:5
+                },
+                endOnTick: {enabled:false},
+                exporting:
+                    {
+                        enabled: false
+                    },
+                title: {
+                    text: ''
+                },
+                xAxis: {
+                    categories: ['Inactive', 'Active']
+                },
+                yAxis: {
+                    min: 0,
+                    max: 40,
+                    title: { text: '' },
+                    labels: {
+                        formatter: function () {
+                            return this.value + "%";
+                        }
+                    },
+                },               
+                plotOptions: {
+                    column: {
+                        stacking: 'normal',
+                        pointWidth: 40,
+                    },
+                },
+                series: [{
+                    name: '0-30 Days',
+                    data: [0, 12]                    
+                },
+                {
+                    name: '30-60 Days',
+                    data: [0, 8]
+                },
+                {
+                    name: '60-90 Days',
+                    data: [0, 10]
+                },
+                {
+                    name: '90-120 Days',
+                    data: [0, 5]
+                },
+                {
+                    name: '120+ Days',
+                    data: [25, 0]
+                }],
+               
+            });
+        });
+    </script>
 </body>
