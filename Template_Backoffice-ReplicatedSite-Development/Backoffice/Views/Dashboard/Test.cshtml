@@ -138,10 +138,10 @@
                 </div>
             </div>
             <div class="retention">
-                <div class="ret-box ret-top-left">
-                    <div id="container" style="width:230px; height: 235px;"></div>
+                <div class="ret-box ret-top-left" style="border-bottom:solid;">
+                    <div id="container" style="width:240px; height: 235px;"></div>
                 </div>
-                <div class="ret-box ret-top-middle text-between">
+                <div class="ret-box ret-top-middle text-between" style="border-bottom:solid;">
                     <p class="tb-top-line">Total Customers</p>
                     <p class="tb-bottom-line">60</p>
                     <p class="tb-top-line">Active Customers</p>
@@ -149,7 +149,7 @@
                     <p class="tb-top-line">Inactive Customers</p>
                     <p class="tb-bottom-line">25</p>
                 </div>
-                <div class="ret-box ret-top-right">
+                <div class="ret-box ret-top-right" style="border-bottom:solid;">
                     <div id="container2" style="width:180px; height: 170px; margin-left: -10px; margin-top: 45px;"></div>
                 </div>
                 <div class="ret-box ret-bottom-left">
@@ -218,6 +218,7 @@
                 },
                 xAxis: {
                     categories: ['Inactive', 'Active']
+                    
                 },
                 yAxis: {
                     min: 0,
@@ -350,17 +351,13 @@
                 yAxis: {
                     min: 0,
                     max: 500,
-                    title: { text: '' },
-                    labels: {
-                        formatter: function () {
-                            return this.value + "k";
-                        }
-                    }
+                    title: { text: '' },                   
                 },
                 plotOptions: {
                     column: {
                         stacking: 'normal',
                         pointWidth: 40,
+                        color: '#B7B5DA'
                     },
                 },
                 series: [{
@@ -402,6 +399,7 @@
                 },
                 xAxis: {
                     categories: ['Inactive', 'Active']
+                    
                 },
                 yAxis: {
                     min: 0,
@@ -411,7 +409,7 @@
                         formatter: function () {
                             return this.value + "%";
                         }
-                    },
+                    }
                 },
                 plotOptions: {
                     column: {
@@ -558,6 +556,7 @@
                     column: {
                         stacking: 'normal',
                         pointWidth: 40,
+                        color:'#76D2CF'
                     },
                 },
                 series: [{
@@ -580,7 +579,7 @@
                     itemStyle: {
                         fontSize: 8
                     },
-                    align: 'left',
+                    align: 'center',
                     padding: -10,
                     symbolHeight: 5,
                     marker: {
@@ -603,43 +602,44 @@
                     }
                 },
                 xAxis: {
-                    categories: ['Inactive', 'Active']
+                    categories: ['Current', 'Previous', 'Avg'],
+                    labels: {
+                        style: {
+                            fontSize:8
+                        }
+                    }
                 },
-                yAxis: {
-                    min: 0,
-                    max: 40,
+                yAxis: [{
                     title: { text: '' },
                     labels: {
                         formatter: function () {
                             return this.value + "%";
-                        }
+                        }                        
                     },
+                    min: 0,
+                    max: 60,
                 },
+                    {
+                        title: { text: '' },
+                        opposite: true,                        
+                        min: 0,
+                        max: 75,
+                        labels: {
+                            formatter: function () {
+                                return "$" + this.value + ".000";
+                            }
+                        }
+                    }],
                 plotOptions: {
                     column: {
                         stacking: 'normal',
-                        pointWidth: 40,
+                        pointWidth: 25,
+                        color: '#F68EAA'
                     },
                 },
                 series: [{
-                    name: '0-30 Days',
-                    data: [0, 12]
-                },
-                {
-                    name: '30-60 Days',
-                    data: [0, 8]
-                },
-                {
-                    name: '60-90 Days',
-                    data: [0, 10]
-                },
-                {
-                    name: '90-120 Days',
-                    data: [0, 5]
-                },
-                {
-                    name: '120+ Days',
-                    data: [25, 0]
+                    name: 'Total Amount',
+                    data: [48, 42,57]
                 }],
             });
         });
@@ -657,7 +657,7 @@
                     itemStyle: {
                         fontSize: 8
                     },
-                    align: 'left',
+                    align: 'center',
                     padding: -10,
                     symbolHeight: 5,
                     marker: {
@@ -680,43 +680,44 @@
                     }
                 },
                 xAxis: {
-                    categories: ['Inactive', 'Active']
+                    categories: ['Current', 'Previous', 'Avg'],
+                    labels: {
+                        style: {
+                            fontSize: 8
+                        }
+                    }
                 },
-                yAxis: {
-                    min: 0,
-                    max: 40,
+                yAxis: [{
                     title: { text: '' },
                     labels: {
                         formatter: function () {
                             return this.value + "%";
                         }
                     },
+                    min: 0,
+                    max: 60,
                 },
+                    {
+                        title: { text: '' },
+                        opposite: true,
+                        min: 0,
+                        max: 75,
+                        labels: {
+                            formatter: function () {
+                                return "$" + this.value + ".000";
+                            }
+                        }
+                    }],
                 plotOptions: {
                     column: {
                         stacking: 'normal',
-                        pointWidth: 40,
+                        pointWidth: 25,
+                        color: '#F68EAA'
                     },
                 },
                 series: [{
-                    name: '0-30 Days',
-                    data: [0, 12]
-                },
-                {
-                    name: '30-60 Days',
-                    data: [0, 8]
-                },
-                {
-                    name: '60-90 Days',
-                    data: [0, 10]
-                },
-                {
-                    name: '90-120 Days',
-                    data: [0, 5]
-                },
-                {
-                    name: '120+ Days',
-                    data: [25, 0]
+                    name: 'Total Amount',
+                    data: [48, 42, 57]
                 }],
             });
         });
