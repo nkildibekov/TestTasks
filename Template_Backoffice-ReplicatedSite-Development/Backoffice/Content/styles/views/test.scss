@@ -11,6 +11,63 @@
   margin-top: 25px;
 }
 
+.retention{
+  display: grid;
+  grid-column: 1/3;
+  grid-template-columns: 235px 140px 170px;
+  grid-template-rows: 235px 235px;  
+  .ret-box{
+       background-color: #FFFFFF;
+  }
+}
+
+.acquisition{
+    display:grid;
+    grid-template-rows: 235px 235px;  
+     .ac-box{
+       background-color: #FFFFFF;
+  }
+}
+
+.profit{
+    display:grid;
+    grid-template-rows: 235px 235px;  
+     .pr-box{
+       background-color: #FFFFFF;
+       }
+}
+
+.ret-top-left{
+    grid-column: 1;
+    grid-row: 1;
+    border-bottom:thin;
+    border-bottom-color:dimgray;
+}
+.ret-top-middle{
+    grid-column: 2;
+    grid-row: 1;
+    border-bottom:thin;
+    border-bottom-color:dimgray;
+}
+.ret-top-right{
+    grid-column: 3;
+    grid-row: 1;
+    border-bottom:thin;
+    border-bottom-color:dimgray;
+}
+.ret-bottom-left{
+    grid-column: 1;
+    grid-row: 2;
+}
+.ret-bottom-middle{
+    grid-column: 2;
+    grid-row: 2;
+}
+.ret-bottom-right{
+    grid-column: 3;
+    grid-row: 2;
+}
+
 .box {
   font-family: sans-serif;
   text-align: center;
@@ -22,6 +79,7 @@
 .box > .top-title {
   font-size: 13px;
   color:#9A9A9A;
+  margin-top:4px;
 }
 
 .box > .top-id{
@@ -30,9 +88,6 @@
     margin-top:-18px;
 }
 
-.retention{
-    grid-column: 1/3;
-}
 
 .left-stat-top-name {
 	float: left;
@@ -99,6 +154,25 @@
     color:#9A9A9A;
     margin-top:-13px;
     margin-bottom:0;
+}
+
+#container2 > .highcharts-root{
+        padding-right: 10px;
+}
+
+.text-between{
+    text-align:center;
+    vertical-align:middle;
+    padding-top:80px;
+}
+.tb-top-line{
+    font-size:smaller;
+    color:#FA97B0;
+}
+.tb-bottom-line{
+    font-size:20px;
+    color:#80D5D3;
+    margin-top: -15px;
 }
 
 
