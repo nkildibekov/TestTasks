@@ -5133,6 +5133,61 @@ a.bg-danger:hover {
   color: #80D5D3;
   margin-top: -15px; }
 
+.arrow-up {
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-bottom: 5px solid #7ED321;
+  margin-left: auto;
+  margin-right: 150px; }
+
+.arrow-down {
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid #FE4949;
+  margin-left: auto;
+  margin-right: 185px; }
+
+.arrow-down-1 {
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid #FE4949;
+  margin-left: auto;
+  margin-right: 150px; }
+
+.arrow-up-1 {
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-bottom: 5px solid #7ED321;
+  margin-left: auto;
+  margin-right: 170px; }
+
+.arrow-up-2 {
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-bottom: 5px solid #7ED321;
+  margin-left: auto;
+  margin-right: 185px; }
+
+.arrow-up-3 {
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-bottom: 5px solid #7ED321;
+  margin-left: 177px;
+  margin-right: auto;
+  margin-bottom: 10px; }
+
 .row-24:before,
 .row-24:after {
   display: table;

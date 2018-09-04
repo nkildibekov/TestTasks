@@ -1,194 +1,222 @@
 ﻿@{
     ViewBag.Title = "Test";
+    var perRetSal = 110.108;
+    var perRetSalGoal = 125.000;
 }
 
 <h2>Test</h2>
-<script src="https://code.highcharts.com/highcharts.js"></script>
-
+<head>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+    <script src="~/Content/scripts/vendor/jquery-1.11.3.min.js"></script>
+</head>
 <body>
-    <div class="container">
-        <div class="box-container">
-            <div class="top box profile col">
-                <p class="top-title">NIKITA KILDIBEKOV</p>
-                <p class="top-id"> <img class="id-ava" src="~/Content/images/avatars/id_avatar.png" alt="face" height="11" width="11" /> 0000007 </p>
-                <div class="row top-line">
-                    <div>
-                        <img src="~/Content/images/avatars/avatar-3.png" class="user-avatar" />
-                    </div>
-                </div>
-                <div class="row bottom-line">
-                    <div>
-                        <p class="user-email">nickkildibekov@gmail.com</p>
-                        <p class="user-phone">099-317-43-20</p>
-                    </div>
-                </div>
-                <div class="row top-line">
-                    <div class="first-left-stat-top-name">High rank</div>
-                    <div class="first-middle-stat-top-name">Current rank</div>
-                    <div class="first-right-stat-top-name">To next rank</div>
-                </div>
-                <div class="row top-line">
-                    <div class="first-left-stat-value">Trainer</div>
-                    <div class="first-middle-stat-value">Sponsor</div>
-                    <div class="first-right-stat-value">83%</div>
+<div class="container">
+    <div class="box-container">
+        <div class="top box profile col">
+            <p class="top-title">NIKITA KILDIBEKOV</p>
+            <p class="top-id"> <img class="id-ava" src="~/Content/images/avatars/id_avatar.png" alt="face" height="11" width="11" /> 0000007 </p>
+            <div class="row top-line">
+                <div>
+                    <img src="~/Content/images/avatars/avatar-3.png" class="user-avatar" />
                 </div>
             </div>
-            <div class="top box my-summary col">
-                <p class="top-title">MY SUMMARY</p>
-                <div class="row top-line">
-                    <div class="left-stat-top-name">Personal Retail Sales</div>
-                    <div class="right-stat-top-name">Goal</div>
-                </div>
-                <div class="row bottom-line">
-                    <div class="left-stat-value"><span>&#36;</span>110.108</div>
-                    <div class="right-stat-value"><span>&#36;</span>100.000</div>
-                </div>
-                <div class="row top-line">
-                    <div class="left-stat-top-name">Sales Gross Profit</div>
-                    <div class="right-stat-top-name">Goal</div>
-                </div>
-                <div class="row bottom-line">
-                    <div class="left-stat-value">53.2%</div>
-                    <div class="right-stat-value">50%</div>
-                </div>
-                <div class="row top-line">
-                    <div class="left-stat-top-name-smaller">Previous Month Sales +/-</div>
-                    <div class="right-stat-top-name-smaller">March 2017 Sales +/-</div>
-                </div>
-                <div class="row bottom-line">
-                    <div class="left-stat-value">53.2%</div>
-                    <div class="right-stat-value">50%</div>
-                </div>
-                <div class="row top-line">
-                    <div class="left-stat-top-name">Avg. Piece Price</div>
-                    <div class="right-stat-top-name">Pieces sold</div>
-                </div>
-                <div class="row top-line">
-                    <div class="left-stat-value"><span>&#36;</span>54.17</div>
-                    <div class="right-stat-value">2035.5</div>
+            <div class="row bottom-line">
+                <div>
+                    <p class="user-email">nickkildibekov@gmail.com</p>
+                    <p class="user-phone">099-317-43-20</p>
                 </div>
             </div>
-            <div class="top box team-summary">
-                <p class="top-title">TEAM SUMMARY</p>
-                <div class="row top-line">
-                    <div class="left-stat-top-name">Team Volume</div>
-                    <div class="right-stat-top-name">New Team Members</div>
-                </div>
-                <div class="row bottom-line">
-                    <div class="left-stat-value"><span>&#36;</span>731.657</div>
-                    <div class="right-stat-value">11</div>
-                </div>
-                <div class="row top-line">
-                    <div class="left-stat-top-name-smaller">TM's with + Sales</div>
-                    <div class="right-stat-top-name-smaller">Leaders with + Bonus</div>
-                </div>
-                <div class="row bottom-line">
-                    <div class="left-stat-value">44%</div>
-                    <div class="right-stat-value">55%</div>
-                </div>
-                <div class="row top-line">
-                    <div class="left-stat-top-name-smaller">Retention(120 days)</div>
-                    <div class="right-stat-top-name-smaller">Retention(All time)</div>
-                </div>
-                <div class="row bottom-line">
-                    <div class="left-stat-value">63%</div>
-                    <div class="right-stat-value">70%</div>
-                </div>
-                <div class="row top-line">
-                    <div class="left-stat-top-name-smaller">Team Avg. Piece Price</div>
-                    <div class="right-stat-top-name-smaller">Team Piece count</div>
-                </div>
-                <div class="row top-line">
-                    <div class="left-stat-value"><span>&#36;</span>42.11</div>
-                    <div class="right-stat-value">12,488.5</div>
+            <div class="row top-line">
+                <div class="first-left-stat-top-name">High rank</div>
+                <div class="first-middle-stat-top-name">Current rank</div>
+                <div class="first-right-stat-top-name">To next rank</div>
+            </div>
+            <div class="row top-line">
+                <div class="first-left-stat-value">Trainer</div>
+                <div class="first-middle-stat-value">Sponsor</div>
+                <div class="first-right-stat-value">83%</div>
+            </div>
+        </div>
+        <div class="top box my-summary col">
+            <p class="top-title">MY SUMMARY</p>
+            <div class="row top-line">
+                <div class="left-stat-top-name">Personal Retail Sales</div>
+                <div class="right-stat-top-name">Goal</div>
+            </div>
+            <div class="row bottom-line perRetSal">
+                <div class="left-stat-value " ><span>&#36;</span>@perRetSal</div>
+                <div class="right-stat-value "><span>&#36;</span>@perRetSalGoal</div>
+                <div  id="arrow-up"></div>
+            </div>
+            <div class="row top-line">
+                <div class="left-stat-top-name">Sales Gross Profit</div>
+                <div class="right-stat-top-name">Goal</div>
+            </div>
+            <div class="row bottom-line">
+                <div class="left-stat-value">53.2%</div>
+                <div class="right-stat-value">50%</div>
+                <div class="arrow-up-1"></div>
+            </div>
+            <div class="row top-line">
+                <div class="left-stat-top-name-smaller">Previous Month Sales +/-</div>
+                <div class="right-stat-top-name-smaller">March 2017 Sales +/-</div>
+            </div>
+            <div class="row bottom-line">
+                <div class="left-stat-value">42%</div>
+                <div class="right-stat-value">53.2%</div>
+                <div class="arrow-up-2">
+                    <div class="arrow-up-3"></div>
                 </div>
             </div>
-            <div class="top box qualifications">
-                <p class="top-title">QUALIFICATIONS</p>
-                <div class="row top-line">
-                    <div class="left-stat-top-name">Rank Qualified</div>
-                    <div class="right-stat-top-name">Previous Month</div>
-                </div>
-                <div class="row bottom-line">
-                    <div class="left-stat-value">No</div>
-                    <div class="right-stat-value">Yes</div>
-                </div>
-                <div class="row top-line">
-                    <div class="left-stat-top-name">Cruise Qualified</div>
-                    <div class="right-stat-top-name">Previous Month</div>
-                </div>
-                <div class="row bottom-line">
-                    <div class="left-stat-value">Yes</div>
-                    <div class="right-stat-value">No</div>
-                </div>
-                <div class="row top-line">
-                    <div class="left-stat-top-name-smaller">Team Rank Qualified</div>
-                    <div class="right-stat-top-name-smaller">Previous Month</div>
-                </div>
-                <div class="row bottom-line">
-                    <div class="left-stat-value">24</div>
-                    <div class="right-stat-value">22</div>
-                </div>
-                <div class="row top-line">
-                    <div class="left-stat-top-name">Team Cruise Qualified</div>
-                    <div class="right-stat-top-name">Previous Month</div>
-                </div>
-                <div class="row top-line">
-                    <div class="left-stat-value">94</div>
-                    <div class="right-stat-value">93</div>
+            <div class="row top-line">
+                <div class="left-stat-top-name">Avg. Piece Price</div>
+                <div class="right-stat-top-name">Pieces sold</div>
+            </div>
+            <div class="row top-line">
+                <div class="left-stat-value"><span>&#36;</span>54.17</div>
+                <div class="right-stat-value">2035.5</div>
+            </div>
+        </div>
+        <div class="top box team-summary">
+            <p class="top-title">TEAM SUMMARY</p>
+            <div class="row top-line">
+                <div class="left-stat-top-name">Team Volume</div>
+                <div class="right-stat-top-name">New Team Members</div>
+            </div>
+            <div class="row bottom-line">
+                <div class="left-stat-value"><span>&#36;</span>731.657</div>
+                <div class="right-stat-value">11</div>
+            </div>
+            <div class="row top-line">
+                <div class="left-stat-top-name-smaller">TM's with + Sales</div>
+                <div class="right-stat-top-name-smaller">Leaders with + Bonus</div>
+            </div>
+            <div class="row bottom-line">
+                <div class="left-stat-value">44%</div>
+                <div class="right-stat-value">55%</div>
+                <div class="arrow-down">
+                    <div class="arrow-up-3"></div>
                 </div>
             </div>
-            <div class="retention">
-                <div class="ret-box ret-top-center" style="text-align: center; padding-top: 20px; color: #999999;">RETENTION</div>
-                <div class="ret-box ret-top-left border-bottom ">
-                    <div id="container" style="width: 185px; height: 150px; margin-top: 10px; margin-left: 40px;"></div>
-                </div>
-                <div class="ret-box ret-top-middle top-text-between ">
-                    <p class="tb-top-line">Total Customers</p>
-                    <p class="tb-bottom-line">60</p>
-                    <p class="tb-top-line">Active Customers</p>
-                    <p class="tb-bottom-line">35</p>
-                    <p class="tb-top-line">Inactive Customers</p>
-                    <p class="tb-bottom-line">25</p>
-                </div>
-                <div class="ret-box ret-top-right ">
-                    <div id="container2" style="width: 180px; height: 170px; margin-left: -10px; margin-top: 10px"></div>
-                </div>
-                <div class="ret-box ret-bottom-left">
-                    <div id="container4" style="width: 185px; height: 150px; margin-top: 25px; margin-left: 40px;"></div>
-                </div>
-                <div class="ret-box ret-bottom-middle bottom-text-between">
-                    <p class="tb-top-line">Total Customers</p>
-                    <p class="tb-bottom-line">200</p>
-                    <p class="tb-top-line">Active Customers</p>
-                    <p class="tb-bottom-line">125</p>
-                    <p class="tb-top-line">Inactive Customers</p>
-                    <p class="tb-bottom-line">75</p>
-                </div>
-                <div class="ret-box ret-bottom-right">
-                    <div id="container5" style="width: 180px; height: 170px; margin-left: -10px; margin-top: 25px;"></div>
-                </div>
+            <div class="row top-line">
+                <div class="left-stat-top-name-smaller">Retention(120 days)</div>
+                <div class="right-stat-top-name-smaller">Retention(All time)</div>
             </div>
-            <div class="acquisition">
-                <div class="ac-box ac-top-center" style="text-align: center; padding-top: 20px; color: #999999;">ACQUISITION</div>
-                <div class="ac-box ac-top">
-                    <div id="container3" style="width: 220px; height: 200px; padding-left: 15px;"></div>
-                </div>
-                <div class="ac-box ac-bottom">
-                    <div id="container6" style="width: 220px; height: 180px; margin-top: 20px; padding-left: 15px;"></div>
-                </div>
+            <div class="row bottom-line">
+                <div class="left-stat-value">63%</div>
+                <div class="right-stat-value">70%</div>
             </div>
-            <div class="profit">
-                <div class="pr-box pr-top-center" style="text-align: center; padding-top: 20px; color: #999999;">PROFIT</div>
-                <div class="pr-box pr-top">
-                    <div id="container7" style="width: 220px; height: 200px; margin-left: 18px;"></div>
-                </div>
-                <div class="pr-box pr-bottom">
-                    <div id="container8" style="width: 220px; height: 200px; padding-top: 20px; margin-left: 18px;"></div>
-                </div>
+            <div class="row top-line">
+                <div class="left-stat-top-name-smaller">Team Avg. Piece Price</div>
+                <div class="right-stat-top-name-smaller">Team Piece count</div>
+            </div>
+            <div class="row top-line">
+                <div class="left-stat-value"><span>&#36;</span>42.11</div>
+                <div class="right-stat-value">12,488.5</div>
+            </div>
+        </div>
+        <div class="top box qualifications">
+            <p class="top-title">QUALIFICATIONS</p>
+            <div class="row top-line">
+                <div class="left-stat-top-name">Rank Qualified</div>
+                <div class="right-stat-top-name">Previous Month</div>
+            </div>
+            <div class="row bottom-line">
+                <div class="left-stat-value">No</div>
+                <div class="right-stat-value">Yes</div>
+            </div>
+            <div class="row top-line">
+                <div class="left-stat-top-name">Cruise Qualified</div>
+                <div class="right-stat-top-name">Previous Month</div>
+            </div>
+            <div class="row bottom-line">
+                <div class="left-stat-value">Yes</div>
+                <div class="right-stat-value">No</div>
+            </div>
+            <div class="row top-line">
+                <div class="left-stat-top-name-smaller">Team Rank Qualified</div>
+                <div class="right-stat-top-name-smaller">Previous Month</div>
+            </div>
+            <div class="row bottom-line">
+                <div class="left-stat-value">24</div>
+                <div class="right-stat-value">22</div>
+            </div>
+            <div class="row top-line">
+                <div class="left-stat-top-name">Team Cruise Qualified</div>
+                <div class="right-stat-top-name">Previous Month</div>
+            </div>
+            <div class="row top-line">
+                <div class="left-stat-value">94</div>
+                <div class="right-stat-value">93</div>
+            </div>
+        </div>
+        <div class="retention">
+            <div class="ret-box ret-top-center" style="text-align: center; padding-top: 20px; color: #999999;">RETENTION</div>
+            <div class="ret-box ret-top-left border-bottom ">
+                <div id="container" style="width: 185px; height: 150px; margin-top: 10px; margin-left: 40px;"></div>
+            </div>
+            <div class="ret-box ret-top-middle top-text-between ">
+                <p class="tb-top-line">Total Customers</p>
+                <p class="tb-bottom-line">60</p>
+                <p class="tb-top-line">Active Customers</p>
+                <p class="tb-bottom-line">35</p>
+                <p class="tb-top-line">Inactive Customers</p>
+                <p class="tb-bottom-line">25</p>
+            </div>
+            <div class="ret-box ret-top-right ">
+                <div id="container2" style="width: 180px; height: 170px; margin-left: -10px; margin-top: 10px"></div>
+            </div>
+            <div class="ret-box ret-bottom-left">
+                <div id="container4" style="width: 185px; height: 150px; margin-top: 25px; margin-left: 40px;"></div>
+            </div>
+            <div class="ret-box ret-bottom-middle bottom-text-between">
+                <p class="tb-top-line">Total Customers</p>
+                <p class="tb-bottom-line">200</p>
+                <p class="tb-top-line">Active Customers</p>
+                <p class="tb-bottom-line">125</p>
+                <p class="tb-top-line">Inactive Customers</p>
+                <p class="tb-bottom-line">75</p>
+            </div>
+            <div class="ret-box ret-bottom-right">
+                <div id="container5" style="width: 180px; height: 170px; margin-left: -10px; margin-top: 25px;"></div>
+            </div>
+        </div>
+        <div class="acquisition">
+            <div class="ac-box ac-top-center" style="text-align: center; padding-top: 20px; color: #999999;">ACQUISITION</div>
+            <div class="ac-box ac-top">
+                <div id="container3" style="width: 220px; height: 200px; padding-left: 15px;"></div>
+            </div>
+            <div class="ac-box ac-bottom">
+                <div id="container6" style="width: 220px; height: 180px; margin-top: 20px; padding-left: 15px;"></div>
+            </div>
+        </div>
+        <div class="profit">
+            <div class="pr-box pr-top-center" style="text-align: center; padding-top: 20px; color: #999999;">PROFIT</div>
+            <div class="pr-box pr-top">
+                <div id="container7" style="width: 220px; height: 200px; margin-left: 18px;"></div>
+            </div>
+            <div class="pr-box pr-bottom">
+                <div id="container8" style="width: 220px; height: 200px; padding-top: 20px; margin-left: 18px;"></div>
             </div>
         </div>
     </div>
+</div>
+    
+<script>
+    $(document).ready(function(){
+        var perRetSal = @perRetSal;
+        var perRetSalGoal = @perRetSalGoal;
+        if (perRetSal < perRetSalGoal) {
+            document.getElementById("arrow-up").classList.add('arrow-down-1');
+            document.getElementById("arrow-up").classList.remove('arrow-up');
+        } 
+        else {
+            document.getElementById("arrow-up").classList.add('arrow-up');
+        }
+    });
+</script>
+
 <script>
     var container;
     var container2;
