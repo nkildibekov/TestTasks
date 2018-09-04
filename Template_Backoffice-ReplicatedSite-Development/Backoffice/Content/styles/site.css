@@ -5046,6 +5046,45 @@ a.bg-danger:hover {
   margin-top: -10px;
   margin-right: 20px; }
 
+.first-left-stat-top-name {
+  float: left;
+  color: #FA97B0;
+  font-size: smaller;
+  margin-left: 20px; }
+
+.first-middle-stat-top-name {
+  float: none;
+  color: #fa97b0;
+  font-size: smaller;
+  margin-right: 80px; }
+
+.first-right-stat-top-name {
+  float: right;
+  color: #FA97B0;
+  font-size: smaller;
+  margin-top: -23px;
+  margin-right: 20px; }
+
+.first-left-stat-value {
+  float: left;
+  color: #97DDDC;
+  font-size: 15px;
+  margin-top: -10px;
+  margin-left: 20px; }
+
+.first-middle-stat-value {
+  color: #97DDDC;
+  font-size: 15px;
+  margin-top: -10px;
+  margin-right: 86px; }
+
+.first-right-stat-value {
+  float: right;
+  color: #97DDDC;
+  font-size: 15px;
+  margin-top: -30px;
+  margin-right: 20px; }
+
 .bottom-line {
   border-bottom: solid thin;
   border-bottom-color: #F9F9F9; }
