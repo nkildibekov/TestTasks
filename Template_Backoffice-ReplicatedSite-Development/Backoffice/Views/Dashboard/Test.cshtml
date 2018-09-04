@@ -138,10 +138,11 @@
                 </div>
             </div>
             <div class="retention">
-                <div class="ret-box ret-top-left" style="border-bottom:solid;">
-                    <div id="container" style="width:240px; height: 235px;"></div>
+                <div class="ret-box ret-top-center" style="text-align: center; padding-top: 20px; color: #999999;">RETENTION</div>
+                <div class="ret-box ret-top-left border-bottom ">
+                    <div id="container" style="width: 185px; height: 150px; margin-top: 10px; margin-left: 40px;"></div>
                 </div>
-                <div class="ret-box ret-top-middle text-between" style="border-bottom:solid;">
+                <div class="ret-box ret-top-middle top-text-between ">
                     <p class="tb-top-line">Total Customers</p>
                     <p class="tb-bottom-line">60</p>
                     <p class="tb-top-line">Active Customers</p>
@@ -149,13 +150,13 @@
                     <p class="tb-top-line">Inactive Customers</p>
                     <p class="tb-bottom-line">25</p>
                 </div>
-                <div class="ret-box ret-top-right" style="border-bottom:solid;">
-                    <div id="container2" style="width:180px; height: 170px; margin-left: -10px; margin-top: 45px;"></div>
+                <div class="ret-box ret-top-right ">
+                    <div id="container2" style="width: 180px; height: 170px; margin-left: -10px; margin-top: 10px"></div>
                 </div>
                 <div class="ret-box ret-bottom-left">
-                    <div id="container4" style="width:230px; height: 235px;"></div>
+                    <div id="container4" style="width: 185px; height: 150px; margin-top: 25px; margin-left: 40px;"></div>
                 </div>
-                <div class="ret-box ret-bottom-middle text-between">
+                <div class="ret-box ret-bottom-middle bottom-text-between">
                     <p class="tb-top-line">Total Customers</p>
                     <p class="tb-bottom-line">200</p>
                     <p class="tb-top-line">Active Customers</p>
@@ -164,30 +165,32 @@
                     <p class="tb-bottom-line">75</p>
                 </div>
                 <div class="ret-box ret-bottom-right">
-                    <div id="container5" style="width:180px; height: 170px; margin-left: -10px; margin-top: 45px;"></div>
+                    <div id="container5" style="width: 180px; height: 170px; margin-left: -10px; margin-top: 25px;"></div>
                 </div>
             </div>
             <div class="acquisition">
+                <div class="ac-box ac-top-center" style="text-align: center; padding-top: 20px; color: #999999;">ACQUISITION</div>
                 <div class="ac-box ac-top">
-                    <div id="container3" style="width:245px; height: 235px;"></div>
+                    <div id="container3" style="width: 220px; height: 200px; padding-left: 15px;"></div>
                 </div>
                 <div class="ac-box ac-bottom">
-                    <div id="container6" style="width:245px; height: 235px;"></div>
+                    <div id="container6" style="width: 220px; height: 180px; margin-top: 20px; padding-left: 15px;"></div>
                 </div>
             </div>
             <div class="profit">
+                <div class="pr-box pr-top-center" style="text-align: center; padding-top: 20px; color: #999999;">PROFIT</div>
                 <div class="pr-box pr-top">
-                    <div id="container7" style="width:245px; height: 235px;"></div>
+                    <div id="container7" style="width: 220px; height: 200px; margin-left: 18px;"></div>
                 </div>
                 <div class="pr-box pr-bottom">
-                    <div id="container8" style="width:245px; height: 235px;"></div>
+                    <div id="container8" style="width: 220px; height: 200px; padding-top: 20px; margin-left: 18px;"></div>
                 </div>
             </div>
         </div>
     </div>
     <script>
         $(function () {
-            var myChart = Highcharts.chart('container', {
+            $('#container').highcharts({
                 chart: {
                     type: 'column'
                 },
@@ -197,16 +200,22 @@
                 legend: {
                     layout: 'horizontal',
                     itemStyle: {
-                        fontSize: 8
+                        fontSize: 8,
+                        fontWeight:"normal"
                     },
                     align: 'left',
                     padding: -10,
-                    symbolHeight: 5,
+                    symbolHeight: 8,
                     marker: {
-                        symbol: 'square',
+                        symbol: 'square'
                     },
-                    itemDistance: 5,
-                    margin: 5
+                    itemDistance: -4,
+                    margin: 10,
+                    itemMarginLeft: 5,
+                    x: -2,
+                    symbolPadding: -1,
+                    symbolRadius: 0
+                    
                 },
                 endOnTick: { enabled: false },
                 exporting:
@@ -229,12 +238,13 @@
                             return this.value + "%";
                         }
                     },
+                    tickAmount: 5
                 },
                 plotOptions: {
                     column: {
                         stacking: 'normal',
-                        pointWidth: 40,
-                    },
+                        pointWidth: 40
+                    }
                 },
                 series: [{
                     name: '0-30 Days',
@@ -260,7 +270,7 @@
         });
 
         $(function () {
-            var myChart = Highcharts.chart('container2', {
+            $('#container2').highcharts({
                 chart: {
                     type: 'pie'
                 },
@@ -272,6 +282,17 @@
                         enabled: false
                     },
                 title: {
+                    text: 'Personal',
+                    style: {
+                        color: '#74D1CF',
+                        fontWeight: 'bold',
+                        fontSize: 12
+                    },
+                    verticalAlign: 'top',
+                    floating: true,
+                    y:2
+                },
+                subtitle: {
                     text: '58%',
                     style: {
                         color: '#74D1CF',
@@ -312,7 +333,7 @@
         });
 
         $(function () {
-            var myChart = Highcharts.chart('container3', {
+            $('#container3').highcharts({
                 chart: {
                     type: 'column'
                 },
@@ -325,10 +346,11 @@
                         fontSize: 8
                     },
                     align: 'center',
-                    symbolHeight: 5,
+                    symbolHeight: 8,
                     marker: {
-                        symbol: 'square',
+                        symbol: 'square'
                     },
+                    symbolRadius: 0,
                     itemDistance: 5,
                     margin: 5
                 },
@@ -338,11 +360,11 @@
                         enabled: false
                     },
                 title: {
-                    text: 'New Customers - Personal',
+                    text: 'New Customers-Personal',
                     style: {
                         color: '#74D1CF',
                         fontWeight: 'bold',
-                        fontSize: 13
+                        fontSize: 11
                     }
                 },
                 xAxis: {
@@ -350,8 +372,14 @@
                 },
                 yAxis: {
                     min: 0,
-                    max: 500,
-                    title: { text: '' },                   
+                    max: 550,
+                    title: { text: '' },
+                    labels: {
+                        formatter: function () {
+                            return this.value + "k";
+                        }
+                    },
+                    tickAmount: 3
                 },
                 plotOptions: {
                     column: {
@@ -368,7 +396,7 @@
         });
 
         $(function () {
-            var myChart = Highcharts.chart('container4', {
+            $('#container4').highcharts({
                 chart: {
                     type: 'column'
                 },
@@ -378,16 +406,22 @@
                 legend: {
                     layout: 'horizontal',
                     itemStyle: {
-                        fontSize: 8
+                        fontSize: 8,
+                        fontWeight: "normal"
                     },
                     align: 'left',
                     padding: -10,
-                    symbolHeight: 5,
+                    symbolHeight: 8,
                     marker: {
-                        symbol: 'square',
+                        symbol: 'square'
                     },
-                    itemDistance: 5,
-                    margin: 5
+                    itemDistance: -4,
+                    margin: 10,
+                    itemMarginLeft: 5,
+                    x: -2,
+                    symbolPadding: -1,
+                    symbolRadius: 0
+
                 },
                 endOnTick: { enabled: false },
                 exporting:
@@ -399,7 +433,7 @@
                 },
                 xAxis: {
                     categories: ['Inactive', 'Active']
-                    
+
                 },
                 yAxis: {
                     min: 0,
@@ -409,12 +443,13 @@
                         formatter: function () {
                             return this.value + "%";
                         }
-                    }
+                    },
+                    tickAmount: 5
                 },
                 plotOptions: {
                     column: {
                         stacking: 'normal',
-                        pointWidth: 40,
+                        pointWidth: 40
                     },
                 },
                 series: [{
@@ -441,7 +476,7 @@
         });
 
         $(function () {
-            var myChart = Highcharts.chart('container5', {
+            $('#container5').highcharts({
                 chart: {
                     type: 'pie'
                 },
@@ -449,10 +484,21 @@
                     enabled: false
                 },
                 exporting:
-                    {
-                        enabled: false
-                    },
+                {
+                    enabled: false
+                },
                 title: {
+                    text: 'Team',
+                    style: {
+                        color: '#74D1CF',
+                        fontWeight: 'bold',
+                        fontSize: 12
+                    },
+                    verticalAlign: 'top',
+                    floating: true,
+                    y: 2
+                },
+                subtitle: {
                     text: '63%',
                     style: {
                         color: '#74D1CF',
@@ -475,7 +521,7 @@
                     }
                 },
                 series: [{
-                    name: 'Browsers',
+                    name: '',
                     data: [{
                         y: 63,
                         color: "#73D1CF"
@@ -488,25 +534,12 @@
                     dataLabels: {
                         enabled: false
                     }
-                }],
-                function(chart) {
-                    var textX = chart.plotLeft + (chart.plotWidth * 0.5);
-                    var textY = chart.plotTop + (chart.plotHeight * 0.5);
-
-                    var span = '<span id="pieChartInfoText" style="position:absolute; text-align:center;">';
-                    span += '<span style="font-size: 20px">58%</span><br>';
-                    span += '</span>';
-
-                    $("#addText").append(span);
-                    span = $('#pieChartInfoText');
-                    span.css('left', textX + (span.width() * -0.5));
-                    span.css('top', textY + (span.height() * -0.5));
-                }
+                }]
             });
         });
 
         $(function () {
-            var myChart = Highcharts.chart('container6', {
+            $('#container6').highcharts({
                 chart: {
                     type: 'column'
                 },
@@ -519,24 +552,24 @@
                         fontSize: 8
                     },
                     align: 'center',
-                    symbolHeight: 5,
+                    symbolHeight: 8,
                     marker: {
-                        symbol: 'square',
+                        symbol: 'square'
                     },
+                    symbolRadius: 0,
                     itemDistance: 5,
                     margin: 5
                 },
-                endOnTick: { enabled: false },
                 exporting:
                     {
                         enabled: false
                     },
                 title: {
-                    text: 'New Customers - Team',
+                    text: 'New Customers-Team',
                     style: {
                         color: '#74D1CF',
                         fontWeight: 'bold',
-                        fontSize: 13
+                        fontSize: 11
                     }
                 },
                 xAxis: {
@@ -550,14 +583,15 @@
                         formatter: function () {
                             return this.value + "k";
                         }
-                    }
+                    },
+                    tickAmount: 3
                 },
                 plotOptions: {
                     column: {
                         stacking: 'normal',
                         pointWidth: 40,
                         color:'#76D2CF'
-                    },
+                    }
                 },
                 series: [{
                     name: 'Team',
@@ -567,7 +601,7 @@
         });
 
         $(function () {
-            var myChart = Highcharts.chart('container7', {
+            $('#container7').highcharts({
                 chart: {
                     type: 'column'
                 },
@@ -583,16 +617,17 @@
                     padding: -10,
                     symbolHeight: 5,
                     marker: {
-                        symbol: 'square',
+                        symbol: 'square'
                     },
+                    symbolRadius: 0,
                     itemDistance: 5,
                     margin: 5
                 },
                 endOnTick: { enabled: false },
                 exporting:
-                    {
-                        enabled: false
-                    },
+                {
+                    enabled: false
+                },
                 title: {
                     text: 'Personal',
                     style: {
@@ -605,29 +640,38 @@
                     categories: ['Current', 'Previous', 'Avg'],
                     labels: {
                         style: {
-                            fontSize:8
+                            fontSize: 8
                         }
                     }
                 },
                 yAxis: [{
                     title: { text: '' },
                     labels: {
-                        formatter: function () {
+                        formatter: function() {
                             return this.value + "%";
-                        }                        
+                        },
+                        style: {
+                            fontSize: 6
+        }
                     },
+                    tickAmount: 5,
                     min: 0,
-                    max: 60,
+                    max: 60
                 },
                     {
                         title: { text: '' },
-                        opposite: true,                        
+                        opposite: true,
+                        tickAmount: 5,
+                        tickInterval: 13.5,
                         min: 0,
-                        max: 75,
+                        max: 70,
                         labels: {
                             formatter: function () {
                                 return "$" + this.value + ".000";
-                            }
+                            },
+                            style: {
+                                fontSize: 6
+                                }
                         }
                     }],
                 plotOptions: {
@@ -635,17 +679,17 @@
                         stacking: 'normal',
                         pointWidth: 25,
                         color: '#F68EAA'
-                    },
+                    }
                 },
                 series: [{
                     name: 'Total Amount',
-                    data: [48, 42,57]
-                }],
+                    data: [48,50,60]
+                }]
             });
         });
 
         $(function () {
-            var myChart = Highcharts.chart('container8', {
+            $('#container8').highcharts({
                 chart: {
                     type: 'column'
                 },
@@ -661,8 +705,9 @@
                     padding: -10,
                     symbolHeight: 5,
                     marker: {
-                        symbol: 'square',
+                        symbol: 'square'
                     },
+                    symbolRadius: 0,
                     itemDistance: 5,
                     margin: 5
                 },
@@ -688,23 +733,32 @@
                     }
                 },
                 yAxis: [{
-                    title: { text: '' },
-                    labels: {
-                        formatter: function () {
-                            return this.value + "%";
-                        }
+                        title: { text: '' },
+                        labels: {
+                            formatter: function () {
+                                return this.value + "%";
+                            },
+                            style: {
+                                fontSize: 6
+                            }
+                        },
+                        tickAmount: 5,
+                        min: 0,
+                        max: 60
                     },
-                    min: 0,
-                    max: 60,
-                },
                     {
                         title: { text: '' },
                         opposite: true,
+                        tickAmount: 5,
+                        tickInterval: 13.5,
                         min: 0,
-                        max: 75,
+                        max: 70,
                         labels: {
                             formatter: function () {
                                 return "$" + this.value + ".000";
+                            },
+                            style: {
+                                fontSize: 6
                             }
                         }
                     }],

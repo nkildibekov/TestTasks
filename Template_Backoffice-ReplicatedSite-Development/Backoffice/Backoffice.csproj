@@ -809,6 +809,7 @@
     <Content Include="Content\styles\theme\illuminel\theme.scss" />
     <Content Include="Content\styles\theme\purecare\theme.scss" />
     <Content Include="Content\styles\theme\dayzero\theme.scss" />
+    <Content Include="Content\styles\views\test.scss" />
     <None Include="Properties\PublishProfiles\exigobackoffice - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\exigobackoffice - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\exigobackoffice-Sandbox - FTP.pubxml" />
@@ -1071,6 +1072,7 @@
     <Content Include="Views\ShoppingWithAutoOrder\Payment.cshtml" />
     <Content Include="Views\ShoppingWithAutoOrder\Review.cshtml" />
     <Content Include="Views\ShoppingWithAutoOrder\Shipping.cshtml" />
+    <Content Include="Views\Dashboard\Test.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">
