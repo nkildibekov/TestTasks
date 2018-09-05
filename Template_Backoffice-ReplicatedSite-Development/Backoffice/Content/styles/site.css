@@ -5188,6 +5188,19 @@ a.bg-danger:hover {
   margin-right: auto;
   margin-bottom: 10px; }
 
+.my-summary {
+  grid-area: my-summary; }
+
+/*@media only screen and (min-width: 500px) {
+    .box-container {
+        grid-template-columns: 20% auto;
+        grid-template-areas:
+        "header   header" 
+        "sidebar  content" 
+        "sidebar2 sidebar2" 
+        "footer   footer";
+    }
+}*/
 .row-24:before,
 .row-24:after {
   display: table;
